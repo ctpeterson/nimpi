@@ -100,6 +100,30 @@ type
     ## - `comm`: The underlying MPI_Comm handle that represents the communicator.
     comm*: MPI_Comm
 
+#[ error handling ]#
+
+proc mpiAssert*(code: cint) =
+  ## Asserts that an MPI function call was successful. If the code is not `MPI_SUCCESS`,
+  ## raises an `MpiError` with the corresponding error message.
+  ## 
+  ## Parameters:
+  ##  - `code`: The return code from an MPI function call to check for success.
+  ## 
+  ## Example:
+  ## ```nim
+  ## var rank: cint
+  ## mpiAssert MPI_Comm_rank(WorldCommunicator.comm, addr rank)
+  ## ```
+  if code != MPI_SUCCESS:
+    var buf: array[1024, char]
+    var len: cint
+    discard MPI_Error_string(code, cast[cstring](addr buf[0]), addr len)
+    var message = newString(len)
+    copyMem(addr message[0], addr buf[0], len)
+    var err = newException(MpiError, message)
+    err.code = code
+    raise err
+
 #[ global variables ]#
 
 let
@@ -130,30 +154,6 @@ proc mpiFinalized*: bool =
   var flag: cint
   mpiAssert MPI_Finalized(addr flag)
   return flag != 0
-
-#[ error handling ]#
-
-proc mpiAssert*(code: cint) =
-  ## Asserts that an MPI function call was successful. If the code is not `MPI_SUCCESS`,
-  ## raises an `MpiError` with the corresponding error message.
-  ## 
-  ## Parameters:
-  ##  - `code`: The return code from an MPI function call to check for success.
-  ## 
-  ## Example:
-  ## ```nim
-  ## var rank: cint
-  ## mpiAssert MPI_Comm_rank(WorldCommunicator.comm, addr rank)
-  ## ```
-  if code != MPI_SUCCESS:
-    var buf: array[1024, char]
-    var len: cint
-    discard MPI_Error_string(code, cast[cstring](addr buf[0]), addr len)
-    var message = newString(len)
-    copyMem(addr message[0], addr buf[0], len)
-    var err = newException(MpiError, message)
-    err.code = code
-    raise err
 
 #[ timers ]#
 

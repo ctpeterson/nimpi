@@ -164,7 +164,6 @@ mpiVariables constantDefinition:
   MPI_IN_PLACE: pointer
   MPI_BOTTOM: pointer
   MPI_BSEND_OVERHEAD: cint
-  MPI_UNDEFINED: cint
   MPI_MAX_PROCESSOR_NAME: cint
   MPI_MAX_ERROR_STRING: cint
   MPI_MAX_OBJECT_NAME: cint
