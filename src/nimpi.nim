@@ -37,3 +37,29 @@
 import nimpi/[mpi]
 
 export mpi
+
+## Nim MPI bindings and utilities. This module provides a high-level interface to MPI,
+## including type definitions, global variables, and utility procedures for initialization,
+## finalization, and error handling. It serves as the main entry point for users of the
+## NiMPI library, abstracting away the details of the underlying MPI implementation and
+## providing a more idiomatic Nim interface to MPI functionality.
+## 
+## The actual MPI function bindings are defined in the `mpiwrap` module.
+## 
+## The idiomatic Nim interface is provided by the `mpi` module. 
+## 
+## Acknowledgments:
+## - NimMPI by Michalina Kotwica (Udiknedormin)
+##  https://github.com/Udiknedormin/NimMPI — MIT License
+##  Copyright (c) 2016 M. Kotwica
+## - QEX (Quantum EXpressions) by James Osborn et al.
+##  https://github.com/jcosborn/qex — MIT License
+##  Copyright (c) 2015 James Osborn
+##
+## Example:
+## ```nim
+## import nimpi
+## 
+## mpi:
+##   echo "Hello from process ", WorldCommunicator.myRank, " of ", WorldCommunicator.size
+## ```

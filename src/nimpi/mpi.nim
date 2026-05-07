@@ -34,9 +34,49 @@
   SOFTWARE.
 ]#
 
-import mpiwrap
+## NiMPI – MPI Wrapper for Nim
+##
+## High-level, idiomatic Nim bindings for MPI (Message Passing Interface).
+##
+## Quick Start
+## ===========
+##
+## ```nim
+## import nimpi
+##
+## mpi:
+##   echo "Rank: ", myRank(WorldCommunicator)
+##   echo "Size: ", size(WorldCommunicator)
+## ```
+##
+## Core Types
+## ==========
+##
+## - `MpiCommunicator`: Wraps MPI_Comm for safe group communication.
+## - `MpiError`: Exception raised when MPI operations fail.
+##
+## Communicator Operations
+## =======================
+##
+## Split, duplicate, and manage MPI communicators:
+##
+## - `split()`: Create subcommunicators by color/rank.
+## - `duplicate()`: Clone a communicator.
+## - `size()`, `myRank()`: Query communicator metadata.
+## - `free()`: Release communicator resources.
+##
+## Initialization & Finalization
+## ==============================
+##
+## Use the `mpi` template to safely initialize/finalize MPI:
+##
+## ```nim
+## mpi:
+##   # MPI_Init and MPI_Finalize called automatically
+##   discard
+## ```
 
-export mpiwrap
+import mpiwrap
 
 #[ MPI types ]#
 
