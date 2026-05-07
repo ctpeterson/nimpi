@@ -22,6 +22,21 @@ jobs:
         with:
           nim-version: stable
       - run: nim doc --project --outdir=docs/html src/nimpi.nim
+      - name: Ensure Pages entrypoint
+        run: |
+          set -euo pipefail
+          test -d docs/html
+          if [ -f docs/html/index.html ]; then
+            echo "index.html already exists"
+          elif [ -f docs/html/theindex.html ]; then
+            cp docs/html/theindex.html docs/html/index.html
+          elif [ -f docs/html/nimpi.html ]; then
+            cp docs/html/nimpi.html docs/html/index.html
+          else
+            echo "No suitable landing page generated in docs/html"
+            ls -la docs/html
+            exit 1
+          fi
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
