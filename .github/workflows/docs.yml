@@ -20,17 +20,40 @@ jobs:
         run: |
           set -euo pipefail
           test -d docs/html
-          if [ -f docs/html/index.html ]; then
-            echo "index.html already exists"
-          elif [ -f docs/html/theindex.html ]; then
-            cp docs/html/theindex.html docs/html/index.html
-          elif [ -f docs/html/nimpi.html ]; then
-            cp docs/html/nimpi.html docs/html/index.html
-          else
+          target=""
+          for candidate in \
+            "nimpi/mpi.html" \
+            "nimpi_mpi.html" \
+            "mpi.html" \
+            "theindex.html" \
+            "nimpi.html"; do
+            if [ -f "docs/html/$candidate" ]; then
+              target="$candidate"
+              break
+            fi
+          done
+
+          if [ -z "$target" ]; then
             echo "No suitable landing page generated in docs/html"
-            ls -la docs/html
+            find docs/html -maxdepth 2 -type f -name '*.html' | sort
             exit 1
           fi
+
+          cat > docs/html/index.html <<EOF
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8" />
+            <meta http-equiv="refresh" content="0; url=./$target" />
+            <link rel="canonical" href="./$target" />
+            <title>Redirecting...</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="./$target">./$target</a></p>
+          </body>
+          </html>
+          EOF
+          echo "Created docs/html/index.html redirect to $target"
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
