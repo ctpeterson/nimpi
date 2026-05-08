@@ -36,46 +36,52 @@
 
 ## NiMPI – MPI Wrapper for Nim
 ##
-## High-level, idiomatic Nim bindings for MPI (Message Passing Interface).
+## High-level, idiomatic Nim bindings for Message Passing Interface (MPI).
+## This is a work in progress and not ready for production use. API is subject
+## to change without deprecation.
 ##
-## Quick Start
+## Hello World
 ## ===========
+## 
+## The simplest way to use NiMPI is to annotate a block of code with the `mpi` pragma, 
+## which wraps the code in an MPI initialization/finalization block:
 ##
 ## ```nim
 ## import nimpi
 ##
 ## mpi:
-##   echo "Rank: ", myRank(WorldCommunicator)
-##   echo "Size: ", size(WorldCommunicator)
+##   let rank = WorldCommunicator.myRank # rank of the calling process
+##   let size = WorldCommunicator.size   # number of ranks in the communicator
+##   echo "Hello, world! From: ", rank, "/", size
 ## ```
-##
-## Core Types
-## ==========
-##
-## - `MpiCommunicator`: Wraps MPI_Comm for safe group communication.
-## - `MpiError`: Exception raised when MPI operations fail.
-##
-## Communicator Operations
-## =======================
-##
-## Split, duplicate, and manage MPI communicators:
-##
-## - `split()`: Create subcommunicators by color/rank.
-## - `duplicate()`: Clone a communicator.
-## - `size()`, `myRank()`: Query communicator metadata.
-## - `free()`: Release communicator resources.
-##
-## Initialization & Finalization
-## ==============================
-##
-## Use the `mpi` template to safely initialize/finalize MPI:
-##
+## 
+## Alternatively, one can annotate a procedure with the `mpi` pragma, which wraps
+## the body of the procedure in an MPI initialization/finalization block:
+## 
 ## ```nim
-## mpi:
-##   # MPI_Init and MPI_Finalize called automatically
-##   discard
+## import nimpi
+##
+## proc main() {.mpi.} =
+##   let rank = WorldCommunicator.myRank # rank of the calling process
+##   let size = WorldCommunicator.size   # number of ranks in the communicator
+##   echo "Hello, world! From: ", rank, "/", size
+## main()
+## ```
+## 
+## Both modes of initialization and finalization are functionally equivalent the 
+## most verbose means of initializing and finalizing MPI with NiMPI:
+## 
+## ```nim
+## import nimpi
+##
+## mpiInit()
+## let rank = WorldCommunicator.myRank # rank of the calling process
+## let size = WorldCommunicator.size   # number of ranks in the communicator
+## echo "Hello, world! From: ", rank, "/", size
+## mpiFinalize()
 ## ```
 
+import std/[macros]
 import mpiwrap
 
 #[ MPI types ]#
@@ -99,6 +105,34 @@ type
     ## Attributes:
     ## - `comm`: The underlying MPI_Comm handle that represents the communicator.
     comm*: MPI_Comm
+  
+  MpiGroup* = object
+    ## Represents an MPI group, which is an ordered set of processes. MPI groups
+    ## are used to define the membership of communicators and to specify subsets
+    ## of processes for communication operations.
+    ##
+    ## Attributes:
+    ## - `group`: The underlying MPI_Group handle that represents the group.
+    group*: mpiwrap.MPI_Group
+
+#[ global variables ]#
+
+let
+  WorldCommunicator* = MpiCommunicator(comm: MPI_COMM_WORLD)
+    ## The default communicator that includes all processes in the MPI program.
+    
+  SelfCommunicator* = MpiCommunicator(comm: MPI_COMM_SELF)
+    ## A communicator that includes only the calling process. 
+  
+  NullCommunicator* = MpiCommunicator(comm: MPI_COMM_NULL)
+    ## A null communicator that represents an invalid communicator.
+
+let
+  NullGroup* = MpiGroup(group: MPI_GROUP_NULL)
+    ## A null group that represents an invalid group.
+
+  EmptyGroup* = MpiGroup(group: MPI_GROUP_EMPTY)
+    ## An empty group that contains no processes.
 
 #[ error handling ]#
 
@@ -123,15 +157,6 @@ proc mpiAssert*(code: cint) =
     var err = newException(MpiError, message)
     err.code = code
     raise err
-
-#[ global variables ]#
-
-let
-  WorldCommunicator* = MpiCommunicator(comm: MPI_COMM_WORLD)
-    ## The default communicator that includes all processes in the MPI program.
-    
-  SelfCommunicator* = MpiCommunicator(comm: MPI_COMM_SELF)
-    ## A communicator that includes only the calling process. 
 
 #[ initialization/finalization ]#
 
@@ -170,6 +195,30 @@ proc mpiWallTick*: float64 =
   return MPI_Wtick()
 
 #[ communicator ]#
+
+proc `=destroy`(communicator: var MpiCommunicator) =
+  ## Destructor hook for user-created communicators
+  ## 
+  ## Does not free communicators that are `MPI_COMM_NULL`, `MPI_COMM_WORLD`, or 
+  ## `MPI_COMM_SELF`, as these are managed by MPI and should not be freed by the user. 
+  ## For other communicators, checks if MPI is initialized and not finalized before 
+  ## freeing the communicator. This ensures that communicators are only freed when 
+  ## it is safe to do so.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to be destroyed.
+  if (
+    communicator.comm != MPI_COMM_NULL and
+    communicator.comm != MPI_COMM_WORLD and
+    communicator.comm != MPI_COMM_SELF
+  ):
+    var isInit: cint
+    var isFinalized: cint
+    discard MPI_Initialized(addr isInit)
+    discard MPI_Finalized(addr isFinalized)
+    if isInit != 0 and isFinalized == 0:
+      discard MPI_Comm_free(addr communicator.comm)
+  communicator.comm = MPI_COMM_NULL
 
 proc duplicate*(communicator: MpiCommunicator): MpiCommunicator =
   ## Duplicates the given communicator
@@ -234,34 +283,97 @@ proc abort*(communicator: MpiCommunicator, errorcode: int = 1) =
   mpiAssert MPI_Abort(communicator.comm, cint(errorcode))
 
 proc free*(communicator: var MpiCommunicator) =
+  ## Frees communicator
+  ## 
+  ## This routine does not free communicator storage, which is freed only when
+  ## all references to the communictor are removed. 
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The communicator to free. 
   mpiAssert MPI_Comm_free(addr communicator.comm)
 
 proc size*(communicator: MpiCommunicator): int =
+  ## Returns communicator size (number of ranks in the communicator)
+  ## 
+  ## Parameters:
+  ##  - `communicator`: MpiCommunicator object
+  ##
+  ## Returns:
+  ##  - The size of the communicator (number of ranks). 
   var size: cint
   mpiAssert MPI_Comm_size(communicator.comm, addr size)
   return int(size)
 
 proc myRank*(communicator: MpiCommunicator): int =
+  ## Returns the rank of the calling process within the given communicator.
+  ## 
+  ## Note that ranks are zero-indexed.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: MpiCommunicator object
+  ## 
+  ## Returns:
+  ##  - The rank of the calling process within the communicator.
   var rank: cint
   mpiAssert MPI_Comm_rank(communicator.comm, addr rank)
   return int(rank)
 
-#[ MPI block ]#
-
-template mpi*(body: untyped): untyped =
-  ## Encapsulates MPI program in a block that ensures proper initialization and 
-  ## finalization of MPI. Alternative to manual calls to `mpiInit` and `mpiFinalize`.
-  ## 
+macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
+  ## Prints `message` from rank 0 of `communicator` only.
+  ## Accepts the same comma-separated arguments as the built-in `echo`.
+  ##
   ## Example:
+  ## ```nim
+  ## WorldCommunicator.echo "rank 0 says hi"
+  ## customComm.echo "size = ", customComm.size
+  ## ```
+  result = quote do:
+    if `communicator`.myRank == 0: echo `message`
+
+#[ MPI dispatch wrappers ]#
+
+macro mpi*(routine: untyped): untyped =
+  ## MPI dispatch wrapper
+  ## 
+  ## Encapsulates body of code within an MPI initialization/finalization block.
+  ## Can be used in two ways. 
+  ## 
+  ## The first is as a pragma that wraps a procedure body:
+  ## 
+  ## ```nim
+  ## proc program() {.mpi.} =
+  ##   let comm = WorldCommunicator
+  ##   echo "Hello from process ", comm.myRank, " of ", comm.size
+  ## program()
+  ## ```
+  ## 
+  ## The second is as a code injection template that wraps arbitrary code:
+  ## 
   ## ```nim
   ## mpi:
   ##   let comm = WorldCommunicator
   ##   echo "Hello from process ", comm.myRank, " of ", comm.size
   ## ```
-  proc main =
-    mpiAssert MPI_Init(nil, nil)
-    defer: mpiAssert MPI_Finalize()
-    assert mpiInitialized()
-    body
-  main()
-  assert mpiFinalized()
+  if routine.kind notin {
+    nnkProcDef, 
+    nnkFuncDef, 
+    nnkMethodDef, 
+    nnkIteratorDef, 
+    nnkConverterDef
+  }: 
+    return quote do:
+      proc main =
+        mpiInit()
+        defer: mpiFinalize()
+        assert mpiInitialized()
+        `routine`
+      main()
+      assert mpiFinalized()
+  else:
+    let body = routine[^1]
+    result = routine
+    routine[^1] = quote do:
+      mpiInit()
+      defer: mpiFinalize()
+      assert mpiInitialized()
+      `body`

@@ -249,7 +249,7 @@ proc MPI_Comm_rank*(comm: MPI_Comm, rank: ptr cint): cint {.cdecl, mpi.}
 
 proc MPI_Comm_size*(comm: MPI_Comm, size: ptr cint): cint {.cdecl, mpi.}
 
-proc MPI_comm_dup*(comm: MPI_Comm, newcomm: ptr MPI_Comm): cint {.cdecl, mpi.}
+proc MPI_Comm_dup*(comm: MPI_Comm, newcomm: ptr MPI_Comm): cint {.cdecl, mpi.}
 
 proc MPI_Comm_split*(
   comm: MPI_Comm, 
