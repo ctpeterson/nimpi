@@ -54,10 +54,7 @@
       </select>
     </div>
     <ul class="simple simple-toc" id="toc-list">
-  <li><a class="reference" id="quick-start_toc" href="#quick-start">Quick Start</a></li>
-<li><a class="reference" id="core-types_toc" href="#core-types">Core Types</a></li>
-<li><a class="reference" id="communicator-operations_toc" href="#communicator-operations">Communicator Operations</a></li>
-<li><a class="reference" id="initialization-amp-finalization_toc" href="#initialization-amp-finalization">Initialization &amp; Finalization</a></li>
+  <li><a class="reference" id="hello-world_toc" href="#hello-world">Hello World</a></li>
 <li>
   <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
 </li>
@@ -69,6 +66,8 @@
   comm*: MPI_Comm">MpiCommunicator</a></li>
 <li><a class="reference" href="#MpiError" title="MpiError = object of CatchableError
   code*: cint">MpiError</a></li>
+<li><a class="reference" href="#MpiGroup" title="MpiGroup = object
+  group*: mpiwrap.MPI_Group">MpiGroup</a></li>
 
     </ul>
   </details>
@@ -77,7 +76,10 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#9" id="59">Lets</a></summary>
     <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#SelfCommunicator" title="SelfCommunicator = MpiCommunicator(comm: MPI_COMM_SELF)">SelfCommunicator</a></li>
+      <li><a class="reference" href="#EmptyGroup" title="EmptyGroup = MpiGroup(group: MPI_GROUP_EMPTY)">EmptyGroup</a></li>
+<li><a class="reference" href="#NullCommunicator" title="NullCommunicator = MpiCommunicator(comm: MPI_COMM_NULL)">NullCommunicator</a></li>
+<li><a class="reference" href="#NullGroup" title="NullGroup = MpiGroup(group: MPI_GROUP_NULL)">NullGroup</a></li>
+<li><a class="reference" href="#SelfCommunicator" title="SelfCommunicator = MpiCommunicator(comm: MPI_COMM_SELF)">SelfCommunicator</a></li>
 <li><a class="reference" href="#WorldCommunicator" title="WorldCommunicator = MpiCommunicator(comm: MPI_COMM_WORLD)">WorldCommunicator</a></li>
 
     </ul>
@@ -145,10 +147,14 @@
 </li>
 <li>
   <details open>
-    <summary><a class="reference reference-toplevel" href="#18" id="68">Templates</a></summary>
+    <summary><a class="reference reference-toplevel" href="#17" id="67">Macros</a></summary>
     <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">mpi
-  <li><a class="reference" href="#mpi.t%2Cuntyped" title="mpi(body: untyped): untyped">mpi(body: untyped): untyped</a></li>
+      <ul class="simple nested-toc-section">echo
+  <li><a class="reference" href="#echo.m%2CMpiCommunicator%2Cvarargs%5Buntyped%5D" title="echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped">echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">mpi
+  <li><a class="reference" href="#mpi.m%2Cuntyped" title="mpi(routine: untyped): untyped">mpi(routine: untyped): untyped</a></li>
 
 </ul>
 
@@ -164,29 +170,31 @@
     <div id="tocRoot"></div>
     
     <p class="module-desc"><p>NiMPI – MPI Wrapper for Nim</p>
-<p>High-level, idiomatic Nim bindings for MPI (Message Passing Interface).</p>
+<p>High-level, idiomatic Nim bindings for Message Passing Interface (MPI). This is a work in progress and not ready for production use. API is subject to change without deprecation.</p>
 
-<h1><a class="toc-backref" id="quick-start" href="#quick-start">Quick Start</a></h1><p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">nimpi</span>
+<h1><a class="toc-backref" id="hello-world" href="#hello-world">Hello World</a></h1><p>The simplest way to use NiMPI is to annotate a block of code with the <tt class="docutils literal"><span class="pre"><span class="Identifier">mpi</span></span></tt> pragma, which wraps the code in an MPI initialization/finalization block:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">nimpi</span>
 
 <span class="Identifier">mpi</span><span class="Punctuation">:</span>
-  <span class="Identifier">echo</span> <span class="StringLit">&quot;Rank: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">myRank</span><span class="Punctuation">(</span><span class="Identifier">WorldCommunicator</span><span class="Punctuation">)</span>
-  <span class="Identifier">echo</span> <span class="StringLit">&quot;Size: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">size</span><span class="Punctuation">(</span><span class="Identifier">WorldCommunicator</span><span class="Punctuation">)</span></pre></p>
+  <span class="Keyword">let</span> <span class="Identifier">rank</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">myRank</span> <span class="Comment"># rank of the calling process</span>
+  <span class="Keyword">let</span> <span class="Identifier">size</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">size</span>   <span class="Comment"># number of ranks in the communicator</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;Hello, world! From: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">rank</span><span class="Punctuation">,</span> <span class="StringLit">&quot;/&quot;</span><span class="Punctuation">,</span> <span class="Identifier">size</span></pre></p>
+<p>Alternatively, one can annotate a procedure with the <tt class="docutils literal"><span class="pre"><span class="Identifier">mpi</span></span></tt> pragma, which wraps the body of the procedure in an MPI initialization/finalization block:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">nimpi</span>
 
-<h1><a class="toc-backref" id="core-types" href="#core-types">Core Types</a></h1><ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt>: Wraps MPI_Comm for safe group communication.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">MpiError</span></span></tt>: Exception raised when MPI operations fail.</li>
-</ul>
+<span class="Keyword">proc</span> <span class="Identifier">main</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">mpi</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span>
+  <span class="Keyword">let</span> <span class="Identifier">rank</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">myRank</span> <span class="Comment"># rank of the calling process</span>
+  <span class="Keyword">let</span> <span class="Identifier">size</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">size</span>   <span class="Comment"># number of ranks in the communicator</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;Hello, world! From: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">rank</span><span class="Punctuation">,</span> <span class="StringLit">&quot;/&quot;</span><span class="Punctuation">,</span> <span class="Identifier">size</span>
+<span class="Identifier">main</span><span class="Punctuation">(</span><span class="Punctuation">)</span></pre></p>
+<p>Both modes of initialization and finalization are functionally equivalent the most verbose means of initializing and finalizing MPI with NiMPI:</p>
+<p><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">nimpi</span>
 
-<h1><a class="toc-backref" id="communicator-operations" href="#communicator-operations">Communicator Operations</a></h1><p>Split, duplicate, and manage MPI communicators:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">split</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>: Create subcommunicators by color/rank.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">duplicate</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>: Clone a communicator.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">size</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">myRank</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>: Query communicator metadata.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">free</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>: Release communicator resources.</li>
-</ul>
-
-<h1><a class="toc-backref" id="initialization-amp-finalization" href="#initialization-amp-finalization">Initialization &amp; Finalization</a></h1><p>Use the <tt class="docutils literal"><span class="pre"><span class="Identifier">mpi</span></span></tt> template to safely initialize/finalize MPI:</p>
-<p><pre class="listing"><span class="Identifier">mpi</span><span class="Punctuation">:</span>
-  <span class="Comment"># MPI_Init and MPI_Finalize called automatically</span>
-  <span class="Keyword">discard</span></pre></p>
+<span class="Identifier">mpiInit</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+<span class="Keyword">let</span> <span class="Identifier">rank</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">myRank</span> <span class="Comment"># rank of the calling process</span>
+<span class="Keyword">let</span> <span class="Identifier">size</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">size</span>   <span class="Comment"># number of ranks in the communicator</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;Hello, world! From: &quot;</span><span class="Punctuation">,</span> <span class="Identifier">rank</span><span class="Punctuation">,</span> <span class="StringLit">&quot;/&quot;</span><span class="Punctuation">,</span> <span class="Identifier">size</span>
+<span class="Identifier">mpiFinalize</span><span class="Punctuation">(</span><span class="Punctuation">)</span></pre></p>
 </p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
@@ -223,13 +231,50 @@
     
   </dd>
 </div>
+<div id="MpiGroup">
+  <dt><pre><a href="#MpiGroup"><span class="Identifier">MpiGroup</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">group</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">mpiwrap</span><span class="Other">.</span><span class="Identifier">MPI_Group</span></pre></dt>
+  <dd>
+    
+    <p>Represents an MPI group, which is an ordered set of processes. MPI groups are used to define the membership of communicators and to specify subsets of processes for communication operations.</p>
+<p>Attributes:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">group</span></span></tt>: The underlying MPI_Group handle that represents the group.</li>
+</ul>
+
+    
+  </dd>
+</div>
 
   </dl>
 </div>
 <div class="section" id="9">
   <h1><a class="toc-backref" href="#9">Lets</a></h1>
   <dl class="item">
-    <div id="SelfCommunicator">
+    <div id="EmptyGroup">
+  <dt><pre><a href="#EmptyGroup"><span class="Identifier">EmptyGroup</span></a> <span class="Other">=</span> <a href="#MpiGroup"><span class="Identifier">MpiGroup</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_GROUP_EMPTY"><span class="Identifier">MPI_GROUP_EMPTY</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    An empty group that contains no processes.
+    
+  </dd>
+</div>
+<div id="NullCommunicator">
+  <dt><pre><a href="#NullCommunicator"><span class="Identifier">NullCommunicator</span></a> <span class="Other">=</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">(</span><span class="Identifier">comm</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_COMM_NULL"><span class="Identifier">MPI_COMM_NULL</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    A null communicator that represents an invalid communicator.
+    
+  </dd>
+</div>
+<div id="NullGroup">
+  <dt><pre><a href="#NullGroup"><span class="Identifier">NullGroup</span></a> <span class="Other">=</span> <a href="#MpiGroup"><span class="Identifier">MpiGroup</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_GROUP_NULL"><span class="Identifier">MPI_GROUP_NULL</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    A null group that represents an invalid group.
+    
+  </dd>
+</div>
+<div id="SelfCommunicator">
   <dt><pre><a href="#SelfCommunicator"><span class="Identifier">SelfCommunicator</span></a> <span class="Other">=</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">(</span><span class="Identifier">comm</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_COMM_SELF"><span class="Identifier">MPI_COMM_SELF</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
@@ -301,7 +346,12 @@
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    
+    <p>Frees communicator</p>
+<p>This routine does not free communicator storage, which is freed only when all references to the communictor are removed.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The communicator to free. </li>
+</ul>
+
     
   </dd>
 </div>
@@ -397,7 +447,15 @@
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    
+    <p>Returns the rank of the calling process within the given communicator.</p>
+<p>Note that ranks are zero-indexed.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: MpiCommunicator object</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple"><li>The rank of the calling process within the communicator.</li>
+</ul>
+
     
   </dd>
 </div>
@@ -409,7 +467,14 @@
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    
+    <p>Returns communicator size (number of ranks in the communicator)</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: MpiCommunicator object</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple"><li>The size of the communicator (number of ranks). </li>
+</ul>
+
     
   </dd>
 </div>
@@ -444,16 +509,37 @@
 
   </dl>
 </div>
-<div class="section" id="18">
-  <h1><a class="toc-backref" href="#18">Templates</a></h1>
+<div class="section" id="17">
+  <h1><a class="toc-backref" href="#17">Macros</a></h1>
   <dl class="item">
-    <div id="mpi-templates-all">
-  <div id="mpi.t,untyped">
-  <dt><pre><span class="Keyword">template</span> <a href="#mpi.t%2Cuntyped"><span class="Identifier">mpi</span></a><span class="Other">(</span><span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+    <div id="echo-macros-all">
+  <div id="echo.m,MpiCommunicator,varargs[untyped]">
+  <dt><pre><span class="Keyword">macro</span> <a href="#echo.m%2CMpiCommunicator%2Cvarargs%5Buntyped%5D"><span class="Identifier">echo</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">message</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">untyped</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
   <dd>
     
-    <p>Encapsulates MPI program in a block that ensures proper initialization and finalization of MPI. Alternative to manual calls to <tt class="docutils literal"><span class="pre"><span class="Identifier">mpiInit</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">mpiFinalize</span></span></tt>.</p>
+    <p>Prints <tt class="docutils literal"><span class="pre"><span class="Identifier">message</span></span></tt> from rank 0 of <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> only. Accepts the same comma-separated arguments as the built-in <tt class="docutils literal"><span class="pre"><span class="Identifier">echo</span></span></tt>.</p>
 <p>Example:</p>
+<p><pre class="listing"><span class="Identifier">WorldCommunicator</span><span class="Operator">.</span><span class="Identifier">echo</span> <span class="StringLit">&quot;rank 0 says hi&quot;</span>
+<span class="Identifier">customComm</span><span class="Operator">.</span><span class="Identifier">echo</span> <span class="StringLit">&quot;size = &quot;</span><span class="Punctuation">,</span> <span class="Identifier">customComm</span><span class="Operator">.</span><span class="Identifier">size</span></pre></p>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="mpi-macros-all">
+  <div id="mpi.m,untyped">
+  <dt><pre><span class="Keyword">macro</span> <a href="#mpi.m%2Cuntyped"><span class="Identifier">mpi</span></a><span class="Other">(</span><span class="Identifier">routine</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+  <dd>
+    
+    <p>MPI dispatch wrapper</p>
+<p>Encapsulates body of code within an MPI initialization/finalization block. Can be used in two ways.</p>
+<p>The first is as a pragma that wraps a procedure body:</p>
+<p><pre class="listing"><span class="Keyword">proc</span> <span class="Identifier">program</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Punctuation">{</span><span class="Operator">.</span><span class="Identifier">mpi</span><span class="Operator">.</span><span class="Punctuation">}</span> <span class="Operator">=</span>
+  <span class="Keyword">let</span> <span class="Identifier">comm</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;Hello from process &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">myRank</span><span class="Punctuation">,</span> <span class="StringLit">&quot; of &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">size</span>
+<span class="Identifier">program</span><span class="Punctuation">(</span><span class="Punctuation">)</span></pre></p>
+<p>The second is as a code injection template that wraps arbitrary code:</p>
 <p><pre class="listing"><span class="Identifier">mpi</span><span class="Punctuation">:</span>
   <span class="Keyword">let</span> <span class="Identifier">comm</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span>
   <span class="Identifier">echo</span> <span class="StringLit">&quot;Hello from process &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">myRank</span><span class="Punctuation">,</span> <span class="StringLit">&quot; of &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">size</span></pre></p>
@@ -473,7 +559,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 13:10:05 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 15:08:02 UTC</small>
       </div>
     </div>
   </div>

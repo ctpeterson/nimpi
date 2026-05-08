@@ -37,13 +37,21 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc duplicate(communicator: MpiCommunicator): MpiCommunicator" href="nimpi/mpi.html#duplicate%2CMpiCommunicator">mpi: proc duplicate(communicator: MpiCommunicator): MpiCommunicator</a></li>
           </ul></dd>
+<dt><a name="echo" href="#echo"><span>echo:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped" href="nimpi/mpi.html#echo.m%2CMpiCommunicator%2Cvarargs%5Buntyped%5D">mpi: macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped</a></li>
+          </ul></dd>
+<dt><a name="EmptyGroup" href="#EmptyGroup"><span>EmptyGroup:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: let EmptyGroup" href="nimpi/mpi.html#EmptyGroup">mpi: let EmptyGroup</a></li>
+          </ul></dd>
 <dt><a name="free" href="#free"><span>free:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc free(communicator: var MpiCommunicator)" href="nimpi/mpi.html#free%2CMpiCommunicator">mpi: proc free(communicator: var MpiCommunicator)</a></li>
           </ul></dd>
 <dt><a name="mpi" href="#mpi"><span>mpi:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mpi: template mpi(body: untyped): untyped" href="nimpi/mpi.html#mpi.t%2Cuntyped">mpi: template mpi(body: untyped): untyped</a></li>
+          data-doc-search-tag="mpi: macro mpi(routine: untyped): untyped" href="nimpi/mpi.html#mpi.m%2Cuntyped">mpi: macro mpi(routine: untyped): untyped</a></li>
           </ul></dd>
 <dt><a name="MPI_2INT" href="#MPI_2INT"><span>MPI_2INT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -121,9 +129,9 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Comm_create%2CMPI_Comm%2CMPI_Group%2Cptr.MPI_Comm">mpiwrap: proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint</a></li>
           </ul></dd>
-<dt><a name="MPI_comm_dup" href="#MPI_comm_dup"><span>MPI_comm_dup:</span></a></dt><dd><ul class="simple">
+<dt><a name="MPI_Comm_dup" href="#MPI_Comm_dup"><span>MPI_Comm_dup:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mpiwrap: proc MPI_comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_comm_dup%2CMPI_Comm%2Cptr.MPI_Comm">mpiwrap: proc MPI_comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint</a></li>
+          data-doc-search-tag="mpiwrap: proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Comm_dup%2CMPI_Comm%2Cptr.MPI_Comm">mpiwrap: proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_Comm_free" href="#MPI_Comm_free"><span>MPI_Comm_free:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -332,6 +340,10 @@
 <dt><a name="MPI_GRAPH" href="#MPI_GRAPH"><span>MPI_GRAPH:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_GRAPH" href="nimpi/mpiwrap.html#MPI_GRAPH">mpiwrap: var MPI_GRAPH</a></li>
+          </ul></dd>
+<dt><a name="MpiGroup" href="#MpiGroup"><span>MpiGroup:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: object MpiGroup" href="nimpi/mpi.html#MpiGroup">mpi: object MpiGroup</a></li>
           </ul></dd>
 <dt><a name="MPI_Group" href="#MPI_Group"><span>MPI_Group:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -653,6 +665,14 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc myRank(communicator: MpiCommunicator): int" href="nimpi/mpi.html#myRank%2CMpiCommunicator">mpi: proc myRank(communicator: MpiCommunicator): int</a></li>
           </ul></dd>
+<dt><a name="NullCommunicator" href="#NullCommunicator"><span>NullCommunicator:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: let NullCommunicator" href="nimpi/mpi.html#NullCommunicator">mpi: let NullCommunicator</a></li>
+          </ul></dd>
+<dt><a name="NullGroup" href="#NullGroup"><span>NullGroup:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: let NullGroup" href="nimpi/mpi.html#NullGroup">mpi: let NullGroup</a></li>
+          </ul></dd>
 <dt><a name="SelfCommunicator" href="#SelfCommunicator"><span>SelfCommunicator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: let SelfCommunicator" href="nimpi/mpi.html#SelfCommunicator">mpi: let SelfCommunicator</a></li>
@@ -673,7 +693,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 13:10:05 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 15:08:02 UTC</small>
       </div>
     </div>
   </div>

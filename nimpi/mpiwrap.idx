@@ -135,7 +135,7 @@ nim	MPI_Wtick	nimpi/mpiwrap.html#MPI_Wtick	proc MPI_Wtick(): cdouble		242
 nim	MPI_Abort	nimpi/mpiwrap.html#MPI_Abort,MPI_Comm,cint	proc MPI_Abort(comm: MPI_Comm; errorcode: cint): cint		246
 nim	MPI_Comm_rank	nimpi/mpiwrap.html#MPI_Comm_rank,MPI_Comm,ptr.cint	proc MPI_Comm_rank(comm: MPI_Comm; rank: ptr cint): cint		248
 nim	MPI_Comm_size	nimpi/mpiwrap.html#MPI_Comm_size,MPI_Comm,ptr.cint	proc MPI_Comm_size(comm: MPI_Comm; size: ptr cint): cint		250
-nim	MPI_comm_dup	nimpi/mpiwrap.html#MPI_comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		252
+nim	MPI_Comm_dup	nimpi/mpiwrap.html#MPI_Comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		252
 nim	MPI_Comm_split	nimpi/mpiwrap.html#MPI_Comm_split,MPI_Comm,cint,cint,ptr.MPI_Comm	proc MPI_Comm_split(comm: MPI_Comm; color: cint; key: cint; newcomm: ptr MPI_Comm): cint		254
 nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_free(comm: ptr MPI_Comm): cint		261
 nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		263
