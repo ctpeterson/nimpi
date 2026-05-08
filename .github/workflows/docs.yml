@@ -15,27 +15,18 @@ jobs:
       - uses: jiro4989/setup-nim-action@v1
         with:
           nim-version: stable
-      - run: nim doc --project --outdir=docs/html src/nimpi/mpi.nim
+      - run: nim doc --project --outdir=docs/html src/nimpi.nim
       - name: Ensure Pages entrypoint
         run: |
           set -euo pipefail
           test -d docs/html
-          target=""
-          for candidate in \
-            "mpi.html" \
-            "nimpi/mpi.html" \
-            "nimpi_mpi.html" \
-            "theindex.html" \
-            "nimpi.html"; do
-            if [ -f "docs/html/$candidate" ]; then
-              target="$candidate"
-              break
-            fi
-          done
-
-          if [ -z "$target" ]; then
-            echo "No suitable landing page generated in docs/html"
-            find docs/html -maxdepth 2 -type f -name '*.html' | sort
+          target="nimpi/mpi.html"
+          if [ ! -f "docs/html/$target" ] && [ -f "docs/html/mpi.html" ]; then
+            target="mpi.html"
+          fi
+          if [ ! -f "docs/html/$target" ]; then
+            echo "Expected module page not found: docs/html/nimpi/mpi.html or docs/html/mpi.html"
+            find docs/html -maxdepth 3 -type f -name '*.html' | sort
             exit 1
           fi
 
