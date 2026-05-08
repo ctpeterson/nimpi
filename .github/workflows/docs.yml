@@ -15,16 +15,16 @@ jobs:
       - uses: jiro4989/setup-nim-action@v1
         with:
           nim-version: stable
-      - run: nim doc --project --outdir=docs/html src/nimpi.nim
+      - run: nim doc --project --outdir=docs/html src/nimpi/mpi.nim
       - name: Ensure Pages entrypoint
         run: |
           set -euo pipefail
           test -d docs/html
           target=""
           for candidate in \
+            "mpi.html" \
             "nimpi/mpi.html" \
             "nimpi_mpi.html" \
-            "mpi.html" \
             "theindex.html" \
             "nimpi.html"; do
             if [ -f "docs/html/$candidate" ]; then
