@@ -307,9 +307,28 @@ proc MPI_Comm_compare*(
 
 proc MPI_Comm_group*(comm: MPI_Comm, group: ptr MPI_Group): cint {.cdecl, mpi.}
 
+proc MPI_Barrier*(comm: MPI_Comm): cint {.cdecl, mpi.}
 
+#[ MPI send/recv ]#
 
+proc MPI_Send*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
 
+proc MPI_Recv*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  source: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
 
 
 

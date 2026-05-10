@@ -180,6 +180,43 @@ proc mpiFinalized*: bool =
   mpiCheck MPI_Finalized(addr flag)
   return flag != 0
 
+#[ MPI type converter ]#
+
+proc mpiType*(T: typedesc): MPI_Datatype =
+  ## Converts a Nim type to the corresponding MPI datatype. This is used for 
+  ## specifying the datatype in MPI communication operations.
+  ## 
+  ## Parameters:
+  ##  - `T`: The Nim type to convert to an MPI datatype.
+  ##
+  ## Returns:
+  ##  - The corresponding `MPI_Datatype` for the given Nim type.\
+  when T is int8:    MPI_INT8_T
+  elif T is int16:   MPI_INT16_T
+  elif T is int32:   MPI_INT32_T
+  elif T is int64:   MPI_INT64_T
+  elif T is uint8:   MPI_UINT8_T
+  elif T is uint16:  MPI_UINT16_T
+  elif T is uint32:  MPI_UINT32_T
+  elif T is uint64:  MPI_UINT64_T
+  elif T is float32: MPI_FLOAT
+  elif T is float64: MPI_DOUBLE
+  elif T is cint:    MPI_INT
+  elif T is cchar:   MPI_CHAR
+  elif T is char:    MPI_CHAR
+  elif T is byte:    MPI_BYTE
+  elif T is int:
+    when sizeof(int) == 4: MPI_INT32_T
+    else:                  MPI_INT64_T
+  elif T is uint:
+    when sizeof(uint) == 4: MPI_UINT32_T
+    else:                   MPI_UINT64_T
+  elif T is float:
+    when sizeof(float) == 4: MPI_FLOAT
+    else:                    MPI_DOUBLE
+  else:
+    {.error: "No MPI_Datatype mapping for " & $T.}
+
 #[ timers ]#
 
 proc mpiWallTime*: float64 = 
@@ -218,8 +255,7 @@ proc newMpiGroup*(ranks: seq[int]): MpiGroup =
   ##  - An `MpiGroup` object representing the new group that includes the specified ranks.
   var group: mpiwrap.MPI_Group
   var cRanks = newSeq[cint](ranks.len)
-  for i in 0..<ranks.len:
-    cRanks[i] = cint(ranks[i])
+  for i in 0..<ranks.len: cRanks[i] = cint(ranks[i])
   mpiCheck MPI_Group_incl(WorldCommunicator.group.group, cint(ranks.len), addr cRanks[0], addr group)
   return MpiGroup(group: group)
 
@@ -234,8 +270,7 @@ proc newMpiGroup*(group: MpiGroup; ranks: seq[int]): MpiGroup =
   ##  - An `MpiGroup` object representing the new group that includes the specified ranks.
   var newGroup: mpiwrap.MPI_Group
   var cRanks = newSeq[cint](ranks.len)
-  for i in 0..<ranks.len:
-    cRanks[i] = cint(ranks[i])
+  for i in 0..<ranks.len: cRanks[i] = cint(ranks[i])
   mpiCheck MPI_Group_incl(group.group, cint(ranks.len), addr cRanks[0], addr newGroup)
   return MpiGroup(group: newGroup)
 
@@ -445,7 +480,7 @@ proc free*(communicator: var MpiCommunicator) =
   ##  - `communicator`: The communicator to free. 
   mpiCheck MPI_Comm_free(addr communicator.comm)
 
-proc size*(communicator: MpiCommunicator): int =
+proc size*(communicator: MpiCommunicator = WorldCommunicator): int =
   ## Returns communicator size (number of ranks in the communicator)
   ## 
   ## Parameters:
@@ -457,7 +492,7 @@ proc size*(communicator: MpiCommunicator): int =
   mpiCheck MPI_Comm_size(communicator.comm, addr size)
   return int(size)
 
-proc myRank*(communicator: MpiCommunicator): int =
+proc myRank*(communicator: MpiCommunicator = WorldCommunicator): int =
   ## Returns the rank of the calling process within the given communicator.
   ## 
   ## Note that ranks are zero-indexed.
@@ -471,6 +506,22 @@ proc myRank*(communicator: MpiCommunicator): int =
   mpiCheck MPI_Comm_rank(communicator.comm, addr rank)
   return int(rank)
 
+proc mpiBarrier*(communicator: MpiCommunicator = WorldCommunicator) =
+  ## Blocks until all processes in the communicator have reached this routine. 
+  ## This is a collective operation that synchronizes all processes in the communicator.
+  ##
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` for which to perform the barrier operation.
+  ##
+  ## Example:
+  ## ```nim
+  ## let comm = WorldCommunicator
+  ## echo "Process ", comm.myRank, " before barrier"
+  ## comm.mpiBarrier()
+  ## echo "Process ", comm.myRank, " after barrier"
+  ## ```
+  mpiCheck MPI_Barrier(communicator.comm)
+
 macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
   ## Prints `message` from rank 0 of `communicator` only.
   ## Accepts the same comma-separated arguments as the built-in `echo`.
@@ -482,6 +533,128 @@ macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
   ## ```
   result = quote do:
     if `communicator`.myRank == 0: echo `message`
+
+#[ point-to-point communication: blocking ]#
+
+proc send*[T](
+  communicator: MpiCommunicator;
+  buffer: openArray[T];
+  dest: int;
+  tag: int = 0
+) = mpiCheck MPI_Send(
+  addr buffer[0], 
+  cint(buffer.len), 
+  mpiType(T), 
+  cint(dest), 
+  cint(tag), 
+  communicator.comm
+)
+
+proc send*[T](buffer: openArray[T]; dest: int; tag: int = 0) =
+  ## Sends `buffer` to the process with rank `dest` in `WorldCommunicator` using `MPI_Send`.
+  ## 
+  ## Parameters:
+  ##  - `buffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  WorldCommunicator.send(buffer, dest, tag)
+
+proc send*[T: not (array or seq)](
+  communicator: MpiCommunicator; 
+  data: var T; 
+  dest: int; 
+  tag: int = 0
+) =
+  ## Sends scalar `data` to the process with rank `dest` in `communicator` using `MPI_Send`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for sending.
+  ##  - `data`: The scalar data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  mpiCheck MPI_Send(
+    addr data, 
+    1, 
+    mpiType(T), 
+    cint(dest), 
+    cint(tag), 
+    communicator.comm
+  )
+
+proc send*[T: not (array or seq)](data: var T; dest: int; tag: int = 0) =
+  ## Sends scalar `data` to the process with rank `dest` in `WorldCommunicator` using `MPI_Send`.
+  ## 
+  ## Parameters:
+  ##  - `data`: The scalar data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  WorldCommunicator.send(data, dest, tag)
+
+proc receive*[T](
+  communicator: MpiCommunicator; 
+  buffer: var openArray[T]; 
+  source: int; 
+  tag: int = 0
+) =
+  ## Receives data into `buffer` from the process with rank `source` in `communicator` using `MPI_Recv`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for receiving.
+  ##  - `buffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  var status: MPI_Status
+  mpiCheck MPI_Recv(
+    addr buffer[0], 
+    cint(buffer.len), 
+    mpiType(T), 
+    cint(source), 
+    cint(tag), 
+    communicator.comm, 
+    addr status
+  )
+
+proc receive*[T](buffer: var openArray[T]; source: int; tag: int = 0) =
+  ## Receives data into `buffer` from the process with rank `source` in `WorldCommunicator` using `MPI_Recv`.
+  ## 
+  ## Parameters:
+  ##  - `buffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  WorldCommunicator.receive(buffer, source, tag)
+
+proc receive*[T: not (array or seq)](
+  communicator: MpiCommunicator; 
+  data: var T; 
+  source: int; 
+  tag: int = 0
+) =
+  ## Receives scalar data into `data` from the process with rank `source` in `communicator` using `MPI_Recv`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for receiving.
+  ##  - `data`: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  var status: MPI_Status
+  mpiCheck MPI_Recv(
+    addr data, 
+    1, 
+    mpiType(T), 
+    cint(source), 
+    cint(tag), 
+    communicator.comm, 
+    addr status
+  )
+
+proc receive*[T: not (array or seq)](data: var T; source: int; tag: int = 0) =
+  ## Receives scalar data into `data` from the process with rank `source` in `WorldCommunicator` using `MPI_Recv`.
+  ## 
+  ## Parameters:
+  ##  - `data`: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  WorldCommunicator.receive(data, source, tag)
 
 #[ MPI dispatch wrappers ]#
 
