@@ -7,19 +7,35 @@ nim	SelfCommunicator	nimpi/mpi.html#SelfCommunicator	let SelfCommunicator		124
 nim	NullCommunicator	nimpi/mpi.html#NullCommunicator	let NullCommunicator		127
 nim	NullGroup	nimpi/mpi.html#NullGroup	let NullGroup		131
 nim	EmptyGroup	nimpi/mpi.html#EmptyGroup	let EmptyGroup		134
-nim	mpiAssert	nimpi/mpi.html#mpiAssert,cint	proc mpiAssert(code: cint)		139
+nim	mpiCheck	nimpi/mpi.html#mpiCheck,cint	proc mpiCheck(code: cint)		139
 nim	mpiInit	nimpi/mpi.html#mpiInit	proc mpiInit()		163
 nim	mpiFinalize	nimpi/mpi.html#mpiFinalize	proc mpiFinalize()		167
 nim	mpiInitialized	nimpi/mpi.html#mpiInitialized	proc mpiInitialized(): bool		171
 nim	mpiFinalized	nimpi/mpi.html#mpiFinalized	proc mpiFinalized(): bool		177
 nim	mpiWallTime	nimpi/mpi.html#mpiWallTime	proc mpiWallTime(): float64		185
 nim	mpiWallTick	nimpi/mpi.html#mpiWallTick	proc mpiWallTick(): float64		192
-nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		223
-nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		242
-nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		270
-nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		285
-nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator): int		295
-nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator): int		307
-nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		321
-nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		335
+nim	group	nimpi/mpi.html#group,MpiCommunicator	proc group(communicator: MpiCommunicator): MpiGroup		199
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,seq[int]	proc newMpiGroup(ranks: seq[int]): MpiGroup		211
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,MpiGroup,seq[int]	proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup		226
+nim	size	nimpi/mpi.html#size,MpiGroup	proc size(group: MpiGroup): int		242
+nim	myRank	nimpi/mpi.html#myRank,MpiGroup	proc myRank(group: MpiGroup): int		254
+nim	free	nimpi/mpi.html#free,MpiGroup	proc free(group: var MpiGroup)		266
+nim	`+`	nimpi/mpi.html#+,MpiGroup,MpiGroup	proc `+`(group1, group2: MpiGroup): MpiGroup		275
+nim	`*`	nimpi/mpi.html#*,MpiGroup,MpiGroup	proc `*`(group1, group2: MpiGroup): MpiGroup		295
+nim	`-`	nimpi/mpi.html#-,MpiGroup,MpiGroup	proc `-`(group1, group2: MpiGroup): MpiGroup		315
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiCommunicator,MpiGroup	proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator		361
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiGroup	proc newMpiCommunicator(group: MpiGroup): MpiCommunicator		370
+nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		376
+nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		395
+nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		423
+nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		438
+nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator): int		448
+nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator): int		460
+nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		474
+nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		488
+nimgrp	newmpicommunicator	nimpi/mpi.html#newMpiCommunicator-procs-all	proc		361
+nimgrp	free	nimpi/mpi.html#free-procs-all	proc		266
+nimgrp	size	nimpi/mpi.html#size-procs-all	proc		242
+nimgrp	newmpigroup	nimpi/mpi.html#newMpiGroup-procs-all	proc		211
+nimgrp	myrank	nimpi/mpi.html#myRank-procs-all	proc		254
 heading	Hello World	nimpi/mpi.html#hello-world	 Hello World		0

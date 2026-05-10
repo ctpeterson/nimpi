@@ -248,6 +248,40 @@
   <li><a class="reference" href="#MPI_Finalized%2Cptr.cint" title="MPI_Finalized(flag: ptr cint): cint">MPI_Finalized(flag: ptr cint): cint</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">MPI_Group_difference
+  <li><a class="reference" href="#MPI_Group_difference%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group" title="MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;
+                     newgroup: ptr MPI_Group): cint">MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;
+                     newgroup: ptr MPI_Group): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_free
+  <li><a class="reference" href="#MPI_Group_free%2Cptr.MPI_Group" title="MPI_Group_free(group: ptr MPI_Group): cint">MPI_Group_free(group: ptr MPI_Group): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_incl
+  <li><a class="reference" href="#MPI_Group_incl%2CMPI_Group%2Ccint%2Cptr.cint%2Cptr.MPI_Group" title="MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;
+               newgroup: ptr MPI_Group): cint">MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;
+               newgroup: ptr MPI_Group): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_intersection
+  <li><a class="reference" href="#MPI_Group_intersection%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group" title="MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;
+                       newgroup: ptr MPI_Group): cint">MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;
+                       newgroup: ptr MPI_Group): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_rank
+  <li><a class="reference" href="#MPI_Group_rank%2CMPI_Group%2Cptr.cint" title="MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint">MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_size
+  <li><a class="reference" href="#MPI_Group_size%2CMPI_Group%2Cptr.cint" title="MPI_Group_size(group: MPI_Group; size: ptr cint): cint">MPI_Group_size(group: MPI_Group; size: ptr cint): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Group_union
+  <li><a class="reference" href="#MPI_Group_union%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group" title="MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint">MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">MPI_Init
   <li><a class="reference" href="#MPI_Init%2Cptr.cint%2Cptr.cstringArray" title="MPI_Init(argc: ptr cint; argv: ptr cstringArray): cint">MPI_Init(argc: ptr cint; argv: ptr cstringArray): cint</a></li>
 
@@ -1445,6 +1479,94 @@
 </div>
 
 </div>
+<div id="MPI_Group_difference-procs-all">
+  <div id="MPI_Group_difference,MPI_Group,MPI_Group,ptr.MPI_Group">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_difference%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_difference</span></a><span class="Other">(</span><span class="Identifier">group1</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">group2</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span>
+                          <span class="Identifier">newgroup</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_free-procs-all">
+  <div id="MPI_Group_free,ptr.MPI_Group">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_free%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_free</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_incl-procs-all">
+  <div id="MPI_Group_incl,MPI_Group,cint,ptr.cint,ptr.MPI_Group">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_incl%2CMPI_Group%2Ccint%2Cptr.cint%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_incl</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">n</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">ranks</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">;</span>
+                    <span class="Identifier">newgroup</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_intersection-procs-all">
+  <div id="MPI_Group_intersection,MPI_Group,MPI_Group,ptr.MPI_Group">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_intersection%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_intersection</span></a><span class="Other">(</span><span class="Identifier">group1</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">group2</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span>
+                            <span class="Identifier">newgroup</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_rank-procs-all">
+  <div id="MPI_Group_rank,MPI_Group,ptr.cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_rank%2CMPI_Group%2Cptr.cint"><span class="Identifier">MPI_Group_rank</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">rank</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_size-procs-all">
+  <div id="MPI_Group_size,MPI_Group,ptr.cint">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_size%2CMPI_Group%2Cptr.cint"><span class="Identifier">MPI_Group_size</span></a><span class="Other">(</span><span class="Identifier">group</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Group_union-procs-all">
+  <div id="MPI_Group_union,MPI_Group,MPI_Group,ptr.MPI_Group">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_union%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_union</span></a><span class="Other">(</span><span class="Identifier">group1</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">group2</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span>
+                     <span class="Identifier">newgroup</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="MPI_Init-procs-all">
   <div id="MPI_Init,ptr.cint,ptr.cstringArray">
   <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Init%2Cptr.cint%2Cptr.cstringArray"><span class="Identifier">MPI_Init</span></a><span class="Other">(</span><span class="Identifier">argc</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">argv</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">cstringArray</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
@@ -1503,7 +1625,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 15:08:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 16:28:54 UTC</small>
       </div>
     </div>
   </div>

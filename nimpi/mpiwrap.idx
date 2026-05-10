@@ -132,12 +132,19 @@ nim	MPI_Finalized	nimpi/mpiwrap.html#MPI_Finalized,ptr.cint	proc MPI_Finalized(f
 nim	MPI_Error_string	nimpi/mpiwrap.html#MPI_Error_string,cint,cstring,ptr.cint	proc MPI_Error_string(code: cint; str: cstring; resultlen: ptr cint): cint		232
 nim	MPI_Wtime	nimpi/mpiwrap.html#MPI_Wtime	proc MPI_Wtime(): cdouble		240
 nim	MPI_Wtick	nimpi/mpiwrap.html#MPI_Wtick	proc MPI_Wtick(): cdouble		242
-nim	MPI_Abort	nimpi/mpiwrap.html#MPI_Abort,MPI_Comm,cint	proc MPI_Abort(comm: MPI_Comm; errorcode: cint): cint		246
-nim	MPI_Comm_rank	nimpi/mpiwrap.html#MPI_Comm_rank,MPI_Comm,ptr.cint	proc MPI_Comm_rank(comm: MPI_Comm; rank: ptr cint): cint		248
-nim	MPI_Comm_size	nimpi/mpiwrap.html#MPI_Comm_size,MPI_Comm,ptr.cint	proc MPI_Comm_size(comm: MPI_Comm; size: ptr cint): cint		250
-nim	MPI_Comm_dup	nimpi/mpiwrap.html#MPI_Comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		252
-nim	MPI_Comm_split	nimpi/mpiwrap.html#MPI_Comm_split,MPI_Comm,cint,cint,ptr.MPI_Comm	proc MPI_Comm_split(comm: MPI_Comm; color: cint; key: cint; newcomm: ptr MPI_Comm): cint		254
-nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_free(comm: ptr MPI_Comm): cint		261
-nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		263
-nim	MPI_Comm_compare	nimpi/mpiwrap.html#MPI_Comm_compare,MPI_Comm,MPI_Comm,ptr.cint	proc MPI_Comm_compare(comm1: MPI_Comm; comm2: MPI_Comm; result: ptr cint): cint		269
-nim	MPI_Comm_group	nimpi/mpiwrap.html#MPI_Comm_group,MPI_Comm,ptr.MPI_Group	proc MPI_Comm_group(comm: MPI_Comm; group: ptr MPI_Group): cint		275
+nim	MPI_Group_incl	nimpi/mpiwrap.html#MPI_Group_incl,MPI_Group,cint,ptr.cint,ptr.MPI_Group	proc MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;\n               newgroup: ptr MPI_Group): cint		246
+nim	MPI_Group_rank	nimpi/mpiwrap.html#MPI_Group_rank,MPI_Group,ptr.cint	proc MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint		253
+nim	MPI_Group_size	nimpi/mpiwrap.html#MPI_Group_size,MPI_Group,ptr.cint	proc MPI_Group_size(group: MPI_Group; size: ptr cint): cint		255
+nim	MPI_Group_free	nimpi/mpiwrap.html#MPI_Group_free,ptr.MPI_Group	proc MPI_Group_free(group: ptr MPI_Group): cint		257
+nim	MPI_Group_union	nimpi/mpiwrap.html#MPI_Group_union,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint		259
+nim	MPI_Group_intersection	nimpi/mpiwrap.html#MPI_Group_intersection,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;\n                       newgroup: ptr MPI_Group): cint		265
+nim	MPI_Group_difference	nimpi/mpiwrap.html#MPI_Group_difference,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;\n                     newgroup: ptr MPI_Group): cint		271
+nim	MPI_Abort	nimpi/mpiwrap.html#MPI_Abort,MPI_Comm,cint	proc MPI_Abort(comm: MPI_Comm; errorcode: cint): cint		279
+nim	MPI_Comm_rank	nimpi/mpiwrap.html#MPI_Comm_rank,MPI_Comm,ptr.cint	proc MPI_Comm_rank(comm: MPI_Comm; rank: ptr cint): cint		281
+nim	MPI_Comm_size	nimpi/mpiwrap.html#MPI_Comm_size,MPI_Comm,ptr.cint	proc MPI_Comm_size(comm: MPI_Comm; size: ptr cint): cint		283
+nim	MPI_Comm_dup	nimpi/mpiwrap.html#MPI_Comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		285
+nim	MPI_Comm_split	nimpi/mpiwrap.html#MPI_Comm_split,MPI_Comm,cint,cint,ptr.MPI_Comm	proc MPI_Comm_split(comm: MPI_Comm; color: cint; key: cint; newcomm: ptr MPI_Comm): cint		287
+nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_free(comm: ptr MPI_Comm): cint		294
+nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		296
+nim	MPI_Comm_compare	nimpi/mpiwrap.html#MPI_Comm_compare,MPI_Comm,MPI_Comm,ptr.cint	proc MPI_Comm_compare(comm1: MPI_Comm; comm2: MPI_Comm; result: ptr cint): cint		302
+nim	MPI_Comm_group	nimpi/mpiwrap.html#MPI_Comm_group,MPI_Comm,ptr.MPI_Group	proc MPI_Comm_group(comm: MPI_Comm; group: ptr MPI_Group): cint		308

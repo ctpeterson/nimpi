@@ -29,7 +29,19 @@
     <div class="container">
       <h1 class="title">Index</h1>
       Modules: <a href="nimpi.html">nimpi</a>, <a href="nimpi/mpi.html">nimpi/mpi</a>, <a href="nimpi/mpiwrap.html">nimpi/mpiwrap</a>.<br/><p /><h2>API symbols</h2>
-<dl><dt><a name="abort" href="#abort"><span>abort:</span></a></dt><dd><ul class="simple">
+<dl><dt><a name="%60%2A%60" href="#%60%2A%60"><span>`*`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc `*`(group1, group2: MpiGroup): MpiGroup" href="nimpi/mpi.html#%2A%2CMpiGroup%2CMpiGroup">mpi: proc `*`(group1, group2: MpiGroup): MpiGroup</a></li>
+          </ul></dd>
+<dt><a name="%60%2B%60" href="#%60%2B%60"><span>`+`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc `+`(group1, group2: MpiGroup): MpiGroup" href="nimpi/mpi.html#%2B%2CMpiGroup%2CMpiGroup">mpi: proc `+`(group1, group2: MpiGroup): MpiGroup</a></li>
+          </ul></dd>
+<dt><a name="%60-%60" href="#%60-%60"><span>`-`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc `-`(group1, group2: MpiGroup): MpiGroup" href="nimpi/mpi.html#-%2CMpiGroup%2CMpiGroup">mpi: proc `-`(group1, group2: MpiGroup): MpiGroup</a></li>
+          </ul></dd>
+<dt><a name="abort" href="#abort"><span>abort:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc abort(communicator: MpiCommunicator; errorcode: int = 1)" href="nimpi/mpi.html#abort%2CMpiCommunicator%2Cint">mpi: proc abort(communicator: MpiCommunicator; errorcode: int = 1)</a></li>
           </ul></dd>
@@ -48,6 +60,12 @@
 <dt><a name="free" href="#free"><span>free:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc free(communicator: var MpiCommunicator)" href="nimpi/mpi.html#free%2CMpiCommunicator">mpi: proc free(communicator: var MpiCommunicator)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc free(group: var MpiGroup)" href="nimpi/mpi.html#free%2CMpiGroup">mpi: proc free(group: var MpiGroup)</a></li>
+          </ul></dd>
+<dt><a name="group" href="#group"><span>group:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc group(communicator: MpiCommunicator): MpiGroup" href="nimpi/mpi.html#group%2CMpiCommunicator">mpi: proc group(communicator: MpiCommunicator): MpiGroup</a></li>
           </ul></dd>
 <dt><a name="mpi" href="#mpi"><span>mpi:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -68,10 +86,6 @@
 <dt><a name="MPI_ANY_SOURCE" href="#MPI_ANY_SOURCE"><span>MPI_ANY_SOURCE:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_ANY_SOURCE" href="nimpi/mpiwrap.html#MPI_ANY_SOURCE">mpiwrap: var MPI_ANY_SOURCE</a></li>
-          </ul></dd>
-<dt><a name="mpiAssert" href="#mpiAssert"><span>mpiAssert:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="mpi: proc mpiAssert(code: cint)" href="nimpi/mpi.html#mpiAssert%2Ccint">mpi: proc mpiAssert(code: cint)</a></li>
           </ul></dd>
 <dt><a name="MPI_BAND" href="#MPI_BAND"><span>MPI_BAND:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -116,6 +130,10 @@
 <dt><a name="MPI_CHAR" href="#MPI_CHAR"><span>MPI_CHAR:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_CHAR" href="nimpi/mpiwrap.html#MPI_CHAR">mpiwrap: var MPI_CHAR</a></li>
+          </ul></dd>
+<dt><a name="mpiCheck" href="#mpiCheck"><span>mpiCheck:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc mpiCheck(code: cint)" href="nimpi/mpi.html#mpiCheck%2Ccint">mpi: proc mpiCheck(code: cint)</a></li>
           </ul></dd>
 <dt><a name="MPI_Comm" href="#MPI_Comm"><span>MPI_Comm:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -349,13 +367,47 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: object MPI_Group" href="nimpi/mpiwrap.html#MPI_Group">mpiwrap: object MPI_Group</a></li>
           </ul></dd>
+<dt><a name="MPI_Group_difference" href="#MPI_Group_difference"><span>MPI_Group_difference:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;
+                     newgroup: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_difference%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;
+                     newgroup: ptr MPI_Group): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_GROUP_EMPTY" href="#MPI_GROUP_EMPTY"><span>MPI_GROUP_EMPTY:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_GROUP_EMPTY" href="nimpi/mpiwrap.html#MPI_GROUP_EMPTY">mpiwrap: var MPI_GROUP_EMPTY</a></li>
           </ul></dd>
+<dt><a name="MPI_Group_free" href="#MPI_Group_free"><span>MPI_Group_free:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_free(group: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_free%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_free(group: ptr MPI_Group): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Group_incl" href="#MPI_Group_incl"><span>MPI_Group_incl:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;
+               newgroup: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_incl%2CMPI_Group%2Ccint%2Cptr.cint%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;
+               newgroup: ptr MPI_Group): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Group_intersection" href="#MPI_Group_intersection"><span>MPI_Group_intersection:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;
+                       newgroup: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_intersection%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;
+                       newgroup: ptr MPI_Group): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_GROUP_NULL" href="#MPI_GROUP_NULL"><span>MPI_GROUP_NULL:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_GROUP_NULL" href="nimpi/mpiwrap.html#MPI_GROUP_NULL">mpiwrap: var MPI_GROUP_NULL</a></li>
+          </ul></dd>
+<dt><a name="MPI_Group_rank" href="#MPI_Group_rank"><span>MPI_Group_rank:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint" href="nimpi/mpiwrap.html#MPI_Group_rank%2CMPI_Group%2Cptr.cint">mpiwrap: proc MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Group_size" href="#MPI_Group_size"><span>MPI_Group_size:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_size(group: MPI_Group; size: ptr cint): cint" href="nimpi/mpiwrap.html#MPI_Group_size%2CMPI_Group%2Cptr.cint">mpiwrap: proc MPI_Group_size(group: MPI_Group; size: ptr cint): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Group_union" href="#MPI_Group_union"><span>MPI_Group_union:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_union%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_IDENT" href="#MPI_IDENT"><span>MPI_IDENT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -664,6 +716,20 @@
 <dt><a name="myRank" href="#myRank"><span>myRank:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc myRank(communicator: MpiCommunicator): int" href="nimpi/mpi.html#myRank%2CMpiCommunicator">mpi: proc myRank(communicator: MpiCommunicator): int</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc myRank(group: MpiGroup): int" href="nimpi/mpi.html#myRank%2CMpiGroup">mpi: proc myRank(group: MpiGroup): int</a></li>
+          </ul></dd>
+<dt><a name="newMpiCommunicator" href="#newMpiCommunicator"><span>newMpiCommunicator:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator" href="nimpi/mpi.html#newMpiCommunicator%2CMpiCommunicator%2CMpiGroup">mpi: proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc newMpiCommunicator(group: MpiGroup): MpiCommunicator" href="nimpi/mpi.html#newMpiCommunicator%2CMpiGroup">mpi: proc newMpiCommunicator(group: MpiGroup): MpiCommunicator</a></li>
+          </ul></dd>
+<dt><a name="newMpiGroup" href="#newMpiGroup"><span>newMpiGroup:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup" href="nimpi/mpi.html#newMpiGroup%2CMpiGroup%2Cseq%5Bint%5D">mpi: proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc newMpiGroup(ranks: seq[int]): MpiGroup" href="nimpi/mpi.html#newMpiGroup%2Cseq%5Bint%5D">mpi: proc newMpiGroup(ranks: seq[int]): MpiGroup</a></li>
           </ul></dd>
 <dt><a name="NullCommunicator" href="#NullCommunicator"><span>NullCommunicator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -680,6 +746,8 @@
 <dt><a name="size" href="#size"><span>size:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc size(communicator: MpiCommunicator): int" href="nimpi/mpi.html#size%2CMpiCommunicator">mpi: proc size(communicator: MpiCommunicator): int</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc size(group: MpiGroup): int" href="nimpi/mpi.html#size%2CMpiGroup">mpi: proc size(group: MpiGroup): int</a></li>
           </ul></dd>
 <dt><a name="split" href="#split"><span>split:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -693,7 +761,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-08 15:08:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 16:28:54 UTC</small>
       </div>
     </div>
   </div>
