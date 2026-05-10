@@ -241,6 +241,39 @@ proc MPI_Wtime*: cdouble {.cdecl, mpi.}
 
 proc MPI_Wtick*: cdouble {.cdecl, mpi.}
 
+#[ MPI group ]#
+
+proc MPI_Group_incl*(
+  group: MPI_Group, 
+  n: cint, 
+  ranks: ptr cint, 
+  newgroup: ptr MPI_Group
+): cint {.cdecl, mpi.}
+
+proc MPI_Group_rank*(group: MPI_Group, rank: ptr cint): cint {.cdecl, mpi.}
+
+proc MPI_Group_size*(group: MPI_Group, size: ptr cint): cint {.cdecl, mpi.}
+
+proc MPI_Group_free*(group: ptr MPI_Group): cint {.cdecl, mpi.}
+
+proc MPI_Group_union*(
+  group1: MPI_Group, 
+  group2: MPI_Group, 
+  newgroup: ptr MPI_Group
+): cint {.cdecl, mpi.}
+
+proc MPI_Group_intersection*(
+  group1: MPI_Group, 
+  group2: MPI_Group, 
+  newgroup: ptr MPI_Group
+): cint {.cdecl, mpi.}
+
+proc MPI_Group_difference*(
+  group1: MPI_Group, 
+  group2: MPI_Group, 
+  newgroup: ptr MPI_Group
+): cint {.cdecl, mpi.}
+
 #[ MPI communicator ]#
 
 proc MPI_Abort*(comm: MPI_Comm, errorcode: cint): cint {.cdecl, mpi.}

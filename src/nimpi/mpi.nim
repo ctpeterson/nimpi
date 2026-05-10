@@ -89,7 +89,7 @@ import mpiwrap
 type MpiError* = object of CatchableError
   ## Represents an error that occurs during MPI operations. Contains an error code
   ## that can be used to identify the specific MPI error that occurred. Paired with
-  ## the `mpiAssert` procedure, which raises an `MpiError` when an MPI function returns
+  ## the `mpiCheck` procedure, which raises an `MpiError` when an MPI function returns
   ## an error code.
   ## 
   ## Attributes:
@@ -136,7 +136,7 @@ let
 
 #[ error handling ]#
 
-proc mpiAssert*(code: cint) =
+proc mpiCheck*(code: cint) =
   ## Asserts that an MPI function call was successful. If the code is not `MPI_SUCCESS`,
   ## raises an `MpiError` with the corresponding error message.
   ## 
@@ -146,7 +146,7 @@ proc mpiAssert*(code: cint) =
   ## Example:
   ## ```nim
   ## var rank: cint
-  ## mpiAssert MPI_Comm_rank(WorldCommunicator.comm, addr rank)
+  ## mpiCheck MPI_Comm_rank(WorldCommunicator.comm, addr rank)
   ## ```
   if code != MPI_SUCCESS:
     var buf: array[1024, char]
@@ -162,22 +162,22 @@ proc mpiAssert*(code: cint) =
 
 proc mpiInit* = 
   ## Initializes the MPI environment. Must be called before any other MPI functions.
-  mpiAssert MPI_Init(nil, nil)
+  mpiCheck MPI_Init(nil, nil)
 
 proc mpiFinalize* = 
   ## Finalizes the MPI environment. Should be called after all MPI functions.
-  mpiAssert MPI_Finalize()
+  mpiCheck MPI_Finalize()
 
 proc mpiInitialized*: bool = 
   ## Checks if the MPI environment has been initialized.
   var flag: cint
-  mpiAssert MPI_Initialized(addr flag)
+  mpiCheck MPI_Initialized(addr flag)
   return flag != 0
 
 proc mpiFinalized*: bool = 
   ## Checks if the MPI environment has been finalized.
   var flag: cint
-  mpiAssert MPI_Finalized(addr flag)
+  mpiCheck MPI_Finalized(addr flag)
   return flag != 0
 
 #[ timers ]#
@@ -193,6 +193,144 @@ proc mpiWallTick*: float64 =
   ## Returns the resolution of the timer used by `mpiWallTime`, in seconds. This value
   ## represents the smallest measurable time interval that can be returned by `mpiWallTime`.
   return MPI_Wtick()
+
+#[ group ]#
+
+proc group*(communicator: MpiCommunicator): MpiGroup =
+  ## Returns the group associated with the given communicator.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The communicator for which to retrieve the group.
+  ## 
+  ## Returns:
+  ##  - An `MpiGroup` object representing the group associated with the communicator.
+  var group: mpiwrap.MPI_Group
+  mpiCheck MPI_Comm_group(communicator.comm, addr group)
+  return MpiGroup(group: group)
+
+proc newMpiGroup*(ranks: seq[int]): MpiGroup =
+  ## Creates a new group from a sequence of ranks. The ranks should be specified with respect to `MPI_COMM_WORLD`.
+  ##
+  ## Parameters:
+  ##  - `ranks`: A sequence of integer ranks that specify the processes to include in the new group. Ranks should be specified with respect to `MPI_COMM_WORLD`.
+  ## 
+  ## Returns:
+  ##  - An `MpiGroup` object representing the new group that includes the specified ranks.
+  var group: mpiwrap.MPI_Group
+  var cRanks = newSeq[cint](ranks.len)
+  for i in 0..<ranks.len:
+    cRanks[i] = cint(ranks[i])
+  mpiCheck MPI_Group_incl(WorldCommunicator.group.group, cint(ranks.len), addr cRanks[0], addr group)
+  return MpiGroup(group: group)
+
+proc newMpiGroup*(group: MpiGroup; ranks: seq[int]): MpiGroup =
+  ## Creates a new group from a sequence of ranks. The ranks should be specified with respect to the given group.
+  ## 
+  ## Parameters:
+  ##  - `group`: The `MpiGroup` with respect to which the ranks are specified.
+  ##  - `ranks`: A sequence of integer ranks that specify the processes to include in the new group. Ranks should be specified with respect to the given group.
+  ##
+  ## Returns:
+  ##  - An `MpiGroup` object representing the new group that includes the specified ranks.
+  var newGroup: mpiwrap.MPI_Group
+  var cRanks = newSeq[cint](ranks.len)
+  for i in 0..<ranks.len:
+    cRanks[i] = cint(ranks[i])
+  mpiCheck MPI_Group_incl(group.group, cint(ranks.len), addr cRanks[0], addr newGroup)
+  return MpiGroup(group: newGroup)
+
+proc size*(group: MpiGroup): int =
+  ## Returns the size of the group (number of ranks in the group).
+  ## 
+  ## Parameters:
+  ##  - `group`: The `MpiGroup` for which to retrieve the size.
+  ## 
+  ## Returns:
+  ##  - The size of the group (number of ranks in the group).
+  var size: cint
+  mpiCheck MPI_Group_size(group.group, addr size)
+  return int(size)
+
+proc myRank*(group: MpiGroup): int =
+  ## Returns the rank of the calling process within the group, or `MPI_UNDEFINED` if the process is not a member of the group.
+  ## 
+  ## Parameters:
+  ##  - `group`: The `MpiGroup` for which to retrieve the rank.
+  ## 
+  ## Returns:
+  ##  - The rank of the calling process within the group, or `MPI_UNDEFINED` if the process is not a member of the group.
+  var rank: cint
+  mpiCheck MPI_Group_rank(group.group, addr rank)
+  return int(rank)
+
+proc free*(group: var MpiGroup) =
+  ## Frees the group. This routine does not free group storage, which is freed only when
+  ## all references to the group are removed. 
+  ## 
+  ## Parameters:
+  ## - `group`: The `MpiGroup` to free.
+  mpiCheck MPI_Group_free(addr group.group)
+  group.group = MPI_GROUP_NULL
+
+proc `+`*(group1, group2: MpiGroup): MpiGroup =
+  ## Returns the union of two groups, which contains all processes that are in either group.
+  ## 
+  ## Parameters:
+  ##  - `group1`: The first group to union.
+  ##  - `group2`: The second group to union.
+  ## 
+  ## Returns:
+  ##  - An `MpiGroup` representing the union of the two groups.
+  ## 
+  ## Example:
+  ## ```nim
+  ## let group1 = newMpiGroup(@[0, 2])
+  ## let group2 = newMpiGroup(@[0, 1, 3])
+  ## let unionGroup = group1 + group2  # unionGroup includes ranks 0, 1, 2, 3
+  ## ```
+  var newGroup: mpiwrap.MPI_Group
+  mpiCheck MPI_Group_union(group1.group, group2.group, addr newGroup)
+  return MpiGroup(group: newGroup)
+
+proc `*`*(group1, group2: MpiGroup): MpiGroup =
+  ## Returns the intersection of two groups, which contains only processes that are in both groups.
+  ## 
+  ## Parameters:
+  ##  - `group1`: The first group to intersect.
+  ##  - `group2`: The second group to intersect.
+  ## 
+  ## Returns:
+  ##  - An `MpiGroup` representing the intersection of the two groups.
+  ## 
+  ## Example:
+  ## ```nim
+  ## let group1 = newMpiGroup(@[0, 2])
+  ## let group2 = newMpiGroup(@[0, 1, 3])
+  ## let intersectionGroup = group1 * group2  # intersectionGroup includes only rank 0
+  ## ```
+  var newGroup: mpiwrap.MPI_Group
+  mpiCheck MPI_Group_intersection(group1.group, group2.group, addr newGroup)
+  return MpiGroup(group: newGroup)
+
+proc `-`*(group1, group2: MpiGroup): MpiGroup =
+  ## Returns the difference of two groups, which contains processes that are in `group1` but not in `group2`.
+  ## 
+  ## Parameters:
+  ##  - `group1`: The group from which to subtract.
+  ##  - `group2`: The group to subtract from `group1`.
+  ## 
+  ## Returns:
+  ##  - An `MpiGroup` representing the difference of the two groups.
+  ## 
+  ## Example:
+  ## ```nim
+  ## let group1 = newMpiGroup(@[0, 2])
+  ## let group2 = newMpiGroup(@[0, 1, 3])
+  ## let differenceGroup = group1 - group2  # differenceGroup includes only rank 2
+  ## ```
+  var newGroup: mpiwrap.MPI_Group
+  mpiCheck MPI_Group_difference(group1.group, group2.group, addr newGroup)
+  return MpiGroup(group: newGroup)
 
 #[ communicator ]#
 
@@ -220,6 +358,21 @@ proc `=destroy`(communicator: var MpiCommunicator) =
       discard MPI_Comm_free(addr communicator.comm)
   communicator.comm = MPI_COMM_NULL
 
+proc newMpiCommunicator*(
+  communicator: MpiCommunicator; 
+  group: MpiGroup
+): MpiCommunicator =
+  ## Creates a new communicator from a group. The new communicator will include only the processes in the given group.
+  var comm: MPI_Comm
+  mpiCheck MPI_Comm_create(communicator.comm, group.group, addr comm)
+  return MpiCommunicator(comm: comm)
+
+proc newMpiCommunicator*(group: MpiGroup): MpiCommunicator =
+  ## Creates a new communicator from a group. The new communicator will include only the processes in the given group.
+  var comm: MPI_Comm
+  mpiCheck MPI_Comm_create(WorldCommunicator.comm, group.group, addr comm)
+  return MpiCommunicator(comm: comm)
+
 proc duplicate*(communicator: MpiCommunicator): MpiCommunicator =
   ## Duplicates the given communicator
   ## 
@@ -236,7 +389,7 @@ proc duplicate*(communicator: MpiCommunicator): MpiCommunicator =
   ## echo "Original communicator rank: ", comm.myRank, ", Duplicated communicator rank: ", dupComm.myRank
   ## ```
   var comm: MPI_Comm
-  mpiAssert MPI_comm_dup(communicator.comm, addr comm)
+  mpiCheck MPI_Comm_dup(communicator.comm, addr comm)
   return MpiCommunicator(comm: comm)
 
 proc split*(communicator: MpiCommunicator; color, key: int): MpiCommunicator =
@@ -264,7 +417,7 @@ proc split*(communicator: MpiCommunicator; color, key: int): MpiCommunicator =
   ## echo "Process ", comm.myRank, " is in subcommunicator with rank ", subcomm.myRank
   ## ```
   var comm: MPI_Comm
-  mpiAssert MPI_Comm_split(communicator.comm, cint(color), cint(key), addr comm)
+  mpiCheck MPI_Comm_split(communicator.comm, cint(color), cint(key), addr comm)
   return MpiCommunicator(comm: comm)
 
 proc abort*(communicator: MpiCommunicator, errorcode: int = 1) =
@@ -280,7 +433,7 @@ proc abort*(communicator: MpiCommunicator, errorcode: int = 1) =
   ## if comm.myRank == 0:
   ##   comm.abort(42)  # Aborts the program with error code 42
   ## ```
-  mpiAssert MPI_Abort(communicator.comm, cint(errorcode))
+  mpiCheck MPI_Abort(communicator.comm, cint(errorcode))
 
 proc free*(communicator: var MpiCommunicator) =
   ## Frees communicator
@@ -290,7 +443,7 @@ proc free*(communicator: var MpiCommunicator) =
   ## 
   ## Parameters:
   ##  - `communicator`: The communicator to free. 
-  mpiAssert MPI_Comm_free(addr communicator.comm)
+  mpiCheck MPI_Comm_free(addr communicator.comm)
 
 proc size*(communicator: MpiCommunicator): int =
   ## Returns communicator size (number of ranks in the communicator)
@@ -301,7 +454,7 @@ proc size*(communicator: MpiCommunicator): int =
   ## Returns:
   ##  - The size of the communicator (number of ranks). 
   var size: cint
-  mpiAssert MPI_Comm_size(communicator.comm, addr size)
+  mpiCheck MPI_Comm_size(communicator.comm, addr size)
   return int(size)
 
 proc myRank*(communicator: MpiCommunicator): int =
@@ -315,7 +468,7 @@ proc myRank*(communicator: MpiCommunicator): int =
   ## Returns:
   ##  - The rank of the calling process within the communicator.
   var rank: cint
-  mpiAssert MPI_Comm_rank(communicator.comm, addr rank)
+  mpiCheck MPI_Comm_rank(communicator.comm, addr rank)
   return int(rank)
 
 macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
