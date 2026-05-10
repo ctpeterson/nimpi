@@ -118,6 +118,10 @@
   <li><a class="reference" href="#group%2CMpiCommunicator" title="group(communicator: MpiCommunicator): MpiGroup">group(communicator: MpiCommunicator): MpiGroup</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">mpiBarrier
+  <li><a class="reference" href="#mpiBarrier%2CMpiCommunicator" title="mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)">mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">mpiCheck
   <li><a class="reference" href="#mpiCheck%2Ccint" title="mpiCheck(code: cint)">mpiCheck(code: cint)</a></li>
 
@@ -138,6 +142,10 @@
   <li><a class="reference" href="#mpiInitialized" title="mpiInitialized(): bool">mpiInitialized(): bool</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">mpiType
+  <li><a class="reference" href="#mpiType%2Ctypedesc" title="mpiType(T: typedesc): MPI_Datatype">mpiType(T: typedesc): MPI_Datatype</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">mpiWallTick
   <li><a class="reference" href="#mpiWallTick" title="mpiWallTick(): float64">mpiWallTick(): float64</a></li>
 
@@ -147,7 +155,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">myRank
-  <li><a class="reference" href="#myRank%2CMpiCommunicator" title="myRank(communicator: MpiCommunicator): int">myRank(communicator: MpiCommunicator): int</a></li>
+  <li><a class="reference" href="#myRank%2CMpiCommunicator" title="myRank(communicator: MpiCommunicator = WorldCommunicator): int">myRank(communicator: MpiCommunicator = WorldCommunicator): int</a></li>
 <li><a class="reference" href="#myRank%2CMpiGroup" title="myRank(group: MpiGroup): int">myRank(group: MpiGroup): int</a></li>
 
 </ul>
@@ -161,8 +169,30 @@
 <li><a class="reference" href="#newMpiGroup%2Cseq%5Bint%5D" title="newMpiGroup(ranks: seq[int]): MpiGroup">newMpiGroup(ranks: seq[int]): MpiGroup</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">receive
+  <li><a class="reference" href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint" title="receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0)">receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#receive%2CT%2Cint%2Cint" title="receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)">receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#receive%2CopenArray%5BT%5D%2Cint%2Cint" title="receive[T](buffer: var openArray[T]; source: int; tag: int = 0)">receive[T](buffer: var openArray[T]; source: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint" title="receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
+           tag: int = 0)">receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
+           tag: int = 0)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">send
+  <li><a class="reference" href="#send%2CMpiCommunicator%2CT%2Cint%2Cint" title="send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0)">send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#send%2CT%2Cint%2Cint" title="send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)">send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#send%2CopenArray%5BT%5D%2Cint%2Cint" title="send[T](buffer: openArray[T]; dest: int; tag: int = 0)">send[T](buffer: openArray[T]; dest: int; tag: int = 0)</a></li>
+<li><a class="reference" href="#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint" title="send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+        tag: int = 0)">send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+        tag: int = 0)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">size
-  <li><a class="reference" href="#size%2CMpiCommunicator" title="size(communicator: MpiCommunicator): int">size(communicator: MpiCommunicator): int</a></li>
+  <li><a class="reference" href="#size%2CMpiCommunicator" title="size(communicator: MpiCommunicator = WorldCommunicator): int">size(communicator: MpiCommunicator = WorldCommunicator): int</a></li>
 <li><a class="reference" href="#size%2CMpiGroup" title="size(group: MpiGroup): int">size(group: MpiGroup): int</a></li>
 
 </ul>
@@ -489,6 +519,27 @@
 </div>
 
 </div>
+<div id="mpiBarrier-procs-all">
+  <div id="mpiBarrier,MpiCommunicator">
+  <dt><pre><span class="Keyword">proc</span> <a href="#mpiBarrier%2CMpiCommunicator"><span class="Identifier">mpiBarrier</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a> <span class="Other">=</span> <span class="Identifier">WorldCommunicator</span><span class="Other">)</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    <p>Blocks until all processes in the communicator have reached this routine. This is a collective operation that synchronizes all processes in the communicator.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> for which to perform the barrier operation.</li>
+</ul>
+<p>Example:</p>
+<p><pre class="listing"><span class="Keyword">let</span> <span class="Identifier">comm</span> <span class="Operator">=</span> <span class="Identifier">WorldCommunicator</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;Process &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">myRank</span><span class="Punctuation">,</span> <span class="StringLit">&quot; before barrier&quot;</span>
+<span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">mpiBarrier</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;Process &quot;</span><span class="Punctuation">,</span> <span class="Identifier">comm</span><span class="Operator">.</span><span class="Identifier">myRank</span><span class="Punctuation">,</span> <span class="StringLit">&quot; after barrier&quot;</span></pre></p>
+
+    
+  </dd>
+</div>
+
+</div>
 <div id="mpiCheck-procs-all">
   <div id="mpiCheck,cint">
   <dt><pre><span class="Keyword">proc</span> <a href="#mpiCheck%2Ccint"><span class="Identifier">mpiCheck</span></a><span class="Other">(</span><span class="Identifier">code</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -551,6 +602,24 @@
 </div>
 
 </div>
+<div id="mpiType-procs-all">
+  <div id="mpiType,typedesc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#mpiType%2Ctypedesc"><span class="Identifier">mpiType</span></a><span class="Other">(</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a></pre></dt>
+  <dd>
+    
+    <p>Converts a Nim type to the corresponding MPI datatype. This is used for specifying the datatype in MPI communication operations.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">T</span></span></tt>: The Nim type to convert to an MPI datatype.</li>
+</ul>
+<p>Returns:</p>
+<ul class="simple"><li>The corresponding <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Datatype</span></span></tt> for the given Nim type.</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
 <div id="mpiWallTick-procs-all">
   <div id="mpiWallTick">
   <dt><pre><span class="Keyword">proc</span> <a href="#mpiWallTick"><span class="Identifier">mpiWallTick</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float64</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
@@ -575,8 +644,8 @@
 </div>
 <div id="myRank-procs-all">
   <div id="myRank,MpiCommunicator">
-  <dt><pre><span class="Keyword">proc</span> <a href="#myRank%2CMpiCommunicator"><span class="Identifier">myRank</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#myRank%2CMpiCommunicator"><span class="Identifier">myRank</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a> <span class="Other">=</span> <span class="Identifier">WorldCommunicator</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     <p>Returns the rank of the calling process within the given communicator.</p>
@@ -665,10 +734,129 @@
 </div>
 
 </div>
+<div id="receive-procs-all">
+  <div id="receive,MpiCommunicator,T,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
+                                    <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Receives scalar data into <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for receiving.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="receive,T,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CT%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Receives scalar data into <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="receive,openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Receives data into <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="receive,MpiCommunicator,openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">buffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+                <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Receives data into <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for receiving.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="send-procs-all">
+  <div id="send,MpiCommunicator,T,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CMpiCommunicator%2CT%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
+                                 <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Sends scalar <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for sending.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="send,T,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CT%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Sends scalar <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="send,openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Sends <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="send,MpiCommunicator,openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">buffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
+             <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="size-procs-all">
   <div id="size,MpiCommunicator">
-  <dt><pre><span class="Keyword">proc</span> <a href="#size%2CMpiCommunicator"><span class="Identifier">size</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#size%2CMpiCommunicator"><span class="Identifier">size</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a> <span class="Other">=</span> <span class="Identifier">WorldCommunicator</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">MpiError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     <p>Returns communicator size (number of ranks in the communicator)</p>
@@ -778,7 +966,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 16:28:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 17:40:02 UTC</small>
       </div>
     </div>
   </div>

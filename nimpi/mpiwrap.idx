@@ -148,3 +148,6 @@ nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_fr
 nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		296
 nim	MPI_Comm_compare	nimpi/mpiwrap.html#MPI_Comm_compare,MPI_Comm,MPI_Comm,ptr.cint	proc MPI_Comm_compare(comm1: MPI_Comm; comm2: MPI_Comm; result: ptr cint): cint		302
 nim	MPI_Comm_group	nimpi/mpiwrap.html#MPI_Comm_group,MPI_Comm,ptr.MPI_Group	proc MPI_Comm_group(comm: MPI_Comm; group: ptr MPI_Group): cint		308
+nim	MPI_Barrier	nimpi/mpiwrap.html#MPI_Barrier,MPI_Comm	proc MPI_Barrier(comm: MPI_Comm): cint		310
+nim	MPI_Send	nimpi/mpiwrap.html#MPI_Send,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n         tag: cint; comm: MPI_Comm): cint		314
+nim	MPI_Recv	nimpi/mpiwrap.html#MPI_Recv,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;\n         tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint		323

@@ -91,6 +91,14 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_BAND" href="nimpi/mpiwrap.html#MPI_BAND">mpiwrap: var MPI_BAND</a></li>
           </ul></dd>
+<dt><a name="mpiBarrier" href="#mpiBarrier"><span>mpiBarrier:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)" href="nimpi/mpi.html#mpiBarrier%2CMpiCommunicator">mpi: proc mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)</a></li>
+          </ul></dd>
+<dt><a name="MPI_Barrier" href="#MPI_Barrier"><span>MPI_Barrier:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Barrier(comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Barrier%2CMPI_Comm">mpiwrap: proc MPI_Barrier(comm: MPI_Comm): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_BOR" href="#MPI_BOR"><span>MPI_BOR:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_BOR" href="nimpi/mpiwrap.html#MPI_BOR">mpiwrap: var MPI_BOR</a></li>
@@ -581,6 +589,12 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_PROD" href="nimpi/mpiwrap.html#MPI_PROD">mpiwrap: var MPI_PROD</a></li>
           </ul></dd>
+<dt><a name="MPI_Recv" href="#MPI_Recv"><span>MPI_Recv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
+         tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Recv%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Status">mpiwrap: proc MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
+         tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_REPLACE" href="#MPI_REPLACE"><span>MPI_REPLACE:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_REPLACE" href="nimpi/mpiwrap.html#MPI_REPLACE">mpiwrap: var MPI_REPLACE</a></li>
@@ -596,6 +610,12 @@
 <dt><a name="MPI_ROOT" href="#MPI_ROOT"><span>MPI_ROOT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_ROOT" href="nimpi/mpiwrap.html#MPI_ROOT">mpiwrap: var MPI_ROOT</a></li>
+          </ul></dd>
+<dt><a name="MPI_Send" href="#MPI_Send"><span>MPI_Send:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+         tag: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Send%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+         tag: cint; comm: MPI_Comm): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_SHORT" href="#MPI_SHORT"><span>MPI_SHORT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -648,6 +668,10 @@
 <dt><a name="MPI_THREAD_SINGLE" href="#MPI_THREAD_SINGLE"><span>MPI_THREAD_SINGLE:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_THREAD_SINGLE" href="nimpi/mpiwrap.html#MPI_THREAD_SINGLE">mpiwrap: var MPI_THREAD_SINGLE</a></li>
+          </ul></dd>
+<dt><a name="mpiType" href="#mpiType"><span>mpiType:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc mpiType(T: typedesc): MPI_Datatype" href="nimpi/mpi.html#mpiType%2Ctypedesc">mpi: proc mpiType(T: typedesc): MPI_Datatype</a></li>
           </ul></dd>
 <dt><a name="MPI_UINT16_T" href="#MPI_UINT16_T"><span>MPI_UINT16_T:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -715,7 +739,7 @@
           </ul></dd>
 <dt><a name="myRank" href="#myRank"><span>myRank:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mpi: proc myRank(communicator: MpiCommunicator): int" href="nimpi/mpi.html#myRank%2CMpiCommunicator">mpi: proc myRank(communicator: MpiCommunicator): int</a></li>
+          data-doc-search-tag="mpi: proc myRank(communicator: MpiCommunicator = WorldCommunicator): int" href="nimpi/mpi.html#myRank%2CMpiCommunicator">mpi: proc myRank(communicator: MpiCommunicator = WorldCommunicator): int</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mpi: proc myRank(group: MpiGroup): int" href="nimpi/mpi.html#myRank%2CMpiGroup">mpi: proc myRank(group: MpiGroup): int</a></li>
           </ul></dd>
@@ -739,13 +763,41 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: let NullGroup" href="nimpi/mpi.html#NullGroup">mpi: let NullGroup</a></li>
           </ul></dd>
+<dt><a name="receive" href="#receive"><span>receive:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
+           tag: int = 0)" href="nimpi/mpi.html#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
+           tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0)" href="nimpi/mpi.html#receive%2CMpiCommunicator%2CT%2Cint%2Cint">mpi: proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc receive[T](buffer: var openArray[T]; source: int; tag: int = 0)" href="nimpi/mpi.html#receive%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc receive[T](buffer: var openArray[T]; source: int; tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)" href="nimpi/mpi.html#receive%2CT%2Cint%2Cint">mpi: proc receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)</a></li>
+          </ul></dd>
 <dt><a name="SelfCommunicator" href="#SelfCommunicator"><span>SelfCommunicator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: let SelfCommunicator" href="nimpi/mpi.html#SelfCommunicator">mpi: let SelfCommunicator</a></li>
           </ul></dd>
+<dt><a name="send" href="#send"><span>send:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+        tag: int = 0)" href="nimpi/mpi.html#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+        tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0)" href="nimpi/mpi.html#send%2CMpiCommunicator%2CT%2Cint%2Cint">mpi: proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc send[T](buffer: openArray[T]; dest: int; tag: int = 0)" href="nimpi/mpi.html#send%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc send[T](buffer: openArray[T]; dest: int; tag: int = 0)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)" href="nimpi/mpi.html#send%2CT%2Cint%2Cint">mpi: proc send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)</a></li>
+          </ul></dd>
 <dt><a name="size" href="#size"><span>size:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mpi: proc size(communicator: MpiCommunicator): int" href="nimpi/mpi.html#size%2CMpiCommunicator">mpi: proc size(communicator: MpiCommunicator): int</a></li>
+          data-doc-search-tag="mpi: proc size(communicator: MpiCommunicator = WorldCommunicator): int" href="nimpi/mpi.html#size%2CMpiCommunicator">mpi: proc size(communicator: MpiCommunicator = WorldCommunicator): int</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mpi: proc size(group: MpiGroup): int" href="nimpi/mpi.html#size%2CMpiGroup">mpi: proc size(group: MpiGroup): int</a></li>
           </ul></dd>
@@ -761,7 +813,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 16:28:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 17:40:02 UTC</small>
       </div>
     </div>
   </div>

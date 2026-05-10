@@ -12,30 +12,42 @@ nim	mpiInit	nimpi/mpi.html#mpiInit	proc mpiInit()		163
 nim	mpiFinalize	nimpi/mpi.html#mpiFinalize	proc mpiFinalize()		167
 nim	mpiInitialized	nimpi/mpi.html#mpiInitialized	proc mpiInitialized(): bool		171
 nim	mpiFinalized	nimpi/mpi.html#mpiFinalized	proc mpiFinalized(): bool		177
-nim	mpiWallTime	nimpi/mpi.html#mpiWallTime	proc mpiWallTime(): float64		185
-nim	mpiWallTick	nimpi/mpi.html#mpiWallTick	proc mpiWallTick(): float64		192
-nim	group	nimpi/mpi.html#group,MpiCommunicator	proc group(communicator: MpiCommunicator): MpiGroup		199
-nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,seq[int]	proc newMpiGroup(ranks: seq[int]): MpiGroup		211
-nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,MpiGroup,seq[int]	proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup		226
-nim	size	nimpi/mpi.html#size,MpiGroup	proc size(group: MpiGroup): int		242
-nim	myRank	nimpi/mpi.html#myRank,MpiGroup	proc myRank(group: MpiGroup): int		254
-nim	free	nimpi/mpi.html#free,MpiGroup	proc free(group: var MpiGroup)		266
-nim	`+`	nimpi/mpi.html#+,MpiGroup,MpiGroup	proc `+`(group1, group2: MpiGroup): MpiGroup		275
-nim	`*`	nimpi/mpi.html#*,MpiGroup,MpiGroup	proc `*`(group1, group2: MpiGroup): MpiGroup		295
-nim	`-`	nimpi/mpi.html#-,MpiGroup,MpiGroup	proc `-`(group1, group2: MpiGroup): MpiGroup		315
-nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiCommunicator,MpiGroup	proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator		361
-nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiGroup	proc newMpiCommunicator(group: MpiGroup): MpiCommunicator		370
-nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		376
-nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		395
-nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		423
-nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		438
-nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator): int		448
-nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator): int		460
-nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		474
-nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		488
-nimgrp	newmpicommunicator	nimpi/mpi.html#newMpiCommunicator-procs-all	proc		361
-nimgrp	free	nimpi/mpi.html#free-procs-all	proc		266
-nimgrp	size	nimpi/mpi.html#size-procs-all	proc		242
-nimgrp	newmpigroup	nimpi/mpi.html#newMpiGroup-procs-all	proc		211
-nimgrp	myrank	nimpi/mpi.html#myRank-procs-all	proc		254
+nim	mpiType	nimpi/mpi.html#mpiType,typedesc	proc mpiType(T: typedesc): MPI_Datatype		185
+nim	mpiWallTime	nimpi/mpi.html#mpiWallTime	proc mpiWallTime(): float64		222
+nim	mpiWallTick	nimpi/mpi.html#mpiWallTick	proc mpiWallTick(): float64		229
+nim	group	nimpi/mpi.html#group,MpiCommunicator	proc group(communicator: MpiCommunicator): MpiGroup		236
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,seq[int]	proc newMpiGroup(ranks: seq[int]): MpiGroup		248
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,MpiGroup,seq[int]	proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup		262
+nim	size	nimpi/mpi.html#size,MpiGroup	proc size(group: MpiGroup): int		277
+nim	myRank	nimpi/mpi.html#myRank,MpiGroup	proc myRank(group: MpiGroup): int		289
+nim	free	nimpi/mpi.html#free,MpiGroup	proc free(group: var MpiGroup)		301
+nim	`+`	nimpi/mpi.html#+,MpiGroup,MpiGroup	proc `+`(group1, group2: MpiGroup): MpiGroup		310
+nim	`*`	nimpi/mpi.html#*,MpiGroup,MpiGroup	proc `*`(group1, group2: MpiGroup): MpiGroup		330
+nim	`-`	nimpi/mpi.html#-,MpiGroup,MpiGroup	proc `-`(group1, group2: MpiGroup): MpiGroup		350
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiCommunicator,MpiGroup	proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator		396
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiGroup	proc newMpiCommunicator(group: MpiGroup): MpiCommunicator		405
+nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		411
+nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		430
+nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		458
+nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		473
+nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator = WorldCommunicator): int		483
+nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator = WorldCommunicator): int		495
+nim	mpiBarrier	nimpi/mpi.html#mpiBarrier,MpiCommunicator	proc mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)		509
+nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		525
+nim	send	nimpi/mpi.html#send,MpiCommunicator,openArray[T],int,int	proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;\n        tag: int = 0)		539
+nim	send	nimpi/mpi.html#send,openArray[T],int,int	proc send[T](buffer: openArray[T]; dest: int; tag: int = 0)		553
+nim	send	nimpi/mpi.html#send,MpiCommunicator,T,int,int	proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;\n                            dest: int; tag: int = 0)		562
+nim	send	nimpi/mpi.html#send,T,int,int	proc send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)		584
+nim	receive	nimpi/mpi.html#receive,MpiCommunicator,openArray[T],int,int	proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;\n           tag: int = 0)		593
+nim	receive	nimpi/mpi.html#receive,openArray[T],int,int	proc receive[T](buffer: var openArray[T]; source: int; tag: int = 0)		617
+nim	receive	nimpi/mpi.html#receive,MpiCommunicator,T,int,int	proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;\n                               source: int; tag: int = 0)		626
+nim	receive	nimpi/mpi.html#receive,T,int,int	proc receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)		650
+nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		661
+nimgrp	newmpicommunicator	nimpi/mpi.html#newMpiCommunicator-procs-all	proc		396
+nimgrp	free	nimpi/mpi.html#free-procs-all	proc		301
+nimgrp	size	nimpi/mpi.html#size-procs-all	proc		277
+nimgrp	newmpigroup	nimpi/mpi.html#newMpiGroup-procs-all	proc		248
+nimgrp	send	nimpi/mpi.html#send-procs-all	proc		539
+nimgrp	myrank	nimpi/mpi.html#myRank-procs-all	proc		289
+nimgrp	receive	nimpi/mpi.html#receive-procs-all	proc		593
 heading	Hello World	nimpi/mpi.html#hello-world	 Hello World		0
