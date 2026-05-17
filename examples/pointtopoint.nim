@@ -10,9 +10,9 @@ mpi:
 
   if myRank() == 0:
     echo "Rank 0 sending: ", scalarSend
-    scalarSend.send(1, tag = 0)
+    WorldCommunicator.send(scalarSend, 1, tag = 0)
   if myRank() == 1:
-    scalarRecv.receive(0, tag = 0)
+    WorldCommunicator.receive(scalarRecv, 0, tag = 0)
     echo "Rank 1 received: ", scalarRecv
 
   # send/recv arrays
@@ -22,7 +22,7 @@ mpi:
 
   if myRank() == 0:
     echo "Rank 0 sending: ", arraySend
-    arraySend.send(1, tag = 1)
+    WorldCommunicator.send(arraySend, 1, tag = 1)
   if myRank() == 1:
-    arrayRecv.receive(0, tag = 1)
+    WorldCommunicator.receive(arrayRecv, 0, tag = 1)
     echo "Rank 1 received: ", arrayRecv

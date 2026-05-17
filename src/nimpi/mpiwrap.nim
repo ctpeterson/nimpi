@@ -330,5 +330,65 @@ proc MPI_Recv*(
   status: ptr MPI_Status
 ): cint {.cdecl, mpi.}
 
+#[ collective operations ]#
+
+proc MPI_Bcast*(
+  buffer: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Gather*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Allgather*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Scatter*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Reduce*(
+  sendbuf: pointer, 
+  recvbuf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  op: MPI_Op, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Allreduce*(
+  sendbuf: pointer, 
+  recvbuf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  op: MPI_Op, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
 
 

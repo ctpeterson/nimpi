@@ -115,6 +115,39 @@ type
     ## - `group`: The underlying MPI_Group handle that represents the group.
     group*: mpiwrap.MPI_Group
 
+  MpiOperation* = enum
+    ## Represents an MPI reduction operation for use in `reduce` and related calls.
+    ##
+    ## Values:
+    ## - `ReduceSum`: corresponds to `MPI_SUM`
+    ## - `ReduceProduct`: corresponds to `MPI_PROD`
+    ## - `ReduceMaximum`: corresponds to `MPI_MAX`
+    ## - `ReduceMinimum`: corresponds to `MPI_MIN`
+    ## - `ReduceLogicalAnd`: corresponds to `MPI_LAND`
+    ## - `ReduceBitwiseAnd`: corresponds to `MPI_BAND`
+    ## - `ReduceLogicalOr`: corresponds to `MPI_LOR`
+    ## - `ReduceBitwiseOr`: corresponds to `MPI_BOR`
+    ## - `ReduceLogicalXor`: corresponds to `MPI_LXOR`
+    ## - `ReduceBitwiseXor`: corresponds to `MPI_BXOR`
+    ## - `ReduceMaxLoc`: corresponds to `MPI_MAXLOC`
+    ## - `ReduceMinLoc`: corresponds to `MPI_MINLOC`
+    ## - `ReduceReplace`: corresponds to `MPI_REPLACE`
+    ## - `ReduceNoOp`: corresponds to `MPI_NO_OP`
+    ReduceSum,
+    ReduceProduct,
+    ReduceMaximum,
+    ReduceMinimum,
+    ReduceLogicalAnd,
+    ReduceBitwiseAnd,
+    ReduceLogicalOr,
+    ReduceBitwiseOr,
+    ReduceLogicalXor,
+    ReduceBitwiseXor,
+    ReduceMaxLoc,
+    ReduceMinLoc,
+    ReduceReplace,
+    ReduceNoOp
+
 #[ global variables ]#
 
 let
@@ -179,6 +212,25 @@ proc mpiFinalized*: bool =
   var flag: cint
   mpiCheck MPI_Finalized(addr flag)
   return flag != 0
+
+#[ MPI operation converter ]#
+
+proc mpiOp*(op: MpiOperation): MPI_Op =
+  ## Converts an `MpiOperation` to the underlying `MPI_Op` handle.
+  result = MPI_NO_OP
+  if op == ReduceSum:        result = MPI_SUM
+  elif op == ReduceProduct:  result = MPI_PROD
+  elif op == ReduceMaximum:  result = MPI_MAX
+  elif op == ReduceMinimum:  result = MPI_MIN
+  elif op == ReduceLogicalAnd:  result = MPI_LAND
+  elif op == ReduceBitwiseAnd:  result = MPI_BAND
+  elif op == ReduceLogicalOr:   result = MPI_LOR
+  elif op == ReduceBitwiseOr:   result = MPI_BOR
+  elif op == ReduceLogicalXor:  result = MPI_LXOR
+  elif op == ReduceBitwiseXor:  result = MPI_BXOR
+  elif op == ReduceMaxLoc:   result = MPI_MAXLOC
+  elif op == ReduceMinLoc:   result = MPI_MINLOC
+  elif op == ReduceReplace:  result = MPI_REPLACE
 
 #[ MPI type converter ]#
 
@@ -541,29 +593,29 @@ proc send*[T](
   buffer: openArray[T];
   dest: int;
   tag: int = 0
-) = mpiCheck MPI_Send(
-  addr buffer[0], 
-  cint(buffer.len), 
-  mpiType(T), 
-  cint(dest), 
-  cint(tag), 
-  communicator.comm
-)
-
-proc send*[T](buffer: openArray[T]; dest: int; tag: int = 0) =
-  ## Sends `buffer` to the process with rank `dest` in `WorldCommunicator` using `MPI_Send`.
+) =
+  ## Sends `buffer` to the process with rank `dest` in `communicator` using `MPI_Send`.
   ## 
   ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for sending.
   ##  - `buffer`: The data to send. Can be any type that has a corresponding MPI datatype.
   ##  - `dest`: The rank of the destination process within the communicator.
-  ##  - `tag`: An optional tag to identify the message (default is 0).
-  WorldCommunicator.send(buffer, dest, tag)
+  ##  - `tag`: An optional tag to identify the message (default is 0 
+  mpiCheck MPI_Send(
+    addr buffer[0], 
+    cint(buffer.len), 
+    mpiType(T), 
+    cint(dest), 
+    cint(tag), 
+    communicator.comm
+  )
 
 proc send*[T: not (array or seq)](
   communicator: MpiCommunicator; 
   data: var T; 
   dest: int; 
-  tag: int = 0
+  tag: int = 0;
+  len: int = 1
 ) =
   ## Sends scalar `data` to the process with rank `dest` in `communicator` using `MPI_Send`.
   ## 
@@ -572,23 +624,15 @@ proc send*[T: not (array or seq)](
   ##  - `data`: The scalar data to send. Can be any type that has a corresponding MPI datatype.
   ##  - `dest`: The rank of the destination process within the communicator.
   ##  - `tag`: An optional tag to identify the message (default is 0).
+  ##  - `len`: The number of elements to send (default is 1).
   mpiCheck MPI_Send(
     addr data, 
-    1, 
+    cint(len), 
     mpiType(T), 
     cint(dest), 
     cint(tag), 
     communicator.comm
   )
-
-proc send*[T: not (array or seq)](data: var T; dest: int; tag: int = 0) =
-  ## Sends scalar `data` to the process with rank `dest` in `WorldCommunicator` using `MPI_Send`.
-  ## 
-  ## Parameters:
-  ##  - `data`: The scalar data to send. Can be any type that has a corresponding MPI datatype.
-  ##  - `dest`: The rank of the destination process within the communicator.
-  ##  - `tag`: An optional tag to identify the message (default is 0).
-  WorldCommunicator.send(data, dest, tag)
 
 proc receive*[T](
   communicator: MpiCommunicator; 
@@ -614,20 +658,12 @@ proc receive*[T](
     addr status
   )
 
-proc receive*[T](buffer: var openArray[T]; source: int; tag: int = 0) =
-  ## Receives data into `buffer` from the process with rank `source` in `WorldCommunicator` using `MPI_Recv`.
-  ## 
-  ## Parameters:
-  ##  - `buffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
-  ##  - `source`: The rank of the source process within the communicator.
-  ##  - `tag`: An optional tag to identify the message (default is 0).
-  WorldCommunicator.receive(buffer, source, tag)
-
 proc receive*[T: not (array or seq)](
   communicator: MpiCommunicator; 
   data: var T; 
   source: int; 
-  tag: int = 0
+  tag: int = 0;
+  len: int = 1
 ) =
   ## Receives scalar data into `data` from the process with rank `source` in `communicator` using `MPI_Recv`.
   ## 
@@ -636,10 +672,11 @@ proc receive*[T: not (array or seq)](
   ##  - `data`: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.
   ##  - `source`: The rank of the source process within the communicator.
   ##  - `tag`: An optional tag to identify the message (default is 0).
+  ##  - `len`: The number of elements to receive (default is 1).
   var status: MPI_Status
   mpiCheck MPI_Recv(
     addr data, 
-    1, 
+    cint(len), 
     mpiType(T), 
     cint(source), 
     cint(tag), 
@@ -647,14 +684,180 @@ proc receive*[T: not (array or seq)](
     addr status
   )
 
-proc receive*[T: not (array or seq)](data: var T; source: int; tag: int = 0) =
-  ## Receives scalar data into `data` from the process with rank `source` in `WorldCommunicator` using `MPI_Recv`.
+#[ collective operations ]#
+
+proc broadcast*[T](
+  communicator: MpiCommunicator; 
+  buffer: var openArray[T]; 
+  root: int
+) =
+  ## Broadcasts `buffer` from the process with rank `root` to all other processes in `communicator` using `MPI_Bcast`.
   ## 
   ## Parameters:
-  ##  - `data`: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.
-  ##  - `source`: The rank of the source process within the communicator.
-  ##  - `tag`: An optional tag to identify the message (default is 0).
-  WorldCommunicator.receive(data, source, tag)
+  ##  - `communicator`: The `MpiCommunicator` to use for broadcasting.
+  ##  - `buffer`: The data to broadcast. Can be any type that has a corresponding MPI datatype.
+  ##  - `root`: The rank of the root process that will broadcast the data.
+  mpiCheck MPI_Bcast(
+    addr buffer[0], 
+    cint(buffer.len), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc broadcast*[T: not (array or seq)](
+  communicator: MpiCommunicator; 
+  data: var T; 
+  root: int;
+  len: int = 1
+) =
+  ## Broadcasts scalar `data` from the process with rank `root` to all other processes in `communicator` using `MPI_Bcast`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for broadcasting.
+  ##  - `data`: The scalar data to broadcast. Can be any type that has a corresponding MPI datatype.
+  ##  - `root`: The rank of the root process that will broadcast the data.
+  ##  - `len`: The number of elements to broadcast (default is 1).
+  mpiCheck MPI_Bcast(
+    addr data, 
+    cint(len), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc scatter*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T]; 
+  root: int;
+  sendLen, recvLen: int
+) =
+  ## Scatters data from the process with rank `root` to all other processes in `communicator` using `MPI_Scatter`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for scattering.
+  ##  - `sendBuffer`: The data to scatter. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the scattered data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `root`: The rank of the root process that will scatter the data.
+  ##  - `sendLen`: The number of elements to send to each process (significant at root).
+  ##  - `recvLen`: The number of elements to receive from the root (significant at non-root processes).
+  mpiCheck MPI_Scatter(
+    addr sendBuffer[0], 
+    cint(sendLen), 
+    mpiType(T), 
+    addr recvBuffer[0], 
+    cint(recvLen), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc gather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T]; 
+  root: int;
+  sendLen, recvLen: int
+) =
+  ## Gathers data from all processes in `communicator` to the process with rank `root` using `MPI_Gather`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the gathered data into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `root`: The rank of the root process that will gather the data.
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  mpiCheck MPI_Gather(
+    addr sendBuffer[0], 
+    cint(sendLen), 
+    mpiType(T), 
+    addr recvBuffer[0], 
+    cint(recvLen), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc allGather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T]; 
+  sendLen, recvLen: int
+) =
+  ## Gathers data from all processes in `communicator` and distributes the combined data to all processes using `MPI_Allgather`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the gathered data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  mpiCheck MPI_Allgather(
+    addr sendBuffer[0], 
+    cint(sendLen), 
+    mpiType(T), 
+    addr recvBuffer[0], 
+    cint(recvLen), 
+    mpiType(T), 
+    communicator.comm
+  )
+
+#[ reduction ]#
+
+proc reduce*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T];  
+  root: int;
+  sendLen, recvLen: int
+) =
+  ## Reduces data from all processes in `communicator` to the process with rank `root` using `MPI_Reduce`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for reduction.
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the reduced result into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `op`: The reduction operation to apply (e.g., `ReduceSum`, `ReduceMaximum`, etc.).
+  ##  - `root`: The rank of the root process that will receive the reduced result.
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  mpiCheck MPI_Reduce(
+    addr sendBuffer[0], 
+    addr recvBuffer[0], 
+    cint(sendLen), 
+    mpiType(T), 
+    op.mpiOp, 
+    cint(root), 
+    communicator.comm
+  )
+
+proc allReduce*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T];  
+  sendLen, recvLen: int
+) =
+  ## Reduces data from all processes in `communicator` and distributes the reduced result to all processes using `MPI_Allreduce`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for reduction.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the reduced result into. Can be any type that has a corresponding MPI datatype.
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  mpiCheck MPI_Allreduce(
+    addr sendBuffer[0], 
+    addr recvBuffer[0], 
+    cint(sendLen), 
+    mpiType(T), 
+    op.mpiOp, 
+    communicator.comm
+  )
 
 #[ MPI dispatch wrappers ]#
 
