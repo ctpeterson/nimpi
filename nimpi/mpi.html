@@ -68,6 +68,10 @@
   code*: cint">MpiError</a></li>
 <li><a class="reference" href="#MpiGroup" title="MpiGroup = object
   group*: mpiwrap.MPI_Group">MpiGroup</a></li>
+<li><a class="reference" href="#MpiOperation" title="MpiOperation = enum
+  ReduceSum, ReduceProduct, ReduceMaximum, ReduceMinimum, ReduceLogicalAnd,
+  ReduceBitwiseAnd, ReduceLogicalOr, ReduceBitwiseOr, ReduceLogicalXor,
+  ReduceBitwiseXor, ReduceMaxLoc, ReduceMinLoc, ReduceReplace, ReduceNoOp">MpiOperation</a></li>
 
     </ul>
   </details>
@@ -105,6 +109,27 @@
   <li><a class="reference" href="#abort%2CMpiCommunicator%2Cint" title="abort(communicator: MpiCommunicator; errorcode: int = 1)">abort(communicator: MpiCommunicator; errorcode: int = 1)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">allGather
+  <li><a class="reference" href="#allGather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint" title="allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+             recvBuffer: var openArray[T]; sendLen, recvLen: int)">allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+             recvBuffer: var openArray[T]; sendLen, recvLen: int)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">allReduce
+  <li><a class="reference" href="#allReduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint" title="allReduce[T](communicator: MpiCommunicator; op: MpiOperation;
+             sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+             sendLen, recvLen: int)">allReduce[T](communicator: MpiCommunicator; op: MpiOperation;
+             sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+             sendLen, recvLen: int)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">broadcast
+  <li><a class="reference" href="#broadcast%2CMpiCommunicator%2CT%2Cint%2Cint" title="broadcast[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                                 root: int; len: int = 1)">broadcast[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                                 root: int; len: int = 1)</a></li>
+<li><a class="reference" href="#broadcast%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint" title="broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)">broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">duplicate
   <li><a class="reference" href="#duplicate%2CMpiCommunicator" title="duplicate(communicator: MpiCommunicator): MpiCommunicator">duplicate(communicator: MpiCommunicator): MpiCommunicator</a></li>
 
@@ -112,6 +137,12 @@
 <ul class="simple nested-toc-section">free
   <li><a class="reference" href="#free%2CMpiCommunicator" title="free(communicator: var MpiCommunicator)">free(communicator: var MpiCommunicator)</a></li>
 <li><a class="reference" href="#free%2CMpiGroup" title="free(group: var MpiGroup)">free(group: var MpiGroup)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">gather
+  <li><a class="reference" href="#gather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint" title="gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+          recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)">gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+          recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">group
@@ -142,6 +173,10 @@
   <li><a class="reference" href="#mpiInitialized" title="mpiInitialized(): bool">mpiInitialized(): bool</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">mpiOp
+  <li><a class="reference" href="#mpiOp%2CMpiOperation" title="mpiOp(op: MpiOperation): MPI_Op">mpiOp(op: MpiOperation): MPI_Op</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">mpiType
   <li><a class="reference" href="#mpiType%2Ctypedesc" title="mpiType(T: typedesc): MPI_Datatype">mpiType(T: typedesc): MPI_Datatype</a></li>
 
@@ -170,22 +205,32 @@
 
 </ul>
 <ul class="simple nested-toc-section">receive
-  <li><a class="reference" href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint" title="receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                               source: int; tag: int = 0)">receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                               source: int; tag: int = 0)</a></li>
-<li><a class="reference" href="#receive%2CT%2Cint%2Cint" title="receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)">receive[T: not (array or seq)](data: var T; source: int; tag: int = 0)</a></li>
-<li><a class="reference" href="#receive%2CopenArray%5BT%5D%2Cint%2Cint" title="receive[T](buffer: var openArray[T]; source: int; tag: int = 0)">receive[T](buffer: var openArray[T]; source: int; tag: int = 0)</a></li>
+  <li><a class="reference" href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint" title="receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0; len: int = 1)">receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                               source: int; tag: int = 0; len: int = 1)</a></li>
 <li><a class="reference" href="#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint" title="receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
            tag: int = 0)">receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
            tag: int = 0)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">reduce
+  <li><a class="reference" href="#reduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint" title="reduce[T](communicator: MpiCommunicator; op: MpiOperation;
+          sendBuffer: openArray[T]; recvBuffer: var openArray[T]; root: int;
+          sendLen, recvLen: int)">reduce[T](communicator: MpiCommunicator; op: MpiOperation;
+          sendBuffer: openArray[T]; recvBuffer: var openArray[T]; root: int;
+          sendLen, recvLen: int)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">scatter
+  <li><a class="reference" href="#scatter%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint" title="scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)">scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">send
-  <li><a class="reference" href="#send%2CMpiCommunicator%2CT%2Cint%2Cint" title="send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                            dest: int; tag: int = 0)">send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                            dest: int; tag: int = 0)</a></li>
-<li><a class="reference" href="#send%2CT%2Cint%2Cint" title="send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)">send[T: not (array or seq)](data: var T; dest: int; tag: int = 0)</a></li>
-<li><a class="reference" href="#send%2CopenArray%5BT%5D%2Cint%2Cint" title="send[T](buffer: openArray[T]; dest: int; tag: int = 0)">send[T](buffer: openArray[T]; dest: int; tag: int = 0)</a></li>
+  <li><a class="reference" href="#send%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint" title="send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0; len: int = 1)">send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
+                            dest: int; tag: int = 0; len: int = 1)</a></li>
 <li><a class="reference" href="#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint" title="send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
         tag: int = 0)">send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
         tag: int = 0)</a></li>
@@ -298,6 +343,34 @@
     <p>Represents an MPI group, which is an ordered set of processes. MPI groups are used to define the membership of communicators and to specify subsets of processes for communication operations.</p>
 <p>Attributes:</p>
 <ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">group</span></span></tt>: The underlying MPI_Group handle that represents the group.</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="MpiOperation">
+  <dt><pre><a href="#MpiOperation"><span class="Identifier">MpiOperation</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">ReduceSum</span><span class="Other">,</span> <span class="Identifier">ReduceProduct</span><span class="Other">,</span> <span class="Identifier">ReduceMaximum</span><span class="Other">,</span> <span class="Identifier">ReduceMinimum</span><span class="Other">,</span> <span class="Identifier">ReduceLogicalAnd</span><span class="Other">,</span>
+  <span class="Identifier">ReduceBitwiseAnd</span><span class="Other">,</span> <span class="Identifier">ReduceLogicalOr</span><span class="Other">,</span> <span class="Identifier">ReduceBitwiseOr</span><span class="Other">,</span> <span class="Identifier">ReduceLogicalXor</span><span class="Other">,</span>
+  <span class="Identifier">ReduceBitwiseXor</span><span class="Other">,</span> <span class="Identifier">ReduceMaxLoc</span><span class="Other">,</span> <span class="Identifier">ReduceMinLoc</span><span class="Other">,</span> <span class="Identifier">ReduceReplace</span><span class="Other">,</span> <span class="Identifier">ReduceNoOp</span></pre></dt>
+  <dd>
+    
+    <p>Represents an MPI reduction operation for use in <tt class="docutils literal"><span class="pre"><span class="Identifier">reduce</span></span></tt> and related calls.</p>
+<p>Values:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceSum</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_SUM</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceProduct</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_PROD</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceMaximum</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_MAX</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceMinimum</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_MIN</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceLogicalAnd</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_LAND</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceBitwiseAnd</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_BAND</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceLogicalOr</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_LOR</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceBitwiseOr</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_BOR</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceLogicalXor</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_LXOR</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceBitwiseXor</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_BXOR</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceMaxLoc</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_MAXLOC</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceMinLoc</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_MINLOC</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceReplace</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_REPLACE</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceNoOp</span></span></tt>: corresponds to <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_NO_OP</span></span></tt></li>
 </ul>
 
     
@@ -448,6 +521,82 @@
 </div>
 
 </div>
+<div id="allGather-procs-all">
+  <div id="allGather,MpiCommunicator,openArray[T],openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allGather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">allGather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">sendBuffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+                  <span class="Identifier">recvBuffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">sendLen</span><span class="Other">,</span> <span class="Identifier">recvLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Gathers data from all processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> and distributes the combined data to all processes using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Allgather</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for gathering.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendBuffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvBuffer</span></span></tt>: The buffer to receive the gathered data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendLen</span></span></tt>: The number of elements to send from each process.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvLen</span></span></tt>: The number of elements received from each process (significant at root).</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="allReduce-procs-all">
+  <div id="allReduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#allReduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">allReduce</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">op</span><span class="Other">:</span> <a href="#MpiOperation"><span class="Identifier">MpiOperation</span></a><span class="Other">;</span>
+                  <span class="Identifier">sendBuffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">recvBuffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+                  <span class="Identifier">sendLen</span><span class="Other">,</span> <span class="Identifier">recvLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Reduces data from all processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> and distributes the reduced result to all processes using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Allreduce</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for reduction.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">op</span></span></tt>: The reduction operation to apply (e.g., sum, max).</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendBuffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvBuffer</span></span></tt>: The buffer to receive the reduced result into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendLen</span></span></tt>: The number of elements to send from each process.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvLen</span></span></tt>: The number of elements received from each process (significant at root).</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="broadcast-procs-all">
+  <div id="broadcast,MpiCommunicator,T,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#broadcast%2CMpiCommunicator%2CT%2Cint%2Cint"><span class="Identifier">broadcast</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span>
+                                      <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Broadcasts scalar <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt> to all other processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Bcast</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for broadcasting.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar data to broadcast. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt>: The rank of the root process that will broadcast the data.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">len</span></span></tt>: The number of elements to broadcast (default is 1).</li>
+</ul>
+
+    
+  </dd>
+</div>
+<div id="broadcast,MpiCommunicator,openArray[T],int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#broadcast%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint"><span class="Identifier">broadcast</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">buffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+                  <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Broadcasts <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt> to all other processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Bcast</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for broadcasting.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The data to broadcast. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt>: The rank of the root process that will broadcast the data.</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
 <div id="duplicate-procs-all">
   <div id="duplicate,MpiCommunicator">
   <dt><pre><span class="Keyword">proc</span> <a href="#duplicate%2CMpiCommunicator"><span class="Identifier">duplicate</span></a><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">)</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a> {.
@@ -493,6 +642,27 @@
     <p>Frees the group. This routine does not free group storage, which is freed only when all references to the group are removed.</p>
 <p>Parameters:</p>
 <ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">group</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiGroup</span></span></tt> to free.</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="gather-procs-all">
+  <div id="gather,MpiCommunicator,openArray[T],openArray[T],int,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#gather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint"><span class="Identifier">gather</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">sendBuffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+               <span class="Identifier">recvBuffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">sendLen</span><span class="Other">,</span> <span class="Identifier">recvLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Gathers data from all processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Gather</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for gathering.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendBuffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvBuffer</span></span></tt>: The buffer to receive the gathered data into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt>: The rank of the root process that will gather the data.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendLen</span></span></tt>: The number of elements to send from each process.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvLen</span></span></tt>: The number of elements received from each process (significant at root).</li>
 </ul>
 
     
@@ -597,6 +767,17 @@
   <dd>
     
     Checks if the MPI environment has been initialized.
+    
+  </dd>
+</div>
+
+</div>
+<div id="mpiOp-procs-all">
+  <div id="mpiOp,MpiOperation">
+  <dt><pre><span class="Keyword">proc</span> <a href="#mpiOp%2CMpiOperation"><span class="Identifier">mpiOp</span></a><span class="Other">(</span><span class="Identifier">op</span><span class="Other">:</span> <a href="#MpiOperation"><span class="Identifier">MpiOperation</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mpiwrap.html#MPI_Op"><span class="Identifier">MPI_Op</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    Converts an <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiOperation</span></span></tt> to the underlying <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Op</span></span></tt> handle.
     
   </dd>
 </div>
@@ -735,9 +916,9 @@
 
 </div>
 <div id="receive-procs-all">
-  <div id="receive,MpiCommunicator,T,int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
-                                    <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <div id="receive,MpiCommunicator,T,int,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
+                                    <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span></pre></dt>
   <dd>
     
     <p>Receives scalar data into <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
@@ -746,34 +927,7 @@
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.</li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
-</ul>
-
-    
-  </dd>
-</div>
-<div id="receive,T,int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CT%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    <p>Receives scalar data into <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
-<p>Parameters:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
-</ul>
-
-    
-  </dd>
-</div>
-<div id="receive,openArray[T],int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#receive%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">receive</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    <p>Receives data into <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Recv</span></span></tt>.</p>
-<p>Parameters:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">source</span></span></tt>: The rank of the source process within the communicator.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">len</span></span></tt>: The number of elements to receive (default is 1).</li>
 </ul>
 
     
@@ -797,10 +951,54 @@
 </div>
 
 </div>
+<div id="reduce-procs-all">
+  <div id="reduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#reduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint"><span class="Identifier">reduce</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">op</span><span class="Other">:</span> <a href="#MpiOperation"><span class="Identifier">MpiOperation</span></a><span class="Other">;</span>
+               <span class="Identifier">sendBuffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">recvBuffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+               <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">sendLen</span><span class="Other">,</span> <span class="Identifier">recvLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Reduces data from all processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Reduce</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for reduction.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendBuffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvBuffer</span></span></tt>: The buffer to receive the reduced result into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">op</span></span></tt>: The reduction operation to apply (e.g., <tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceSum</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">ReduceMaximum</span></span></tt>, etc.).</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt>: The rank of the root process that will receive the reduced result.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendLen</span></span></tt>: The number of elements to send from each process.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvLen</span></span></tt>: The number of elements received from each process (significant at root).</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
+<div id="scatter-procs-all">
+  <div id="scatter,MpiCommunicator,openArray[T],openArray[T],int,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#scatter%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint"><span class="Identifier">scatter</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">sendBuffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span>
+                <span class="Identifier">recvBuffer</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">sendLen</span><span class="Other">,</span> <span class="Identifier">recvLen</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    <p>Scatters data from the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt> to all other processes in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Scatter</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for scattering.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendBuffer</span></span></tt>: The data to scatter. Only significant at the root process. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvBuffer</span></span></tt>: The buffer to receive the scattered data into. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">root</span></span></tt>: The rank of the root process that will scatter the data.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">sendLen</span></span></tt>: The number of elements to send to each process (significant at root).</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">recvLen</span></span></tt>: The number of elements to receive from the root (significant at non-root processes).</li>
+</ul>
+
+    
+  </dd>
+</div>
+
+</div>
 <div id="send-procs-all">
-  <div id="send,MpiCommunicator,T,int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CMpiCommunicator%2CT%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
-                                 <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
+  <div id="send,MpiCommunicator,T,int,int,int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">communicator</span><span class="Other">:</span> <a href="#MpiCommunicator"><span class="Identifier">MpiCommunicator</span></a><span class="Other">;</span> <span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span>
+                                 <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">len</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span></pre></dt>
   <dd>
     
     <p>Sends scalar <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
@@ -809,34 +1007,7 @@
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar data to send. Can be any type that has a corresponding MPI datatype.</li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
-</ul>
-
-    
-  </dd>
-</div>
-<div id="send,T,int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CT%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    <p>Sends scalar <tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
-<p>Parameters:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">data</span></span></tt>: The scalar data to send. Can be any type that has a corresponding MPI datatype.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
-</ul>
-
-    
-  </dd>
-</div>
-<div id="send,openArray[T],int,int">
-  <dt><pre><span class="Keyword">proc</span> <a href="#send%2CopenArray%5BT%5D%2Cint%2Cint"><span class="Identifier">send</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">buffer</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    <p>Sends <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">WorldCommunicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
-<p>Parameters:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0).</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">len</span></span></tt>: The number of elements to send (default is 1).</li>
 </ul>
 
     
@@ -847,7 +1018,14 @@
              <span class="Identifier">tag</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span></pre></dt>
   <dd>
     
-    
+    <p>Sends <tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt> to the process with rank <tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt> in <tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt> using <tt class="docutils literal"><span class="pre"><span class="Identifier">MPI_Send</span></span></tt>.</p>
+<p>Parameters:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">communicator</span></span></tt>: The <tt class="docutils literal"><span class="pre"><span class="Identifier">MpiCommunicator</span></span></tt> to use for sending.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">buffer</span></span></tt>: The data to send. Can be any type that has a corresponding MPI datatype.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">dest</span></span></tt>: The rank of the destination process within the communicator.</li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">tag</span></span></tt>: An optional tag to identify the message (default is 0 </li>
+</ul>
+
     
   </dd>
 </div>
@@ -966,7 +1144,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 17:40:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-17 16:21:46 UTC</small>
       </div>
     </div>
   </div>

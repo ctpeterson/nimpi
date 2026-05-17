@@ -204,8 +204,28 @@
   <li><a class="reference" href="#MPI_Abort%2CMPI_Comm%2Ccint" title="MPI_Abort(comm: MPI_Comm; errorcode: cint): cint">MPI_Abort(comm: MPI_Comm; errorcode: cint): cint</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">MPI_Allgather
+  <li><a class="reference" href="#MPI_Allgather%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Comm" title="MPI_Allgather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+              recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+              comm: MPI_Comm): cint">MPI_Allgather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+              recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+              comm: MPI_Comm): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Allreduce
+  <li><a class="reference" href="#MPI_Allreduce%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2CMPI_Comm" title="MPI_Allreduce(sendbuf: pointer; recvbuf: pointer; count: cint;
+              datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint">MPI_Allreduce(sendbuf: pointer; recvbuf: pointer; count: cint;
+              datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">MPI_Barrier
   <li><a class="reference" href="#MPI_Barrier%2CMPI_Comm" title="MPI_Barrier(comm: MPI_Comm): cint">MPI_Barrier(comm: MPI_Comm): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Bcast
+  <li><a class="reference" href="#MPI_Bcast%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm" title="MPI_Bcast(buffer: pointer; count: cint; datatype: MPI_Datatype; root: cint;
+          comm: MPI_Comm): cint">MPI_Bcast(buffer: pointer; count: cint; datatype: MPI_Datatype; root: cint;
+          comm: MPI_Comm): cint</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">MPI_Comm_compare
@@ -250,6 +270,14 @@
 </ul>
 <ul class="simple nested-toc-section">MPI_Finalized
   <li><a class="reference" href="#MPI_Finalized%2Cptr.cint" title="MPI_Finalized(flag: ptr cint): cint">MPI_Finalized(flag: ptr cint): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Gather
+  <li><a class="reference" href="#MPI_Gather%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm" title="MPI_Gather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+           recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+           root: cint; comm: MPI_Comm): cint">MPI_Gather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+           recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+           root: cint; comm: MPI_Comm): cint</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">MPI_Group_difference
@@ -298,6 +326,20 @@
   <li><a class="reference" href="#MPI_Recv%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Status" title="MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
          tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint">MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
          tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Reduce
+  <li><a class="reference" href="#MPI_Reduce%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2Ccint%2CMPI_Comm" title="MPI_Reduce(sendbuf: pointer; recvbuf: pointer; count: cint;
+           datatype: MPI_Datatype; op: MPI_Op; root: cint; comm: MPI_Comm): cint">MPI_Reduce(sendbuf: pointer; recvbuf: pointer; count: cint;
+           datatype: MPI_Datatype; op: MPI_Op; root: cint; comm: MPI_Comm): cint</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">MPI_Scatter
+  <li><a class="reference" href="#MPI_Scatter%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm" title="MPI_Scatter(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+            recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+            root: cint; comm: MPI_Comm): cint">MPI_Scatter(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+            recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+            root: cint; comm: MPI_Comm): cint</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">MPI_Send
@@ -1362,10 +1404,50 @@
 </div>
 
 </div>
+<div id="MPI_Allgather-procs-all">
+  <div id="MPI_Allgather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Allgather%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Comm"><span class="Identifier">MPI_Allgather</span></a><span class="Other">(</span><span class="Identifier">sendbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">sendcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">sendtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                   <span class="Identifier">recvbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">recvcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">recvtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                   <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Allreduce-procs-all">
+  <div id="MPI_Allreduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Allreduce%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2CMPI_Comm"><span class="Identifier">MPI_Allreduce</span></a><span class="Other">(</span><span class="Identifier">sendbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">recvbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">count</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span>
+                   <span class="Identifier">datatype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span> <span class="Identifier">op</span><span class="Other">:</span> <a href="#MPI_Op"><span class="Identifier">MPI_Op</span></a><span class="Other">;</span> <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.
+    <span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="MPI_Barrier-procs-all">
   <div id="MPI_Barrier,MPI_Comm">
   <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Barrier%2CMPI_Comm"><span class="Identifier">MPI_Barrier</span></a><span class="Other">(</span><span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span>
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Bcast-procs-all">
+  <div id="MPI_Bcast,pointer,cint,MPI_Datatype,cint,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Bcast%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm"><span class="Identifier">MPI_Bcast</span></a><span class="Other">(</span><span class="Identifier">buffer</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">count</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">datatype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span>
+               <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span>
+                                       <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -1507,6 +1589,20 @@
 </div>
 
 </div>
+<div id="MPI_Gather-procs-all">
+  <div id="MPI_Gather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Gather%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm"><span class="Identifier">MPI_Gather</span></a><span class="Other">(</span><span class="Identifier">sendbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">sendcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">sendtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                <span class="Identifier">recvbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">recvcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">recvtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="MPI_Group_difference-procs-all">
   <div id="MPI_Group_difference,MPI_Group,MPI_Group,ptr.MPI_Group">
   <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Group_difference%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group"><span class="Identifier">MPI_Group_difference</span></a><span class="Other">(</span><span class="Identifier">group1</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span> <span class="Identifier">group2</span><span class="Other">:</span> <a href="#MPI_Group"><span class="Identifier">MPI_Group</span></a><span class="Other">;</span>
@@ -1632,6 +1728,33 @@
 </div>
 
 </div>
+<div id="MPI_Reduce-procs-all">
+  <div id="MPI_Reduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,cint,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Reduce%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2Ccint%2CMPI_Comm"><span class="Identifier">MPI_Reduce</span></a><span class="Other">(</span><span class="Identifier">sendbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">recvbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">count</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span>
+                <span class="Identifier">datatype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span> <span class="Identifier">op</span><span class="Other">:</span> <a href="#MPI_Op"><span class="Identifier">MPI_Op</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.
+    <span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span> <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="MPI_Scatter-procs-all">
+  <div id="MPI_Scatter,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm">
+  <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Scatter%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm"><span class="Identifier">MPI_Scatter</span></a><span class="Other">(</span><span class="Identifier">sendbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">sendcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">sendtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                 <span class="Identifier">recvbuf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">recvcount</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">recvtype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span>
+                 <span class="Identifier">root</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">comm</span><span class="Other">:</span> <a href="#MPI_Comm"><span class="Identifier">MPI_Comm</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> {.<span class="Identifier">cdecl</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">,</span>
+    <span class="Identifier">header</span><span class="Other">:</span> <span class="StringLit">&quot;mpi.h&quot;</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="MPI_Send-procs-all">
   <div id="MPI_Send,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm">
   <dt><pre><span class="Keyword">proc</span> <a href="#MPI_Send%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm"><span class="Identifier">MPI_Send</span></a><span class="Other">(</span><span class="Identifier">buf</span><span class="Other">:</span> <span class="Identifier">pointer</span><span class="Other">;</span> <span class="Identifier">count</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">datatype</span><span class="Other">:</span> <a href="#MPI_Datatype"><span class="Identifier">MPI_Datatype</span></a><span class="Other">;</span> <span class="Identifier">dest</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span>
@@ -1679,7 +1802,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-10 17:40:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-17 16:21:46 UTC</small>
       </div>
     </div>
   </div>
