@@ -41,6 +41,10 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc `-`(group1, group2: MpiGroup): MpiGroup" href="nimpi/mpi.html#-%2CMpiGroup%2CMpiGroup">mpi: proc `-`(group1, group2: MpiGroup): MpiGroup</a></li>
           </ul></dd>
+<dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc `==`(comm1, comm2: MpiCommunicator): bool" href="nimpi/mpi.html#%3D%3D%2CMpiCommunicator%2CMpiCommunicator">mpi: proc `==`(comm1, comm2: MpiCommunicator): bool</a></li>
+          </ul></dd>
 <dt><a name="abort" href="#abort"><span>abort:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc abort(communicator: MpiCommunicator; errorcode: int = 1)" href="nimpi/mpi.html#abort%2CMpiCommunicator%2Cint">mpi: proc abort(communicator: MpiCommunicator; errorcode: int = 1)</a></li>
@@ -50,6 +54,10 @@
           data-doc-search-tag="mpi: proc allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
              recvBuffer: var openArray[T]; sendLen, recvLen: int)" href="nimpi/mpi.html#allGather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
              recvBuffer: var openArray[T]; sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc allGather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+             sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])" href="nimpi/mpi.html#allGather%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D">mpi: proc allGather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+             sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])</a></li>
           </ul></dd>
 <dt><a name="allReduce" href="#allReduce"><span>allReduce:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -58,14 +66,38 @@
              sendLen, recvLen: int)" href="nimpi/mpi.html#allReduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;
              sendBuffer: openArray[T]; recvBuffer: var openArray[T];
              sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;
+             sendBuffer: pointer; recvBuffer: pointer; count: int;
+             datatype: typedesc[T])" href="nimpi/mpi.html#allReduce%2CMpiCommunicator%2CMpiOperation%2Cpointer%2Cpointer%2Cint%2Ctypedesc%5BT%5D">mpi: proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;
+             sendBuffer: pointer; recvBuffer: pointer; count: int;
+             datatype: typedesc[T])</a></li>
+          </ul></dd>
+<dt><a name="allToAll" href="#allToAll"><span>allToAll:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc allToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+            recvBuffer: var openArray[T]; sendLen, recvLen: int)" href="nimpi/mpi.html#allToAll%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc allToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+            recvBuffer: var openArray[T]; sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc allToAll[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+            sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])" href="nimpi/mpi.html#allToAll%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D">mpi: proc allToAll[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+            sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])</a></li>
           </ul></dd>
 <dt><a name="broadcast" href="#broadcast"><span>broadcast:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)" href="nimpi/mpi.html#broadcast%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint">mpi: proc broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mpi: proc broadcast[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                                 root: int; len: int = 1)" href="nimpi/mpi.html#broadcast%2CMpiCommunicator%2CT%2Cint%2Cint">mpi: proc broadcast[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                                 root: int; len: int = 1)</a></li>
+          data-doc-search-tag="mpi: proc broadcast[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+             datatype: typedesc[T]; root: int)" href="nimpi/mpi.html#broadcast%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint">mpi: proc broadcast[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+             datatype: typedesc[T]; root: int)</a></li>
+          </ul></dd>
+<dt><a name="BufferedSend" href="#BufferedSend"><span>BufferedSend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: SendType.BufferedSend" href="nimpi/mpi.html#BufferedSend">mpi: SendType.BufferedSend</a></li>
+          </ul></dd>
+<dt><a name="count" href="#count"><span>count:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc count[T](status: MpiStatus): int" href="nimpi/mpi.html#count%2CMpiStatus">mpi: proc count[T](status: MpiStatus): int</a></li>
           </ul></dd>
 <dt><a name="duplicate" href="#duplicate"><span>duplicate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -79,6 +111,24 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: let EmptyGroup" href="nimpi/mpi.html#EmptyGroup">mpi: let EmptyGroup</a></li>
           </ul></dd>
+<dt><a name="error" href="#error"><span>error:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc error(status: MpiStatus): int" href="nimpi/mpi.html#error%2CMpiStatus">mpi: proc error(status: MpiStatus): int</a></li>
+          </ul></dd>
+<dt><a name="exclusiveScan" href="#exclusiveScan"><span>exclusiveScan:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+                 sendLen, recvLen: int)" href="nimpi/mpi.html#exclusiveScan%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+                 sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: pointer; recvBuffer: pointer; count: int;
+                 datatype: typedesc[T])" href="nimpi/mpi.html#exclusiveScan%2CMpiCommunicator%2CMpiOperation%2Cpointer%2Cpointer%2Cint%2Ctypedesc%5BT%5D">mpi: proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: pointer; recvBuffer: pointer; count: int;
+                 datatype: typedesc[T])</a></li>
+          </ul></dd>
 <dt><a name="free" href="#free"><span>free:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc free(communicator: var MpiCommunicator)" href="nimpi/mpi.html#free%2CMpiCommunicator">mpi: proc free(communicator: var MpiCommunicator)</a></li>
@@ -90,10 +140,58 @@
           data-doc-search-tag="mpi: proc gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)" href="nimpi/mpi.html#gather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint">mpi: proc gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc gather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+          sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+          root: int)" href="nimpi/mpi.html#gather%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D%2Cint">mpi: proc gather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+          sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+          root: int)</a></li>
           </ul></dd>
 <dt><a name="group" href="#group"><span>group:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc group(communicator: MpiCommunicator): MpiGroup" href="nimpi/mpi.html#group%2CMpiCommunicator">mpi: proc group(communicator: MpiCommunicator): MpiGroup</a></li>
+          </ul></dd>
+<dt><a name="immediateProbe" href="#immediateProbe"><span>immediateProbe:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc immediateProbe(communicator: MpiCommunicator; source: int; tag: int = 0): (bool,
+    MpiStatus)" href="nimpi/mpi.html#immediateProbe%2CMpiCommunicator%2Cint%2Cint">mpi: proc immediateProbe(communicator: MpiCommunicator; source: int; tag: int = 0): (bool,
+    MpiStatus)</a></li>
+          </ul></dd>
+<dt><a name="immediateReceive" href="#immediateReceive"><span>immediateReceive:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc immediateReceive[T](communicator: MpiCommunicator; buffer: var openArray[T];
+                    source: int; tag: int = 0): MpiRequest" href="nimpi/mpi.html#immediateReceive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc immediateReceive[T](communicator: MpiCommunicator; buffer: var openArray[T];
+                    source: int; tag: int = 0): MpiRequest</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc immediateReceive[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+                    datatype: typedesc[T]; source: int; tag: int = 0): MpiRequest" href="nimpi/mpi.html#immediateReceive%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint%2Cint">mpi: proc immediateReceive[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+                    datatype: typedesc[T]; source: int; tag: int = 0): MpiRequest</a></li>
+          </ul></dd>
+<dt><a name="immediateSend" href="#immediateSend"><span>immediateSend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc immediateSend[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+                 tag: int = 0; sendType: SendType = StandardSend): MpiRequest" href="nimpi/mpi.html#immediateSend%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint%2CSendType">mpi: proc immediateSend[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+                 tag: int = 0; sendType: SendType = StandardSend): MpiRequest</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc immediateSend[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+                 datatype: typedesc[T]; dest: int; tag: int = 0;
+                 sendType: SendType = StandardSend): MpiRequest" href="nimpi/mpi.html#immediateSend%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint%2Cint%2CSendType">mpi: proc immediateSend[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+                 datatype: typedesc[T]; dest: int; tag: int = 0;
+                 sendType: SendType = StandardSend): MpiRequest</a></li>
+          </ul></dd>
+<dt><a name="inclusiveScan" href="#inclusiveScan"><span>inclusiveScan:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+                 sendLen, recvLen: int)" href="nimpi/mpi.html#inclusiveScan%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];
+                 sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: pointer; recvBuffer: pointer; count: int;
+                 datatype: typedesc[T])" href="nimpi/mpi.html#inclusiveScan%2CMpiCommunicator%2CMpiOperation%2Cpointer%2Cpointer%2Cint%2Ctypedesc%5BT%5D">mpi: proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;
+                 sendBuffer: pointer; recvBuffer: pointer; count: int;
+                 datatype: typedesc[T])</a></li>
           </ul></dd>
 <dt><a name="mpi" href="#mpi"><span>mpi:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -125,6 +223,22 @@
               datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Allreduce%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2CMPI_Comm">mpiwrap: proc MPI_Allreduce(sendbuf: pointer; recvbuf: pointer; count: cint;
               datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint</a></li>
           </ul></dd>
+<dt><a name="MPI_Alltoall" href="#MPI_Alltoall"><span>MPI_Alltoall:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Alltoall(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+             recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+             comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Alltoall%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Comm">mpiwrap: proc MPI_Alltoall(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+             recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
+             comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Alltoallv" href="#MPI_Alltoallv"><span>MPI_Alltoallv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Alltoallv(sendbuf: pointer; sendcounts: ptr cint; sdispls: ptr cint;
+              sendtype: MPI_Datatype; recvbuf: pointer; recvcounts: ptr cint;
+              rdispls: ptr cint; recvtype: MPI_Datatype; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Alltoallv%2Cpointer%2Cptr.cint%2Cptr.cint%2CMPI_Datatype%2Cpointer%2Cptr.cint%2Cptr.cint%2CMPI_Datatype%2CMPI_Comm">mpiwrap: proc MPI_Alltoallv(sendbuf: pointer; sendcounts: ptr cint; sdispls: ptr cint;
+              sendtype: MPI_Datatype; recvbuf: pointer; recvcounts: ptr cint;
+              rdispls: ptr cint; recvtype: MPI_Datatype; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_ANY_SOURCE" href="#MPI_ANY_SOURCE"><span>MPI_ANY_SOURCE:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_ANY_SOURCE" href="nimpi/mpiwrap.html#MPI_ANY_SOURCE">mpiwrap: var MPI_ANY_SOURCE</a></li>
@@ -154,6 +268,12 @@
 <dt><a name="MPI_BOTTOM" href="#MPI_BOTTOM"><span>MPI_BOTTOM:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_BOTTOM" href="nimpi/mpiwrap.html#MPI_BOTTOM">mpiwrap: var MPI_BOTTOM</a></li>
+          </ul></dd>
+<dt><a name="MPI_Bsend" href="#MPI_Bsend"><span>MPI_Bsend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Bsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Bsend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Bsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_BSEND_OVERHEAD" href="#MPI_BSEND_OVERHEAD"><span>MPI_BSEND_OVERHEAD:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -375,6 +495,12 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_ERR_UNKNOWN" href="nimpi/mpiwrap.html#MPI_ERR_UNKNOWN">mpiwrap: var MPI_ERR_UNKNOWN</a></li>
           </ul></dd>
+<dt><a name="MPI_Exscan" href="#MPI_Exscan"><span>MPI_Exscan:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Exscan(sendbuf: pointer; recvbuf: pointer; count: cint;
+           datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Exscan%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2CMPI_Comm">mpiwrap: proc MPI_Exscan(sendbuf: pointer; recvbuf: pointer; count: cint;
+           datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_File" href="#MPI_File"><span>MPI_File:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: object MPI_File" href="nimpi/mpiwrap.html#MPI_File">mpiwrap: object MPI_File</a></li>
@@ -418,6 +544,18 @@
            root: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Gather%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Gather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
            recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
            root: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Gatherv" href="#MPI_Gatherv"><span>MPI_Gatherv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Gatherv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+            recvbuf: pointer; recvcounts: ptr cint; displs: ptr cint;
+            recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Gatherv%2Cpointer%2Ccint%2CMPI_Datatype%2Cpointer%2Cptr.cint%2Cptr.cint%2CMPI_Datatype%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Gatherv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+            recvbuf: pointer; recvcounts: ptr cint; displs: ptr cint;
+            recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Get_count" href="#MPI_Get_count"><span>MPI_Get_count:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Get_count(status: ptr MPI_Status; datatype: MPI_Datatype; count: ptr cint): cint" href="nimpi/mpiwrap.html#MPI_Get_count%2Cptr.MPI_Status%2CMPI_Datatype%2Cptr.cint">mpiwrap: proc MPI_Get_count(status: ptr MPI_Status; datatype: MPI_Datatype; count: ptr cint): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_GRAPH" href="#MPI_GRAPH"><span>MPI_GRAPH:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -473,6 +611,12 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint" href="nimpi/mpiwrap.html#MPI_Group_union%2CMPI_Group%2CMPI_Group%2Cptr.MPI_Group">mpiwrap: proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint</a></li>
           </ul></dd>
+<dt><a name="MPI_Ibsend" href="#MPI_Ibsend"><span>MPI_Ibsend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Ibsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint" href="nimpi/mpiwrap.html#MPI_Ibsend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Request">mpiwrap: proc MPI_Ibsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_IDENT" href="#MPI_IDENT"><span>MPI_IDENT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_IDENT" href="nimpi/mpiwrap.html#MPI_IDENT">mpiwrap: var MPI_IDENT</a></li>
@@ -524,6 +668,36 @@
 <dt><a name="MPI_INT8_T" href="#MPI_INT8_T"><span>MPI_INT8_T:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_INT8_T" href="nimpi/mpiwrap.html#MPI_INT8_T">mpiwrap: var MPI_INT8_T</a></li>
+          </ul></dd>
+<dt><a name="MPI_Iprobe" href="#MPI_Iprobe"><span>MPI_Iprobe:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Iprobe(source: cint; tag: cint; comm: MPI_Comm; flag: ptr cint;
+           status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Iprobe%2Ccint%2Ccint%2CMPI_Comm%2Cptr.cint%2Cptr.MPI_Status">mpiwrap: proc MPI_Iprobe(source: cint; tag: cint; comm: MPI_Comm; flag: ptr cint;
+           status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Irecv" href="#MPI_Irecv"><span>MPI_Irecv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Irecv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
+          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint" href="nimpi/mpiwrap.html#MPI_Irecv%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Request">mpiwrap: proc MPI_Irecv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;
+          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Irsend" href="#MPI_Irsend"><span>MPI_Irsend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Irsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint" href="nimpi/mpiwrap.html#MPI_Irsend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Request">mpiwrap: proc MPI_Irsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Isend" href="#MPI_Isend"><span>MPI_Isend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Isend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint" href="nimpi/mpiwrap.html#MPI_Isend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Request">mpiwrap: proc MPI_Isend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Issend" href="#MPI_Issend"><span>MPI_Issend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Issend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint" href="nimpi/mpiwrap.html#MPI_Issend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Request">mpiwrap: proc MPI_Issend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_LAND" href="#MPI_LAND"><span>MPI_LAND:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -645,6 +819,10 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_PACKED" href="nimpi/mpiwrap.html#MPI_PACKED">mpiwrap: var MPI_PACKED</a></li>
           </ul></dd>
+<dt><a name="MPI_Probe" href="#MPI_Probe"><span>MPI_Probe:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Probe(source: cint; tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Probe%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Status">mpiwrap: proc MPI_Probe(source: cint; tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_PROC_NULL" href="#MPI_PROC_NULL"><span>MPI_PROC_NULL:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_PROC_NULL" href="nimpi/mpiwrap.html#MPI_PROC_NULL">mpiwrap: var MPI_PROC_NULL</a></li>
@@ -669,6 +847,10 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_REPLACE" href="nimpi/mpiwrap.html#MPI_REPLACE">mpiwrap: var MPI_REPLACE</a></li>
           </ul></dd>
+<dt><a name="MpiRequest" href="#MpiRequest"><span>MpiRequest:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: object MpiRequest" href="nimpi/mpi.html#MpiRequest">mpi: object MpiRequest</a></li>
+          </ul></dd>
 <dt><a name="MPI_Request" href="#MPI_Request"><span>MPI_Request:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: object MPI_Request" href="nimpi/mpiwrap.html#MPI_Request">mpiwrap: object MPI_Request</a></li>
@@ -681,6 +863,18 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_ROOT" href="nimpi/mpiwrap.html#MPI_ROOT">mpiwrap: var MPI_ROOT</a></li>
           </ul></dd>
+<dt><a name="MPI_Rsend" href="#MPI_Rsend"><span>MPI_Rsend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Rsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Rsend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Rsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Scan" href="#MPI_Scan"><span>MPI_Scan:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Scan(sendbuf: pointer; recvbuf: pointer; count: cint;
+         datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Scan%2Cpointer%2Cpointer%2Ccint%2CMPI_Datatype%2CMPI_Op%2CMPI_Comm">mpiwrap: proc MPI_Scan(sendbuf: pointer; recvbuf: pointer; count: cint;
+         datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_Scatter" href="#MPI_Scatter"><span>MPI_Scatter:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: proc MPI_Scatter(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
@@ -689,11 +883,37 @@
             recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;
             root: cint; comm: MPI_Comm): cint</a></li>
           </ul></dd>
+<dt><a name="MPI_Scatterv" href="#MPI_Scatterv"><span>MPI_Scatterv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Scatterv(sendbuf: pointer; sendcounts: ptr cint; displs: ptr cint;
+             sendtype: MPI_Datatype; recvbuf: pointer; recvcount: cint;
+             recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Scatterv%2Cpointer%2Cptr.cint%2Cptr.cint%2CMPI_Datatype%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Scatterv(sendbuf: pointer; sendcounts: ptr cint; displs: ptr cint;
+             sendtype: MPI_Datatype; recvbuf: pointer; recvcount: cint;
+             recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
 <dt><a name="MPI_Send" href="#MPI_Send"><span>MPI_Send:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
          tag: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Send%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
          tag: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Sendrecv" href="#MPI_Sendrecv"><span>MPI_Sendrecv:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Sendrecv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+             dest: cint; sendtag: cint; recvbuf: pointer; recvcount: cint;
+             recvtype: MPI_Datatype; source: cint; recvtag: cint;
+             comm: MPI_Comm; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Sendrecv%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Status">mpiwrap: proc MPI_Sendrecv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;
+             dest: cint; sendtag: cint; recvbuf: pointer; recvcount: cint;
+             recvtype: MPI_Datatype; source: cint; recvtag: cint;
+             comm: MPI_Comm; status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Sendrecv_replace" href="#MPI_Sendrecv_replace"><span>MPI_Sendrecv_replace:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Sendrecv_replace(buf: pointer; count: cint; datatype: MPI_Datatype;
+                     dest: cint; sendtag: cint; source: cint; recvtag: cint;
+                     comm: MPI_Comm; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Sendrecv_replace%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2Ccint%2Ccint%2CMPI_Comm%2Cptr.MPI_Status">mpiwrap: proc MPI_Sendrecv_replace(buf: pointer; count: cint; datatype: MPI_Datatype;
+                     dest: cint; sendtag: cint; source: cint; recvtag: cint;
+                     comm: MPI_Comm; status: ptr MPI_Status): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_SHORT" href="#MPI_SHORT"><span>MPI_SHORT:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -710,6 +930,16 @@
 <dt><a name="MPI_SIMILAR" href="#MPI_SIMILAR"><span>MPI_SIMILAR:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_SIMILAR" href="nimpi/mpiwrap.html#MPI_SIMILAR">mpiwrap: var MPI_SIMILAR</a></li>
+          </ul></dd>
+<dt><a name="MPI_Ssend" href="#MPI_Ssend"><span>MPI_Ssend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Ssend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint" href="nimpi/mpiwrap.html#MPI_Ssend%2Cpointer%2Ccint%2CMPI_Datatype%2Ccint%2Ccint%2CMPI_Comm">mpiwrap: proc MPI_Ssend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;
+          tag: cint; comm: MPI_Comm): cint</a></li>
+          </ul></dd>
+<dt><a name="MpiStatus" href="#MpiStatus"><span>MpiStatus:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: object MpiStatus" href="nimpi/mpi.html#MpiStatus">mpi: object MpiStatus</a></li>
           </ul></dd>
 <dt><a name="MPI_Status" href="#MPI_Status"><span>MPI_Status:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -730,6 +960,16 @@
 <dt><a name="MPI_SUM" href="#MPI_SUM"><span>MPI_SUM:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_SUM" href="nimpi/mpiwrap.html#MPI_SUM">mpiwrap: var MPI_SUM</a></li>
+          </ul></dd>
+<dt><a name="MPI_Test" href="#MPI_Test"><span>MPI_Test:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Test(request: ptr MPI_Request; flag: ptr cint; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Test%2Cptr.MPI_Request%2Cptr.cint%2Cptr.MPI_Status">mpiwrap: proc MPI_Test(request: ptr MPI_Request; flag: ptr cint; status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Testall" href="#MPI_Testall"><span>MPI_Testall:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Testall(count: cint; array_of_requests: ptr MPI_Request; flag: ptr cint;
+            array_of_statuses: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Testall%2Ccint%2Cptr.MPI_Request%2Cptr.cint%2Cptr.MPI_Status">mpiwrap: proc MPI_Testall(count: cint; array_of_requests: ptr MPI_Request; flag: ptr cint;
+            array_of_statuses: ptr MPI_Status): cint</a></li>
           </ul></dd>
 <dt><a name="MPI_THREAD_FUNNELED" href="#MPI_THREAD_FUNNELED"><span>MPI_THREAD_FUNNELED:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -795,6 +1035,16 @@
 <li><a class="reference external"
           data-doc-search-tag="mpiwrap: var MPI_UNSIGNED_SHORT" href="nimpi/mpiwrap.html#MPI_UNSIGNED_SHORT">mpiwrap: var MPI_UNSIGNED_SHORT</a></li>
           </ul></dd>
+<dt><a name="MPI_Wait" href="#MPI_Wait"><span>MPI_Wait:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Wait(request: ptr MPI_Request; status: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Wait%2Cptr.MPI_Request%2Cptr.MPI_Status">mpiwrap: proc MPI_Wait(request: ptr MPI_Request; status: ptr MPI_Status): cint</a></li>
+          </ul></dd>
+<dt><a name="MPI_Waitall" href="#MPI_Waitall"><span>MPI_Waitall:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpiwrap: proc MPI_Waitall(count: cint; array_of_requests: ptr MPI_Request;
+            array_of_statuses: ptr MPI_Status): cint" href="nimpi/mpiwrap.html#MPI_Waitall%2Ccint%2Cptr.MPI_Request%2Cptr.MPI_Status">mpiwrap: proc MPI_Waitall(count: cint; array_of_requests: ptr MPI_Request;
+            array_of_statuses: ptr MPI_Status): cint</a></li>
+          </ul></dd>
 <dt><a name="mpiWallTick" href="#mpiWallTick"><span>mpiWallTick:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc mpiWallTick(): float64" href="nimpi/mpi.html#mpiWallTick">mpi: proc mpiWallTick(): float64</a></li>
@@ -841,15 +1091,23 @@
 <li><a class="reference external"
           data-doc-search-tag="mpi: let NullGroup" href="nimpi/mpi.html#NullGroup">mpi: let NullGroup</a></li>
           </ul></dd>
+<dt><a name="probe" href="#probe"><span>probe:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc probe(communicator: MpiCommunicator; source: int; tag: int = 0): MpiStatus" href="nimpi/mpi.html#probe%2CMpiCommunicator%2Cint%2Cint">mpi: proc probe(communicator: MpiCommunicator; source: int; tag: int = 0): MpiStatus</a></li>
+          </ul></dd>
+<dt><a name="ReadySend" href="#ReadySend"><span>ReadySend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: SendType.ReadySend" href="nimpi/mpi.html#ReadySend">mpi: SendType.ReadySend</a></li>
+          </ul></dd>
 <dt><a name="receive" href="#receive"><span>receive:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
-           tag: int = 0)" href="nimpi/mpi.html#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
-           tag: int = 0)</a></li>
+           tag: int = 0): MpiStatus" href="nimpi/mpi.html#receive%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;
+           tag: int = 0): MpiStatus</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mpi: proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                               source: int; tag: int = 0; len: int = 1)" href="nimpi/mpi.html#receive%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint">mpi: proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                               source: int; tag: int = 0; len: int = 1)</a></li>
+          data-doc-search-tag="mpi: proc receive[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+           datatype: typedesc[T]; source: int; tag: int = 0): MpiStatus" href="nimpi/mpi.html#receive%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint%2Cint">mpi: proc receive[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+           datatype: typedesc[T]; source: int; tag: int = 0): MpiStatus</a></li>
           </ul></dd>
 <dt><a name="reduce" href="#reduce"><span>reduce:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -858,6 +1116,10 @@
           sendLen, recvLen: int)" href="nimpi/mpi.html#reduce%2CMpiCommunicator%2CMpiOperation%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint">mpi: proc reduce[T](communicator: MpiCommunicator; op: MpiOperation;
           sendBuffer: openArray[T]; recvBuffer: var openArray[T]; root: int;
           sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc reduce[T](communicator: MpiCommunicator; op: MpiOperation; sendBuffer: pointer;
+          recvBuffer: pointer; count: int; datatype: typedesc[T]; root: int)" href="nimpi/mpi.html#reduce%2CMpiCommunicator%2CMpiOperation%2Cpointer%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint">mpi: proc reduce[T](communicator: MpiCommunicator; op: MpiOperation; sendBuffer: pointer;
+          recvBuffer: pointer; count: int; datatype: typedesc[T]; root: int)</a></li>
           </ul></dd>
 <dt><a name="ReduceBitwiseAnd" href="#ReduceBitwiseAnd"><span>ReduceBitwiseAnd:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -920,6 +1182,12 @@
           data-doc-search-tag="mpi: proc scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
            recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)" href="nimpi/mpi.html#scatter%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint">mpi: proc scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
            recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc scatter[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+           sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+           root: int)" href="nimpi/mpi.html#scatter%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D%2Cint">mpi: proc scatter[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+           sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+           root: int)</a></li>
           </ul></dd>
 <dt><a name="SelfCommunicator" href="#SelfCommunicator"><span>SelfCommunicator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -928,12 +1196,46 @@
 <dt><a name="send" href="#send"><span>send:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
-        tag: int = 0)" href="nimpi/mpi.html#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
-        tag: int = 0)</a></li>
+        tag: int = 0; sendType: SendType = StandardSend)" href="nimpi/mpi.html#send%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint%2CSendType">mpi: proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;
+        tag: int = 0; sendType: SendType = StandardSend)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="mpi: proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                            dest: int; tag: int = 0; len: int = 1)" href="nimpi/mpi.html#send%2CMpiCommunicator%2CT%2Cint%2Cint%2Cint">mpi: proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;
-                            dest: int; tag: int = 0; len: int = 1)</a></li>
+          data-doc-search-tag="mpi: proc send[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+        datatype: typedesc[T]; dest: int; tag: int = 0;
+        sendType: SendType = StandardSend)" href="nimpi/mpi.html#send%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint%2Cint%2CSendType">mpi: proc send[T](communicator: MpiCommunicator; buffer: pointer; count: int;
+        datatype: typedesc[T]; dest: int; tag: int = 0;
+        sendType: SendType = StandardSend)</a></li>
+          </ul></dd>
+<dt><a name="sendReceive" href="#sendReceive"><span>sendReceive:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc sendReceive[T](communicator: MpiCommunicator;
+               sendBuffer, recvBuffer: openArray[T]; dest, source: int;
+               sendTag: int = 0; recvTag: int = 0): MpiStatus" href="nimpi/mpi.html#sendReceive%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2Cint%2Cint%2Cint%2Cint">mpi: proc sendReceive[T](communicator: MpiCommunicator;
+               sendBuffer, recvBuffer: openArray[T]; dest, source: int;
+               sendTag: int = 0; recvTag: int = 0): MpiStatus</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc sendReceive[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+               sendCount, recvCount: int;
+               sendDatatype, recvDatatype: typedesc[T]; dest, source: int;
+               sendTag: int = 0; recvTag: int = 0): MpiStatus" href="nimpi/mpi.html#sendReceive%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D%2Cint%2Cint%2Cint%2Cint">mpi: proc sendReceive[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;
+               sendCount, recvCount: int;
+               sendDatatype, recvDatatype: typedesc[T]; dest, source: int;
+               sendTag: int = 0; recvTag: int = 0): MpiStatus</a></li>
+          </ul></dd>
+<dt><a name="sendReceiveReplace" href="#sendReceiveReplace"><span>sendReceiveReplace:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: var openArray[T];
+                      dest, source: int; sendTag: int = 0; recvTag: int = 0): MpiStatus" href="nimpi/mpi.html#sendReceiveReplace%2CMpiCommunicator%2CopenArray%5BT%5D%2Cint%2Cint%2Cint%2Cint">mpi: proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: var openArray[T];
+                      dest, source: int; sendTag: int = 0; recvTag: int = 0): MpiStatus</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: pointer;
+                      count: int; datatype: typedesc[T]; dest, source: int;
+                      sendTag: int = 0; recvTag: int = 0): MpiStatus" href="nimpi/mpi.html#sendReceiveReplace%2CMpiCommunicator%2Cpointer%2Cint%2Ctypedesc%5BT%5D%2Cint%2Cint%2Cint%2Cint">mpi: proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: pointer;
+                      count: int; datatype: typedesc[T]; dest, source: int;
+                      sendTag: int = 0; recvTag: int = 0): MpiStatus</a></li>
+          </ul></dd>
+<dt><a name="SendType" href="#SendType"><span>SendType:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: enum SendType" href="nimpi/mpi.html#SendType">mpi: enum SendType</a></li>
           </ul></dd>
 <dt><a name="size" href="#size"><span>size:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -941,9 +1243,91 @@
           <li><a class="reference external"
           data-doc-search-tag="mpi: proc size(group: MpiGroup): int" href="nimpi/mpi.html#size%2CMpiGroup">mpi: proc size(group: MpiGroup): int</a></li>
           </ul></dd>
+<dt><a name="source" href="#source"><span>source:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc source(status: MpiStatus): int" href="nimpi/mpi.html#source%2CMpiStatus">mpi: proc source(status: MpiStatus): int</a></li>
+          </ul></dd>
 <dt><a name="split" href="#split"><span>split:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mpi: proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator" href="nimpi/mpi.html#split%2CMpiCommunicator%2Cint%2Cint">mpi: proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator</a></li>
+          </ul></dd>
+<dt><a name="StandardSend" href="#StandardSend"><span>StandardSend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: SendType.StandardSend" href="nimpi/mpi.html#StandardSend">mpi: SendType.StandardSend</a></li>
+          </ul></dd>
+<dt><a name="SynchronousSend" href="#SynchronousSend"><span>SynchronousSend:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: SendType.SynchronousSend" href="nimpi/mpi.html#SynchronousSend">mpi: SendType.SynchronousSend</a></li>
+          </ul></dd>
+<dt><a name="tag" href="#tag"><span>tag:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc tag(status: MpiStatus): int" href="nimpi/mpi.html#tag%2CMpiStatus">mpi: proc tag(status: MpiStatus): int</a></li>
+          </ul></dd>
+<dt><a name="test" href="#test"><span>test:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc test(request: var MpiRequest): (bool, MpiStatus)" href="nimpi/mpi.html#test%2CMpiRequest">mpi: proc test(request: var MpiRequest): (bool, MpiStatus)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc test(requests: var seq[MpiRequest]): (bool, seq[MpiStatus])" href="nimpi/mpi.html#test%2Cseq%5BMpiRequest%5D">mpi: proc test(requests: var seq[MpiRequest]): (bool, seq[MpiStatus])</a></li>
+          </ul></dd>
+<dt><a name="variableAllToAll" href="#variableAllToAll"><span>variableAllToAll:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableAllToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                    sendCounts, sendDisplacements: openArray[int];
+                    recvBuffer: var openArray[T];
+                    recvCounts, recvDisplacements: openArray[int])" href="nimpi/mpi.html#variableAllToAll%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2CopenArray%5BT%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D">mpi: proc variableAllToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                    sendCounts, sendDisplacements: openArray[int];
+                    recvBuffer: var openArray[T];
+                    recvCounts, recvDisplacements: openArray[int])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableAllToAll[T](communicator: MpiCommunicator;
+                    sendBuffer, recvBuffer: pointer;
+                    sendCounts, recvCounts: openArray[int];
+                    sendDisplacements, recvDisplacements: openArray[int];
+                    sendDatatype, recvDatatype: typedesc[T])" href="nimpi/mpi.html#variableAllToAll%2CMpiCommunicator%2Cpointer%2Cpointer%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D">mpi: proc variableAllToAll[T](communicator: MpiCommunicator;
+                    sendBuffer, recvBuffer: pointer;
+                    sendCounts, recvCounts: openArray[int];
+                    sendDisplacements, recvDisplacements: openArray[int];
+                    sendDatatype, recvDatatype: typedesc[T])</a></li>
+          </ul></dd>
+<dt><a name="variableGather" href="#variableGather"><span>variableGather:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                  recvBuffer: var openArray[T];
+                  recvCounts, displacements: openArray[int]; root: int)" href="nimpi/mpi.html#variableGather%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5BT%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2Cint">mpi: proc variableGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                  recvBuffer: var openArray[T];
+                  recvCounts, displacements: openArray[int]; root: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableGather[T](communicator: MpiCommunicator;
+                  sendBuffer, recvBuffer: pointer; sendCount: int;
+                  recvCounts: openArray[int];
+                  sendDatatype, recvDatatype: typedesc[T];
+                  displacements: openArray[int]; root: int)" href="nimpi/mpi.html#variableGather%2CMpiCommunicator%2Cpointer%2Cpointer%2Cint%2CopenArray%5Bint%5D%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D%2CopenArray%5Bint%5D%2Cint">mpi: proc variableGather[T](communicator: MpiCommunicator;
+                  sendBuffer, recvBuffer: pointer; sendCount: int;
+                  recvCounts: openArray[int];
+                  sendDatatype, recvDatatype: typedesc[T];
+                  displacements: openArray[int]; root: int)</a></li>
+          </ul></dd>
+<dt><a name="variableScatter" href="#variableScatter"><span>variableScatter:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableScatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                   sendCounts, displacements: openArray[int];
+                   recvBuffer: var openArray[T]; root: int; recvLen: int)" href="nimpi/mpi.html#variableScatter%2CMpiCommunicator%2CopenArray%5BT%5D%2CopenArray%5Bint%5D%2CopenArray%5Bint%5D%2CopenArray%5BT%5D%2Cint%2Cint">mpi: proc variableScatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];
+                   sendCounts, displacements: openArray[int];
+                   recvBuffer: var openArray[T]; root: int; recvLen: int)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc variableScatter[T](communicator: MpiCommunicator;
+                   sendBuffer, recvBuffer: pointer; sendCounts: openArray[int];
+                   recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+                   displacements: openArray[int]; root: int)" href="nimpi/mpi.html#variableScatter%2CMpiCommunicator%2Cpointer%2Cpointer%2CopenArray%5Bint%5D%2Cint%2Ctypedesc%5BT%5D%2Ctypedesc%5BT%5D%2CopenArray%5Bint%5D%2Cint">mpi: proc variableScatter[T](communicator: MpiCommunicator;
+                   sendBuffer, recvBuffer: pointer; sendCounts: openArray[int];
+                   recvCount: int; sendDatatype, recvDatatype: typedesc[T];
+                   displacements: openArray[int]; root: int)</a></li>
+          </ul></dd>
+<dt><a name="wait" href="#wait"><span>wait:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mpi: proc wait(request: var MpiRequest): MpiStatus" href="nimpi/mpi.html#wait%2CMpiRequest">mpi: proc wait(request: var MpiRequest): MpiStatus</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mpi: proc wait(requests: var seq[MpiRequest]): seq[MpiStatus]" href="nimpi/mpi.html#wait%2Cseq%5BMpiRequest%5D">mpi: proc wait(requests: var seq[MpiRequest]): seq[MpiStatus]</a></li>
           </ul></dd>
 <dt><a name="WorldCommunicator" href="#WorldCommunicator"><span>WorldCommunicator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -953,7 +1337,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-17 16:21:46 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-05-18 14:54:06 UTC</small>
       </div>
     </div>
   </div>

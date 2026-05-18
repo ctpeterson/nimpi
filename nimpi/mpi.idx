@@ -1,73 +1,133 @@
 nimTitle	mpi	nimpi/mpi.html	module nimpi/mpi		0
 nim	MpiError	nimpi/mpi.html#MpiError	object MpiError		89
-nim	MpiCommunicator	nimpi/mpi.html#MpiCommunicator	object MpiCommunicator		100
-nim	MpiGroup	nimpi/mpi.html#MpiGroup	object MpiGroup		109
-nim	ReduceSum	nimpi/mpi.html#ReduceSum	MpiOperation.ReduceSum		118
-nim	ReduceProduct	nimpi/mpi.html#ReduceProduct	MpiOperation.ReduceProduct		118
-nim	ReduceMaximum	nimpi/mpi.html#ReduceMaximum	MpiOperation.ReduceMaximum		118
-nim	ReduceMinimum	nimpi/mpi.html#ReduceMinimum	MpiOperation.ReduceMinimum		118
-nim	ReduceLogicalAnd	nimpi/mpi.html#ReduceLogicalAnd	MpiOperation.ReduceLogicalAnd		118
-nim	ReduceBitwiseAnd	nimpi/mpi.html#ReduceBitwiseAnd	MpiOperation.ReduceBitwiseAnd		118
-nim	ReduceLogicalOr	nimpi/mpi.html#ReduceLogicalOr	MpiOperation.ReduceLogicalOr		118
-nim	ReduceBitwiseOr	nimpi/mpi.html#ReduceBitwiseOr	MpiOperation.ReduceBitwiseOr		118
-nim	ReduceLogicalXor	nimpi/mpi.html#ReduceLogicalXor	MpiOperation.ReduceLogicalXor		118
-nim	ReduceBitwiseXor	nimpi/mpi.html#ReduceBitwiseXor	MpiOperation.ReduceBitwiseXor		118
-nim	ReduceMaxLoc	nimpi/mpi.html#ReduceMaxLoc	MpiOperation.ReduceMaxLoc		118
-nim	ReduceMinLoc	nimpi/mpi.html#ReduceMinLoc	MpiOperation.ReduceMinLoc		118
-nim	ReduceReplace	nimpi/mpi.html#ReduceReplace	MpiOperation.ReduceReplace		118
-nim	ReduceNoOp	nimpi/mpi.html#ReduceNoOp	MpiOperation.ReduceNoOp		118
-nim	MpiOperation	nimpi/mpi.html#MpiOperation	enum MpiOperation		118
-nim	WorldCommunicator	nimpi/mpi.html#WorldCommunicator	let WorldCommunicator		154
-nim	SelfCommunicator	nimpi/mpi.html#SelfCommunicator	let SelfCommunicator		157
-nim	NullCommunicator	nimpi/mpi.html#NullCommunicator	let NullCommunicator		160
-nim	NullGroup	nimpi/mpi.html#NullGroup	let NullGroup		164
-nim	EmptyGroup	nimpi/mpi.html#EmptyGroup	let EmptyGroup		167
-nim	mpiCheck	nimpi/mpi.html#mpiCheck,cint	proc mpiCheck(code: cint)		172
-nim	mpiInit	nimpi/mpi.html#mpiInit	proc mpiInit()		196
-nim	mpiFinalize	nimpi/mpi.html#mpiFinalize	proc mpiFinalize()		200
-nim	mpiInitialized	nimpi/mpi.html#mpiInitialized	proc mpiInitialized(): bool		204
-nim	mpiFinalized	nimpi/mpi.html#mpiFinalized	proc mpiFinalized(): bool		210
-nim	mpiOp	nimpi/mpi.html#mpiOp,MpiOperation	proc mpiOp(op: MpiOperation): MPI_Op		218
-nim	mpiType	nimpi/mpi.html#mpiType,typedesc	proc mpiType(T: typedesc): MPI_Datatype		237
-nim	mpiWallTime	nimpi/mpi.html#mpiWallTime	proc mpiWallTime(): float64		274
-nim	mpiWallTick	nimpi/mpi.html#mpiWallTick	proc mpiWallTick(): float64		281
-nim	group	nimpi/mpi.html#group,MpiCommunicator	proc group(communicator: MpiCommunicator): MpiGroup		288
-nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,seq[int]	proc newMpiGroup(ranks: seq[int]): MpiGroup		300
-nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,MpiGroup,seq[int]	proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup		314
-nim	size	nimpi/mpi.html#size,MpiGroup	proc size(group: MpiGroup): int		329
-nim	myRank	nimpi/mpi.html#myRank,MpiGroup	proc myRank(group: MpiGroup): int		341
-nim	free	nimpi/mpi.html#free,MpiGroup	proc free(group: var MpiGroup)		353
-nim	`+`	nimpi/mpi.html#+,MpiGroup,MpiGroup	proc `+`(group1, group2: MpiGroup): MpiGroup		362
-nim	`*`	nimpi/mpi.html#*,MpiGroup,MpiGroup	proc `*`(group1, group2: MpiGroup): MpiGroup		382
-nim	`-`	nimpi/mpi.html#-,MpiGroup,MpiGroup	proc `-`(group1, group2: MpiGroup): MpiGroup		402
-nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiCommunicator,MpiGroup	proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator		448
-nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiGroup	proc newMpiCommunicator(group: MpiGroup): MpiCommunicator		457
-nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		463
-nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		482
-nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		510
-nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		525
-nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator = WorldCommunicator): int		535
-nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator = WorldCommunicator): int		547
-nim	mpiBarrier	nimpi/mpi.html#mpiBarrier,MpiCommunicator	proc mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)		561
-nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		577
-nim	send	nimpi/mpi.html#send,MpiCommunicator,openArray[T],int,int	proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;\n        tag: int = 0)		591
-nim	send	nimpi/mpi.html#send,MpiCommunicator,T,int,int,int	proc send[T: not (array or seq)](communicator: MpiCommunicator; data: var T;\n                            dest: int; tag: int = 0; len: int = 1)		613
-nim	receive	nimpi/mpi.html#receive,MpiCommunicator,openArray[T],int,int	proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;\n           tag: int = 0)		637
-nim	receive	nimpi/mpi.html#receive,MpiCommunicator,T,int,int,int	proc receive[T: not (array or seq)](communicator: MpiCommunicator; data: var T;\n                               source: int; tag: int = 0; len: int = 1)		661
-nim	broadcast	nimpi/mpi.html#broadcast,MpiCommunicator,openArray[T],int	proc broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)		689
-nim	broadcast	nimpi/mpi.html#broadcast,MpiCommunicator,T,int,int	proc broadcast[T: not (array or seq)](communicator: MpiCommunicator; data: var T;\n                                 root: int; len: int = 1)		708
-nim	scatter	nimpi/mpi.html#scatter,MpiCommunicator,openArray[T],openArray[T],int,int,int	proc scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)		729
-nim	gather	nimpi/mpi.html#gather,MpiCommunicator,openArray[T],openArray[T],int,int,int	proc gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n          recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)		756
-nim	allGather	nimpi/mpi.html#allGather,MpiCommunicator,openArray[T],openArray[T],int,int	proc allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n             recvBuffer: var openArray[T]; sendLen, recvLen: int)		783
-nim	reduce	nimpi/mpi.html#reduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int,int	proc reduce[T](communicator: MpiCommunicator; op: MpiOperation;\n          sendBuffer: openArray[T]; recvBuffer: var openArray[T]; root: int;\n          sendLen, recvLen: int)		809
-nim	allReduce	nimpi/mpi.html#allReduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int	proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;\n             sendBuffer: openArray[T]; recvBuffer: var openArray[T];\n             sendLen, recvLen: int)		837
-nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		864
-nimgrp	newmpicommunicator	nimpi/mpi.html#newMpiCommunicator-procs-all	proc		448
-nimgrp	free	nimpi/mpi.html#free-procs-all	proc		353
-nimgrp	size	nimpi/mpi.html#size-procs-all	proc		329
-nimgrp	newmpigroup	nimpi/mpi.html#newMpiGroup-procs-all	proc		300
-nimgrp	broadcast	nimpi/mpi.html#broadcast-procs-all	proc		689
-nimgrp	send	nimpi/mpi.html#send-procs-all	proc		591
-nimgrp	myrank	nimpi/mpi.html#myRank-procs-all	proc		341
-nimgrp	receive	nimpi/mpi.html#receive-procs-all	proc		637
+nim	StandardSend	nimpi/mpi.html#StandardSend	SendType.StandardSend		100
+nim	BufferedSend	nimpi/mpi.html#BufferedSend	SendType.BufferedSend		100
+nim	SynchronousSend	nimpi/mpi.html#SynchronousSend	SendType.SynchronousSend		100
+nim	ReadySend	nimpi/mpi.html#ReadySend	SendType.ReadySend		100
+nim	SendType	nimpi/mpi.html#SendType	enum SendType		100
+nim	MpiCommunicator	nimpi/mpi.html#MpiCommunicator	object MpiCommunicator		114
+nim	MpiRequest	nimpi/mpi.html#MpiRequest	object MpiRequest		123
+nim	MpiGroup	nimpi/mpi.html#MpiGroup	object MpiGroup		132
+nim	MpiStatus	nimpi/mpi.html#MpiStatus	object MpiStatus		141
+nim	ReduceSum	nimpi/mpi.html#ReduceSum	MpiOperation.ReduceSum		152
+nim	ReduceProduct	nimpi/mpi.html#ReduceProduct	MpiOperation.ReduceProduct		152
+nim	ReduceMaximum	nimpi/mpi.html#ReduceMaximum	MpiOperation.ReduceMaximum		152
+nim	ReduceMinimum	nimpi/mpi.html#ReduceMinimum	MpiOperation.ReduceMinimum		152
+nim	ReduceLogicalAnd	nimpi/mpi.html#ReduceLogicalAnd	MpiOperation.ReduceLogicalAnd		152
+nim	ReduceBitwiseAnd	nimpi/mpi.html#ReduceBitwiseAnd	MpiOperation.ReduceBitwiseAnd		152
+nim	ReduceLogicalOr	nimpi/mpi.html#ReduceLogicalOr	MpiOperation.ReduceLogicalOr		152
+nim	ReduceBitwiseOr	nimpi/mpi.html#ReduceBitwiseOr	MpiOperation.ReduceBitwiseOr		152
+nim	ReduceLogicalXor	nimpi/mpi.html#ReduceLogicalXor	MpiOperation.ReduceLogicalXor		152
+nim	ReduceBitwiseXor	nimpi/mpi.html#ReduceBitwiseXor	MpiOperation.ReduceBitwiseXor		152
+nim	ReduceMaxLoc	nimpi/mpi.html#ReduceMaxLoc	MpiOperation.ReduceMaxLoc		152
+nim	ReduceMinLoc	nimpi/mpi.html#ReduceMinLoc	MpiOperation.ReduceMinLoc		152
+nim	ReduceReplace	nimpi/mpi.html#ReduceReplace	MpiOperation.ReduceReplace		152
+nim	ReduceNoOp	nimpi/mpi.html#ReduceNoOp	MpiOperation.ReduceNoOp		152
+nim	MpiOperation	nimpi/mpi.html#MpiOperation	enum MpiOperation		152
+nim	WorldCommunicator	nimpi/mpi.html#WorldCommunicator	let WorldCommunicator		188
+nim	SelfCommunicator	nimpi/mpi.html#SelfCommunicator	let SelfCommunicator		191
+nim	NullCommunicator	nimpi/mpi.html#NullCommunicator	let NullCommunicator		194
+nim	NullGroup	nimpi/mpi.html#NullGroup	let NullGroup		198
+nim	EmptyGroup	nimpi/mpi.html#EmptyGroup	let EmptyGroup		201
+nim	mpiCheck	nimpi/mpi.html#mpiCheck,cint	proc mpiCheck(code: cint)		206
+nim	mpiInit	nimpi/mpi.html#mpiInit	proc mpiInit()		230
+nim	mpiFinalize	nimpi/mpi.html#mpiFinalize	proc mpiFinalize()		234
+nim	mpiInitialized	nimpi/mpi.html#mpiInitialized	proc mpiInitialized(): bool		238
+nim	mpiFinalized	nimpi/mpi.html#mpiFinalized	proc mpiFinalized(): bool		244
+nim	mpiOp	nimpi/mpi.html#mpiOp,MpiOperation	proc mpiOp(op: MpiOperation): MPI_Op		252
+nim	mpiType	nimpi/mpi.html#mpiType,typedesc	proc mpiType(T: typedesc): MPI_Datatype		271
+nim	mpiWallTime	nimpi/mpi.html#mpiWallTime	proc mpiWallTime(): float64		308
+nim	mpiWallTick	nimpi/mpi.html#mpiWallTick	proc mpiWallTick(): float64		315
+nim	group	nimpi/mpi.html#group,MpiCommunicator	proc group(communicator: MpiCommunicator): MpiGroup		322
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,seq[int]	proc newMpiGroup(ranks: seq[int]): MpiGroup		334
+nim	newMpiGroup	nimpi/mpi.html#newMpiGroup,MpiGroup,seq[int]	proc newMpiGroup(group: MpiGroup; ranks: seq[int]): MpiGroup		353
+nim	size	nimpi/mpi.html#size,MpiGroup	proc size(group: MpiGroup): int		368
+nim	myRank	nimpi/mpi.html#myRank,MpiGroup	proc myRank(group: MpiGroup): int		380
+nim	free	nimpi/mpi.html#free,MpiGroup	proc free(group: var MpiGroup)		392
+nim	`+`	nimpi/mpi.html#+,MpiGroup,MpiGroup	proc `+`(group1, group2: MpiGroup): MpiGroup		401
+nim	`*`	nimpi/mpi.html#*,MpiGroup,MpiGroup	proc `*`(group1, group2: MpiGroup): MpiGroup		421
+nim	`-`	nimpi/mpi.html#-,MpiGroup,MpiGroup	proc `-`(group1, group2: MpiGroup): MpiGroup		441
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiCommunicator,MpiGroup	proc newMpiCommunicator(communicator: MpiCommunicator; group: MpiGroup): MpiCommunicator		487
+nim	newMpiCommunicator	nimpi/mpi.html#newMpiCommunicator,MpiGroup	proc newMpiCommunicator(group: MpiGroup): MpiCommunicator		496
+nim	duplicate	nimpi/mpi.html#duplicate,MpiCommunicator	proc duplicate(communicator: MpiCommunicator): MpiCommunicator		502
+nim	split	nimpi/mpi.html#split,MpiCommunicator,int,int	proc split(communicator: MpiCommunicator; color, key: int): MpiCommunicator		521
+nim	abort	nimpi/mpi.html#abort,MpiCommunicator,int	proc abort(communicator: MpiCommunicator; errorcode: int = 1)		549
+nim	free	nimpi/mpi.html#free,MpiCommunicator	proc free(communicator: var MpiCommunicator)		564
+nim	size	nimpi/mpi.html#size,MpiCommunicator	proc size(communicator: MpiCommunicator = WorldCommunicator): int		574
+nim	myRank	nimpi/mpi.html#myRank,MpiCommunicator	proc myRank(communicator: MpiCommunicator = WorldCommunicator): int		586
+nim	mpiBarrier	nimpi/mpi.html#mpiBarrier,MpiCommunicator	proc mpiBarrier(communicator: MpiCommunicator = WorldCommunicator)		600
+nim	`==`	nimpi/mpi.html#==,MpiCommunicator,MpiCommunicator	proc `==`(comm1, comm2: MpiCommunicator): bool		616
+nim	probe	nimpi/mpi.html#probe,MpiCommunicator,int,int	proc probe(communicator: MpiCommunicator; source: int; tag: int = 0): MpiStatus		629
+nim	immediateProbe	nimpi/mpi.html#immediateProbe,MpiCommunicator,int,int	proc immediateProbe(communicator: MpiCommunicator; source: int; tag: int = 0): (bool,\n    MpiStatus)		645
+nim	echo	nimpi/mpi.html#echo.m,MpiCommunicator,varargs[untyped]	macro echo(communicator: MpiCommunicator; message: varargs[untyped]): untyped		661
+nim	source	nimpi/mpi.html#source,MpiStatus	proc source(status: MpiStatus): int		675
+nim	tag	nimpi/mpi.html#tag,MpiStatus	proc tag(status: MpiStatus): int		685
+nim	error	nimpi/mpi.html#error,MpiStatus	proc error(status: MpiStatus): int		695
+nim	count	nimpi/mpi.html#count,MpiStatus	proc count[T](status: MpiStatus): int		705
+nim	wait	nimpi/mpi.html#wait,MpiRequest	proc wait(request: var MpiRequest): MpiStatus		724
+nim	test	nimpi/mpi.html#test,MpiRequest	proc test(request: var MpiRequest): (bool, MpiStatus)		737
+nim	wait	nimpi/mpi.html#wait,seq[MpiRequest]	proc wait(requests: var seq[MpiRequest]): seq[MpiStatus]		753
+nim	test	nimpi/mpi.html#test,seq[MpiRequest]	proc test(requests: var seq[MpiRequest]): (bool, seq[MpiStatus])		770
+nim	send	nimpi/mpi.html#send,MpiCommunicator,pointer,int,typedesc[T],int,int,SendType	proc send[T](communicator: MpiCommunicator; buffer: pointer; count: int;\n        datatype: typedesc[T]; dest: int; tag: int = 0;\n        sendType: SendType = StandardSend)		793
+nim	send	nimpi/mpi.html#send,MpiCommunicator,openArray[T],int,int,SendType	proc send[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;\n        tag: int = 0; sendType: SendType = StandardSend)		850
+nim	immediateSend	nimpi/mpi.html#immediateSend,MpiCommunicator,pointer,int,typedesc[T],int,int,SendType	proc immediateSend[T](communicator: MpiCommunicator; buffer: pointer; count: int;\n                 datatype: typedesc[T]; dest: int; tag: int = 0;\n                 sendType: SendType = StandardSend): MpiRequest		866
+nim	immediateSend	nimpi/mpi.html#immediateSend,MpiCommunicator,openArray[T],int,int,SendType	proc immediateSend[T](communicator: MpiCommunicator; buffer: openArray[T]; dest: int;\n                 tag: int = 0; sendType: SendType = StandardSend): MpiRequest		929
+nim	receive	nimpi/mpi.html#receive,MpiCommunicator,pointer,int,typedesc[T],int,int	proc receive[T](communicator: MpiCommunicator; buffer: pointer; count: int;\n           datatype: typedesc[T]; source: int; tag: int = 0): MpiStatus		955
+nim	receive	nimpi/mpi.html#receive,MpiCommunicator,openArray[T],int,int	proc receive[T](communicator: MpiCommunicator; buffer: var openArray[T]; source: int;\n           tag: int = 0): MpiStatus		987
+nim	immediateReceive	nimpi/mpi.html#immediateReceive,MpiCommunicator,pointer,int,typedesc[T],int,int	proc immediateReceive[T](communicator: MpiCommunicator; buffer: pointer; count: int;\n                    datatype: typedesc[T]; source: int; tag: int = 0): MpiRequest		1005
+nim	immediateReceive	nimpi/mpi.html#immediateReceive,MpiCommunicator,openArray[T],int,int	proc immediateReceive[T](communicator: MpiCommunicator; buffer: var openArray[T];\n                    source: int; tag: int = 0): MpiRequest		1037
+nim	sendReceive	nimpi/mpi.html#sendReceive,MpiCommunicator,pointer,pointer,int,int,typedesc[T],typedesc[T],int,int,int,int	proc sendReceive[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;\n               sendCount, recvCount: int;\n               sendDatatype, recvDatatype: typedesc[T]; dest, source: int;\n               sendTag: int = 0; recvTag: int = 0): MpiStatus		1055
+nim	sendReceive	nimpi/mpi.html#sendReceive,MpiCommunicator,openArray[T],openArray[T],int,int,int,int	proc sendReceive[T](communicator: MpiCommunicator;\n               sendBuffer, recvBuffer: openArray[T]; dest, source: int;\n               sendTag: int = 0; recvTag: int = 0): MpiStatus		1095
+nim	sendReceiveReplace	nimpi/mpi.html#sendReceiveReplace,MpiCommunicator,pointer,int,typedesc[T],int,int,int,int	proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: pointer;\n                      count: int; datatype: typedesc[T]; dest, source: int;\n                      sendTag: int = 0; recvTag: int = 0): MpiStatus		1125
+nim	sendReceiveReplace	nimpi/mpi.html#sendReceiveReplace,MpiCommunicator,openArray[T],int,int,int,int	proc sendReceiveReplace[T](communicator: MpiCommunicator; buffer: var openArray[T];\n                      dest, source: int; sendTag: int = 0; recvTag: int = 0): MpiStatus		1159
+nim	broadcast	nimpi/mpi.html#broadcast,MpiCommunicator,pointer,int,typedesc[T],int	proc broadcast[T](communicator: MpiCommunicator; buffer: pointer; count: int;\n             datatype: typedesc[T]; root: int)		1190
+nim	broadcast	nimpi/mpi.html#broadcast,MpiCommunicator,openArray[T],int	proc broadcast[T](communicator: MpiCommunicator; buffer: var openArray[T]; root: int)		1213
+nim	scatter	nimpi/mpi.html#scatter,MpiCommunicator,pointer,pointer,int,int,typedesc[T],typedesc[T],int	proc scatter[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;\n           sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];\n           root: int)		1226
+nim	scatter	nimpi/mpi.html#scatter,MpiCommunicator,openArray[T],openArray[T],int,int,int	proc scatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n           recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)		1255
+nim	variableScatter	nimpi/mpi.html#variableScatter,MpiCommunicator,pointer,pointer,openArray[int],int,typedesc[T],typedesc[T],openArray[int],int	proc variableScatter[T](communicator: MpiCommunicator;\n                   sendBuffer, recvBuffer: pointer; sendCounts: openArray[int];\n                   recvCount: int; sendDatatype, recvDatatype: typedesc[T];\n                   displacements: openArray[int]; root: int)		1280
+nim	variableScatter	nimpi/mpi.html#variableScatter,MpiCommunicator,openArray[T],openArray[int],openArray[int],openArray[T],int,int	proc variableScatter[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n                   sendCounts, displacements: openArray[int];\n                   recvBuffer: var openArray[T]; root: int; recvLen: int)		1317
+nim	gather	nimpi/mpi.html#gather,MpiCommunicator,pointer,pointer,int,int,typedesc[T],typedesc[T],int	proc gather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;\n          sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T];\n          root: int)		1345
+nim	gather	nimpi/mpi.html#gather,MpiCommunicator,openArray[T],openArray[T],int,int,int	proc gather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n          recvBuffer: var openArray[T]; root: int; sendLen, recvLen: int)		1374
+nim	allGather	nimpi/mpi.html#allGather,MpiCommunicator,pointer,pointer,int,int,typedesc[T],typedesc[T]	proc allGather[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;\n             sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])		1399
+nim	allGather	nimpi/mpi.html#allGather,MpiCommunicator,openArray[T],openArray[T],int,int	proc allGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n             recvBuffer: var openArray[T]; sendLen, recvLen: int)		1425
+nim	variableGather	nimpi/mpi.html#variableGather,MpiCommunicator,pointer,pointer,int,openArray[int],typedesc[T],typedesc[T],openArray[int],int	proc variableGather[T](communicator: MpiCommunicator;\n                  sendBuffer, recvBuffer: pointer; sendCount: int;\n                  recvCounts: openArray[int];\n                  sendDatatype, recvDatatype: typedesc[T];\n                  displacements: openArray[int]; root: int)		1447
+nim	variableGather	nimpi/mpi.html#variableGather,MpiCommunicator,openArray[T],openArray[T],openArray[int],openArray[int],int	proc variableGather[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n                  recvBuffer: var openArray[T];\n                  recvCounts, displacements: openArray[int]; root: int)		1484
+nim	allToAll	nimpi/mpi.html#allToAll,MpiCommunicator,pointer,pointer,int,int,typedesc[T],typedesc[T]	proc allToAll[T](communicator: MpiCommunicator; sendBuffer, recvBuffer: pointer;\n            sendCount, recvCount: int; sendDatatype, recvDatatype: typedesc[T])		1510
+nim	allToAll	nimpi/mpi.html#allToAll,MpiCommunicator,openArray[T],openArray[T],int,int	proc allToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n            recvBuffer: var openArray[T]; sendLen, recvLen: int)		1536
+nim	variableAllToAll	nimpi/mpi.html#variableAllToAll,MpiCommunicator,pointer,pointer,openArray[int],openArray[int],openArray[int],openArray[int],typedesc[T],typedesc[T]	proc variableAllToAll[T](communicator: MpiCommunicator;\n                    sendBuffer, recvBuffer: pointer;\n                    sendCounts, recvCounts: openArray[int];\n                    sendDisplacements, recvDisplacements: openArray[int];\n                    sendDatatype, recvDatatype: typedesc[T])		1558
+nim	variableAllToAll	nimpi/mpi.html#variableAllToAll,MpiCommunicator,openArray[T],openArray[int],openArray[int],openArray[T],openArray[int],openArray[int]	proc variableAllToAll[T](communicator: MpiCommunicator; sendBuffer: openArray[T];\n                    sendCounts, sendDisplacements: openArray[int];\n                    recvBuffer: var openArray[T];\n                    recvCounts, recvDisplacements: openArray[int])		1597
+nim	reduce	nimpi/mpi.html#reduce,MpiCommunicator,MpiOperation,pointer,pointer,int,typedesc[T],int	proc reduce[T](communicator: MpiCommunicator; op: MpiOperation; sendBuffer: pointer;\n          recvBuffer: pointer; count: int; datatype: typedesc[T]; root: int)		1626
+nim	reduce	nimpi/mpi.html#reduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int,int	proc reduce[T](communicator: MpiCommunicator; op: MpiOperation;\n          sendBuffer: openArray[T]; recvBuffer: var openArray[T]; root: int;\n          sendLen, recvLen: int)		1655
+nim	allReduce	nimpi/mpi.html#allReduce,MpiCommunicator,MpiOperation,pointer,pointer,int,typedesc[T]	proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;\n             sendBuffer: pointer; recvBuffer: pointer; count: int;\n             datatype: typedesc[T])		1682
+nim	allReduce	nimpi/mpi.html#allReduce,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int	proc allReduce[T](communicator: MpiCommunicator; op: MpiOperation;\n             sendBuffer: openArray[T]; recvBuffer: var openArray[T];\n             sendLen, recvLen: int)		1708
+nim	inclusiveScan	nimpi/mpi.html#inclusiveScan,MpiCommunicator,MpiOperation,pointer,pointer,int,typedesc[T]	proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;\n                 sendBuffer: pointer; recvBuffer: pointer; count: int;\n                 datatype: typedesc[T])		1732
+nim	inclusiveScan	nimpi/mpi.html#inclusiveScan,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int	proc inclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;\n                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];\n                 sendLen, recvLen: int)		1758
+nim	exclusiveScan	nimpi/mpi.html#exclusiveScan,MpiCommunicator,MpiOperation,pointer,pointer,int,typedesc[T]	proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;\n                 sendBuffer: pointer; recvBuffer: pointer; count: int;\n                 datatype: typedesc[T])		1782
+nim	exclusiveScan	nimpi/mpi.html#exclusiveScan,MpiCommunicator,MpiOperation,openArray[T],openArray[T],int,int	proc exclusiveScan[T](communicator: MpiCommunicator; op: MpiOperation;\n                 sendBuffer: openArray[T]; recvBuffer: var openArray[T];\n                 sendLen, recvLen: int)		1808
+nim	mpi	nimpi/mpi.html#mpi.m,untyped	macro mpi(routine: untyped): untyped		1834
+nimgrp	free	nimpi/mpi.html#free-procs-all	proc		392
+nimgrp	newmpigroup	nimpi/mpi.html#newMpiGroup-procs-all	proc		334
+nimgrp	gather	nimpi/mpi.html#gather-procs-all	proc		1345
+nimgrp	sendreceivereplace	nimpi/mpi.html#sendReceiveReplace-procs-all	proc		1125
+nimgrp	inclusivescan	nimpi/mpi.html#inclusiveScan-procs-all	proc		1732
+nimgrp	test	nimpi/mpi.html#test-procs-all	proc		737
+nimgrp	sendreceive	nimpi/mpi.html#sendReceive-procs-all	proc		1055
+nimgrp	myrank	nimpi/mpi.html#myRank-procs-all	proc		380
+nimgrp	variablescatter	nimpi/mpi.html#variableScatter-procs-all	proc		1280
+nimgrp	reduce	nimpi/mpi.html#reduce-procs-all	proc		1626
+nimgrp	newmpicommunicator	nimpi/mpi.html#newMpiCommunicator-procs-all	proc		487
+nimgrp	immediatereceive	nimpi/mpi.html#immediateReceive-procs-all	proc		1005
+nimgrp	alltoall	nimpi/mpi.html#allToAll-procs-all	proc		1510
+nimgrp	size	nimpi/mpi.html#size-procs-all	proc		368
+nimgrp	exclusivescan	nimpi/mpi.html#exclusiveScan-procs-all	proc		1782
+nimgrp	wait	nimpi/mpi.html#wait-procs-all	proc		724
+nimgrp	variablealltoall	nimpi/mpi.html#variableAllToAll-procs-all	proc		1558
+nimgrp	variablegather	nimpi/mpi.html#variableGather-procs-all	proc		1447
+nimgrp	allreduce	nimpi/mpi.html#allReduce-procs-all	proc		1682
+nimgrp	broadcast	nimpi/mpi.html#broadcast-procs-all	proc		1190
+nimgrp	send	nimpi/mpi.html#send-procs-all	proc		793
+nimgrp	scatter	nimpi/mpi.html#scatter-procs-all	proc		1226
+nimgrp	allgather	nimpi/mpi.html#allGather-procs-all	proc		1399
+nimgrp	immediatesend	nimpi/mpi.html#immediateSend-procs-all	proc		866
+nimgrp	receive	nimpi/mpi.html#receive-procs-all	proc		955
 heading	Hello World	nimpi/mpi.html#hello-world	 Hello World		0

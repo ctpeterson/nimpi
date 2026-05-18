@@ -1,5 +1,6 @@
 nimTitle	mpiwrap	nimpi/mpiwrap.html	module nimpi/mpiwrap		0
 nim	MPI_Offset	nimpi/mpiwrap.html#MPI_Offset	type MPI_Offset		62
+nim	MPI_Status	nimpi/mpiwrap.html#MPI_Status	object MPI_Status		64
 nim	MPI_Aint	nimpi/mpiwrap.html#MPI_Aint	object MPI_Aint		55
 nim	MPI_Count	nimpi/mpiwrap.html#MPI_Count	object MPI_Count		55
 nim	MPI_Comm	nimpi/mpiwrap.html#MPI_Comm	object MPI_Comm		55
@@ -11,7 +12,6 @@ nim	MPI_Info	nimpi/mpiwrap.html#MPI_Info	object MPI_Info		55
 nim	MPI_Op	nimpi/mpiwrap.html#MPI_Op	object MPI_Op		55
 nim	MPI_Request	nimpi/mpiwrap.html#MPI_Request	object MPI_Request		55
 nim	MPI_Message	nimpi/mpiwrap.html#MPI_Message	object MPI_Message		55
-nim	MPI_Status	nimpi/mpiwrap.html#MPI_Status	object MPI_Status		55
 nim	MPI_Win	nimpi/mpiwrap.html#MPI_Win	object MPI_Win		55
 nim	MPI_Fint	nimpi/mpiwrap.html#MPI_Fint	object MPI_Fint		55
 nim	MPI_COMM_WORLD	nimpi/mpiwrap.html#MPI_COMM_WORLD	var MPI_COMM_WORLD		58
@@ -125,35 +125,58 @@ nim	MPI_MODE_RDWR	nimpi/mpiwrap.html#MPI_MODE_RDWR	var MPI_MODE_RDWR		58
 nim	MPI_MODE_WRONLY	nimpi/mpiwrap.html#MPI_MODE_WRONLY	var MPI_MODE_WRONLY		58
 nim	MPI_MODE_CREATE	nimpi/mpiwrap.html#MPI_MODE_CREATE	var MPI_MODE_CREATE		58
 nim	MPI_MODE_APPEND	nimpi/mpiwrap.html#MPI_MODE_APPEND	var MPI_MODE_APPEND		58
-nim	MPI_Init	nimpi/mpiwrap.html#MPI_Init,ptr.cint,ptr.cstringArray	proc MPI_Init(argc: ptr cint; argv: ptr cstringArray): cint		222
-nim	MPI_Initialized	nimpi/mpiwrap.html#MPI_Initialized,ptr.cint	proc MPI_Initialized(flag: ptr cint): cint		224
-nim	MPI_Finalize	nimpi/mpiwrap.html#MPI_Finalize	proc MPI_Finalize(): cint		226
-nim	MPI_Finalized	nimpi/mpiwrap.html#MPI_Finalized,ptr.cint	proc MPI_Finalized(flag: ptr cint): cint		228
-nim	MPI_Error_string	nimpi/mpiwrap.html#MPI_Error_string,cint,cstring,ptr.cint	proc MPI_Error_string(code: cint; str: cstring; resultlen: ptr cint): cint		232
-nim	MPI_Wtime	nimpi/mpiwrap.html#MPI_Wtime	proc MPI_Wtime(): cdouble		240
-nim	MPI_Wtick	nimpi/mpiwrap.html#MPI_Wtick	proc MPI_Wtick(): cdouble		242
-nim	MPI_Group_incl	nimpi/mpiwrap.html#MPI_Group_incl,MPI_Group,cint,ptr.cint,ptr.MPI_Group	proc MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;\n               newgroup: ptr MPI_Group): cint		246
-nim	MPI_Group_rank	nimpi/mpiwrap.html#MPI_Group_rank,MPI_Group,ptr.cint	proc MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint		253
-nim	MPI_Group_size	nimpi/mpiwrap.html#MPI_Group_size,MPI_Group,ptr.cint	proc MPI_Group_size(group: MPI_Group; size: ptr cint): cint		255
-nim	MPI_Group_free	nimpi/mpiwrap.html#MPI_Group_free,ptr.MPI_Group	proc MPI_Group_free(group: ptr MPI_Group): cint		257
-nim	MPI_Group_union	nimpi/mpiwrap.html#MPI_Group_union,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint		259
-nim	MPI_Group_intersection	nimpi/mpiwrap.html#MPI_Group_intersection,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;\n                       newgroup: ptr MPI_Group): cint		265
-nim	MPI_Group_difference	nimpi/mpiwrap.html#MPI_Group_difference,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;\n                     newgroup: ptr MPI_Group): cint		271
-nim	MPI_Abort	nimpi/mpiwrap.html#MPI_Abort,MPI_Comm,cint	proc MPI_Abort(comm: MPI_Comm; errorcode: cint): cint		279
-nim	MPI_Comm_rank	nimpi/mpiwrap.html#MPI_Comm_rank,MPI_Comm,ptr.cint	proc MPI_Comm_rank(comm: MPI_Comm; rank: ptr cint): cint		281
-nim	MPI_Comm_size	nimpi/mpiwrap.html#MPI_Comm_size,MPI_Comm,ptr.cint	proc MPI_Comm_size(comm: MPI_Comm; size: ptr cint): cint		283
-nim	MPI_Comm_dup	nimpi/mpiwrap.html#MPI_Comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		285
-nim	MPI_Comm_split	nimpi/mpiwrap.html#MPI_Comm_split,MPI_Comm,cint,cint,ptr.MPI_Comm	proc MPI_Comm_split(comm: MPI_Comm; color: cint; key: cint; newcomm: ptr MPI_Comm): cint		287
-nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_free(comm: ptr MPI_Comm): cint		294
-nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		296
-nim	MPI_Comm_compare	nimpi/mpiwrap.html#MPI_Comm_compare,MPI_Comm,MPI_Comm,ptr.cint	proc MPI_Comm_compare(comm1: MPI_Comm; comm2: MPI_Comm; result: ptr cint): cint		302
-nim	MPI_Comm_group	nimpi/mpiwrap.html#MPI_Comm_group,MPI_Comm,ptr.MPI_Group	proc MPI_Comm_group(comm: MPI_Comm; group: ptr MPI_Group): cint		308
-nim	MPI_Barrier	nimpi/mpiwrap.html#MPI_Barrier,MPI_Comm	proc MPI_Barrier(comm: MPI_Comm): cint		310
-nim	MPI_Send	nimpi/mpiwrap.html#MPI_Send,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n         tag: cint; comm: MPI_Comm): cint		314
-nim	MPI_Recv	nimpi/mpiwrap.html#MPI_Recv,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;\n         tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint		323
-nim	MPI_Bcast	nimpi/mpiwrap.html#MPI_Bcast,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Bcast(buffer: pointer; count: cint; datatype: MPI_Datatype; root: cint;\n          comm: MPI_Comm): cint		335
-nim	MPI_Gather	nimpi/mpiwrap.html#MPI_Gather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Gather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n           recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n           root: cint; comm: MPI_Comm): cint		343
-nim	MPI_Allgather	nimpi/mpiwrap.html#MPI_Allgather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,MPI_Comm	proc MPI_Allgather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n              recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n              comm: MPI_Comm): cint		354
-nim	MPI_Scatter	nimpi/mpiwrap.html#MPI_Scatter,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Scatter(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n            recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n            root: cint; comm: MPI_Comm): cint		364
-nim	MPI_Reduce	nimpi/mpiwrap.html#MPI_Reduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,cint,MPI_Comm	proc MPI_Reduce(sendbuf: pointer; recvbuf: pointer; count: cint;\n           datatype: MPI_Datatype; op: MPI_Op; root: cint; comm: MPI_Comm): cint		375
-nim	MPI_Allreduce	nimpi/mpiwrap.html#MPI_Allreduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,MPI_Comm	proc MPI_Allreduce(sendbuf: pointer; recvbuf: pointer; count: cint;\n              datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint		385
+nim	MPI_Init	nimpi/mpiwrap.html#MPI_Init,ptr.cint,ptr.cstringArray	proc MPI_Init(argc: ptr cint; argv: ptr cstringArray): cint		228
+nim	MPI_Initialized	nimpi/mpiwrap.html#MPI_Initialized,ptr.cint	proc MPI_Initialized(flag: ptr cint): cint		230
+nim	MPI_Finalize	nimpi/mpiwrap.html#MPI_Finalize	proc MPI_Finalize(): cint		232
+nim	MPI_Finalized	nimpi/mpiwrap.html#MPI_Finalized,ptr.cint	proc MPI_Finalized(flag: ptr cint): cint		234
+nim	MPI_Error_string	nimpi/mpiwrap.html#MPI_Error_string,cint,cstring,ptr.cint	proc MPI_Error_string(code: cint; str: cstring; resultlen: ptr cint): cint		238
+nim	MPI_Wtime	nimpi/mpiwrap.html#MPI_Wtime	proc MPI_Wtime(): cdouble		246
+nim	MPI_Wtick	nimpi/mpiwrap.html#MPI_Wtick	proc MPI_Wtick(): cdouble		248
+nim	MPI_Get_count	nimpi/mpiwrap.html#MPI_Get_count,ptr.MPI_Status,MPI_Datatype,ptr.cint	proc MPI_Get_count(status: ptr MPI_Status; datatype: MPI_Datatype; count: ptr cint): cint		252
+nim	MPI_Group_incl	nimpi/mpiwrap.html#MPI_Group_incl,MPI_Group,cint,ptr.cint,ptr.MPI_Group	proc MPI_Group_incl(group: MPI_Group; n: cint; ranks: ptr cint;\n               newgroup: ptr MPI_Group): cint		260
+nim	MPI_Group_rank	nimpi/mpiwrap.html#MPI_Group_rank,MPI_Group,ptr.cint	proc MPI_Group_rank(group: MPI_Group; rank: ptr cint): cint		267
+nim	MPI_Group_size	nimpi/mpiwrap.html#MPI_Group_size,MPI_Group,ptr.cint	proc MPI_Group_size(group: MPI_Group; size: ptr cint): cint		269
+nim	MPI_Group_free	nimpi/mpiwrap.html#MPI_Group_free,ptr.MPI_Group	proc MPI_Group_free(group: ptr MPI_Group): cint		271
+nim	MPI_Group_union	nimpi/mpiwrap.html#MPI_Group_union,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_union(group1: MPI_Group; group2: MPI_Group; newgroup: ptr MPI_Group): cint		273
+nim	MPI_Group_intersection	nimpi/mpiwrap.html#MPI_Group_intersection,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_intersection(group1: MPI_Group; group2: MPI_Group;\n                       newgroup: ptr MPI_Group): cint		279
+nim	MPI_Group_difference	nimpi/mpiwrap.html#MPI_Group_difference,MPI_Group,MPI_Group,ptr.MPI_Group	proc MPI_Group_difference(group1: MPI_Group; group2: MPI_Group;\n                     newgroup: ptr MPI_Group): cint		285
+nim	MPI_Abort	nimpi/mpiwrap.html#MPI_Abort,MPI_Comm,cint	proc MPI_Abort(comm: MPI_Comm; errorcode: cint): cint		293
+nim	MPI_Comm_rank	nimpi/mpiwrap.html#MPI_Comm_rank,MPI_Comm,ptr.cint	proc MPI_Comm_rank(comm: MPI_Comm; rank: ptr cint): cint		295
+nim	MPI_Comm_size	nimpi/mpiwrap.html#MPI_Comm_size,MPI_Comm,ptr.cint	proc MPI_Comm_size(comm: MPI_Comm; size: ptr cint): cint		297
+nim	MPI_Comm_dup	nimpi/mpiwrap.html#MPI_Comm_dup,MPI_Comm,ptr.MPI_Comm	proc MPI_Comm_dup(comm: MPI_Comm; newcomm: ptr MPI_Comm): cint		299
+nim	MPI_Comm_split	nimpi/mpiwrap.html#MPI_Comm_split,MPI_Comm,cint,cint,ptr.MPI_Comm	proc MPI_Comm_split(comm: MPI_Comm; color: cint; key: cint; newcomm: ptr MPI_Comm): cint		301
+nim	MPI_Comm_free	nimpi/mpiwrap.html#MPI_Comm_free,ptr.MPI_Comm	proc MPI_Comm_free(comm: ptr MPI_Comm): cint		308
+nim	MPI_Comm_create	nimpi/mpiwrap.html#MPI_Comm_create,MPI_Comm,MPI_Group,ptr.MPI_Comm	proc MPI_Comm_create(comm: MPI_Comm; group: MPI_Group; newcomm: ptr MPI_Comm): cint		310
+nim	MPI_Comm_compare	nimpi/mpiwrap.html#MPI_Comm_compare,MPI_Comm,MPI_Comm,ptr.cint	proc MPI_Comm_compare(comm1: MPI_Comm; comm2: MPI_Comm; result: ptr cint): cint		316
+nim	MPI_Comm_group	nimpi/mpiwrap.html#MPI_Comm_group,MPI_Comm,ptr.MPI_Group	proc MPI_Comm_group(comm: MPI_Comm; group: ptr MPI_Group): cint		322
+nim	MPI_Barrier	nimpi/mpiwrap.html#MPI_Barrier,MPI_Comm	proc MPI_Barrier(comm: MPI_Comm): cint		324
+nim	MPI_Probe	nimpi/mpiwrap.html#MPI_Probe,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Probe(source: cint; tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint		326
+nim	MPI_Iprobe	nimpi/mpiwrap.html#MPI_Iprobe,cint,cint,MPI_Comm,ptr.cint,ptr.MPI_Status	proc MPI_Iprobe(source: cint; tag: cint; comm: MPI_Comm; flag: ptr cint;\n           status: ptr MPI_Status): cint		333
+nim	MPI_Wait	nimpi/mpiwrap.html#MPI_Wait,ptr.MPI_Request,ptr.MPI_Status	proc MPI_Wait(request: ptr MPI_Request; status: ptr MPI_Status): cint		343
+nim	MPI_Test	nimpi/mpiwrap.html#MPI_Test,ptr.MPI_Request,ptr.cint,ptr.MPI_Status	proc MPI_Test(request: ptr MPI_Request; flag: ptr cint; status: ptr MPI_Status): cint		345
+nim	MPI_Waitall	nimpi/mpiwrap.html#MPI_Waitall,cint,ptr.MPI_Request,ptr.MPI_Status	proc MPI_Waitall(count: cint; array_of_requests: ptr MPI_Request;\n            array_of_statuses: ptr MPI_Status): cint		351
+nim	MPI_Testall	nimpi/mpiwrap.html#MPI_Testall,cint,ptr.MPI_Request,ptr.cint,ptr.MPI_Status	proc MPI_Testall(count: cint; array_of_requests: ptr MPI_Request; flag: ptr cint;\n            array_of_statuses: ptr MPI_Status): cint		357
+nim	MPI_Send	nimpi/mpiwrap.html#MPI_Send,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Send(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n         tag: cint; comm: MPI_Comm): cint		366
+nim	MPI_Ssend	nimpi/mpiwrap.html#MPI_Ssend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Ssend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n          tag: cint; comm: MPI_Comm): cint		375
+nim	MPI_Bsend	nimpi/mpiwrap.html#MPI_Bsend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Bsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n          tag: cint; comm: MPI_Comm): cint		384
+nim	MPI_Rsend	nimpi/mpiwrap.html#MPI_Rsend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm	proc MPI_Rsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n          tag: cint; comm: MPI_Comm): cint		393
+nim	MPI_Isend	nimpi/mpiwrap.html#MPI_Isend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Request	proc MPI_Isend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint		402
+nim	MPI_Issend	nimpi/mpiwrap.html#MPI_Issend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Request	proc MPI_Issend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint		412
+nim	MPI_Ibsend	nimpi/mpiwrap.html#MPI_Ibsend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Request	proc MPI_Ibsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint		422
+nim	MPI_Irsend	nimpi/mpiwrap.html#MPI_Irsend,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Request	proc MPI_Irsend(buf: pointer; count: cint; datatype: MPI_Datatype; dest: cint;\n           tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint		432
+nim	MPI_Recv	nimpi/mpiwrap.html#MPI_Recv,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Recv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;\n         tag: cint; comm: MPI_Comm; status: ptr MPI_Status): cint		442
+nim	MPI_Irecv	nimpi/mpiwrap.html#MPI_Irecv,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Request	proc MPI_Irecv(buf: pointer; count: cint; datatype: MPI_Datatype; source: cint;\n          tag: cint; comm: MPI_Comm; request: ptr MPI_Request): cint		452
+nim	MPI_Sendrecv	nimpi/mpiwrap.html#MPI_Sendrecv,pointer,cint,MPI_Datatype,cint,cint,pointer,cint,MPI_Datatype,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Sendrecv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n             dest: cint; sendtag: cint; recvbuf: pointer; recvcount: cint;\n             recvtype: MPI_Datatype; source: cint; recvtag: cint;\n             comm: MPI_Comm; status: ptr MPI_Status): cint		462
+nim	MPI_Sendrecv_replace	nimpi/mpiwrap.html#MPI_Sendrecv_replace,pointer,cint,MPI_Datatype,cint,cint,cint,cint,MPI_Comm,ptr.MPI_Status	proc MPI_Sendrecv_replace(buf: pointer; count: cint; datatype: MPI_Datatype;\n                     dest: cint; sendtag: cint; source: cint; recvtag: cint;\n                     comm: MPI_Comm; status: ptr MPI_Status): cint		477
+nim	MPI_Bcast	nimpi/mpiwrap.html#MPI_Bcast,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Bcast(buffer: pointer; count: cint; datatype: MPI_Datatype; root: cint;\n          comm: MPI_Comm): cint		491
+nim	MPI_Gather	nimpi/mpiwrap.html#MPI_Gather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Gather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n           recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n           root: cint; comm: MPI_Comm): cint		499
+nim	MPI_Allgather	nimpi/mpiwrap.html#MPI_Allgather,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,MPI_Comm	proc MPI_Allgather(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n              recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n              comm: MPI_Comm): cint		510
+nim	MPI_Gatherv	nimpi/mpiwrap.html#MPI_Gatherv,pointer,cint,MPI_Datatype,pointer,ptr.cint,ptr.cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Gatherv(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n            recvbuf: pointer; recvcounts: ptr cint; displs: ptr cint;\n            recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint		520
+nim	MPI_Scatter	nimpi/mpiwrap.html#MPI_Scatter,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Scatter(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n            recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n            root: cint; comm: MPI_Comm): cint		532
+nim	MPI_Scatterv	nimpi/mpiwrap.html#MPI_Scatterv,pointer,ptr.cint,ptr.cint,MPI_Datatype,pointer,cint,MPI_Datatype,cint,MPI_Comm	proc MPI_Scatterv(sendbuf: pointer; sendcounts: ptr cint; displs: ptr cint;\n             sendtype: MPI_Datatype; recvbuf: pointer; recvcount: cint;\n             recvtype: MPI_Datatype; root: cint; comm: MPI_Comm): cint		543
+nim	MPI_Alltoall	nimpi/mpiwrap.html#MPI_Alltoall,pointer,cint,MPI_Datatype,pointer,cint,MPI_Datatype,MPI_Comm	proc MPI_Alltoall(sendbuf: pointer; sendcount: cint; sendtype: MPI_Datatype;\n             recvbuf: pointer; recvcount: cint; recvtype: MPI_Datatype;\n             comm: MPI_Comm): cint		555
+nim	MPI_Alltoallv	nimpi/mpiwrap.html#MPI_Alltoallv,pointer,ptr.cint,ptr.cint,MPI_Datatype,pointer,ptr.cint,ptr.cint,MPI_Datatype,MPI_Comm	proc MPI_Alltoallv(sendbuf: pointer; sendcounts: ptr cint; sdispls: ptr cint;\n              sendtype: MPI_Datatype; recvbuf: pointer; recvcounts: ptr cint;\n              rdispls: ptr cint; recvtype: MPI_Datatype; comm: MPI_Comm): cint		565
+nim	MPI_Reduce	nimpi/mpiwrap.html#MPI_Reduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,cint,MPI_Comm	proc MPI_Reduce(sendbuf: pointer; recvbuf: pointer; count: cint;\n           datatype: MPI_Datatype; op: MPI_Op; root: cint; comm: MPI_Comm): cint		593
+nim	MPI_Allreduce	nimpi/mpiwrap.html#MPI_Allreduce,pointer,pointer,cint,MPI_Datatype,MPI_Op,MPI_Comm	proc MPI_Allreduce(sendbuf: pointer; recvbuf: pointer; count: cint;\n              datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint		603
+nim	MPI_Scan	nimpi/mpiwrap.html#MPI_Scan,pointer,pointer,cint,MPI_Datatype,MPI_Op,MPI_Comm	proc MPI_Scan(sendbuf: pointer; recvbuf: pointer; count: cint;\n         datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint		612
+nim	MPI_Exscan	nimpi/mpiwrap.html#MPI_Exscan,pointer,pointer,cint,MPI_Datatype,MPI_Op,MPI_Comm	proc MPI_Exscan(sendbuf: pointer; recvbuf: pointer; count: cint;\n           datatype: MPI_Datatype; op: MPI_Op; comm: MPI_Comm): cint		621
