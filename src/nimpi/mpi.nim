@@ -96,6 +96,20 @@ type MpiError* = object of CatchableError
   ##  - `code`: The MPI error code associated with the error. 
   code*: cint
 
+type
+  SendType* = enum
+    ## Represents the type of send operation for point-to-point communication.
+    ##
+    ## Values:
+    ## - `StandardSend`: corresponds to `MPI_Send`
+    ## - `BufferedSend`: corresponds to `MPI_Bsend`
+    ## - `SynchronousSend`: corresponds to `MPI_Ssend`
+    ## - `ReadySend`: corresponds to `MPI_Rsend`
+    StandardSend,
+    BufferedSend,
+    SynchronousSend,
+    ReadySend
+
 type 
   MpiCommunicator* = object
     ## Represents an MPI communicator, which is a group of processes that can 
@@ -105,6 +119,15 @@ type
     ## Attributes:
     ## - `comm`: The underlying MPI_Comm handle that represents the communicator.
     comm*: MPI_Comm
+
+  MpiRequest* = object
+    ## Represents an MPI request, which is used for non-blocking communication operations. 
+    ## MPI requests allow for asynchronous communication, enabling processes to perform 
+    ## other work while waiting for communication to complete.
+    ##
+    ## Attributes:
+    ## - `request`: The underlying MPI_Request handle that represents the request.
+    request*: mpiwrap.MPI_Request
   
   MpiGroup* = object
     ## Represents an MPI group, which is an ordered set of processes. MPI groups
@@ -115,6 +138,17 @@ type
     ## - `group`: The underlying MPI_Group handle that represents the group.
     group*: mpiwrap.MPI_Group
 
+  MpiStatus* = object
+    ## Represents the status of an MPI operation, which contains information about
+    ## the source, tag, and error code of a completed communication operation. MPI
+    ## statuses are used in receive operations to determine the details of the 
+    ## received message.
+    ##
+    ## Attributes:
+    ## - `status`: The underlying MPI_Status handle that represents the status.
+    status*: mpiwrap.MPI_Status
+
+type
   MpiOperation* = enum
     ## Represents an MPI reduction operation for use in `reduce` and related calls.
     ##
@@ -308,7 +342,12 @@ proc newMpiGroup*(ranks: seq[int]): MpiGroup =
   var group: mpiwrap.MPI_Group
   var cRanks = newSeq[cint](ranks.len)
   for i in 0..<ranks.len: cRanks[i] = cint(ranks[i])
-  mpiCheck MPI_Group_incl(WorldCommunicator.group.group, cint(ranks.len), addr cRanks[0], addr group)
+  mpiCheck MPI_Group_incl(
+    WorldCommunicator.group.group, 
+    cint(ranks.len), 
+    addr cRanks[0], 
+    addr group
+  )
   return MpiGroup(group: group)
 
 proc newMpiGroup*(group: MpiGroup; ranks: seq[int]): MpiGroup =
@@ -574,6 +613,51 @@ proc mpiBarrier*(communicator: MpiCommunicator = WorldCommunicator) =
   ## ```
   mpiCheck MPI_Barrier(communicator.comm)
 
+proc `==`*(comm1, comm2: MpiCommunicator): bool =
+  ## Compares two communicators for equality. Two communicators are considered equal if they are handles for the same underlying MPI communicator.
+  ## 
+  ## Parameters:
+  ##  - `comm1`: The first `MpiCommunicator` to compare.
+  ##  - `comm2`: The second `MpiCommunicator` to compare.
+  ##
+  ## Returns:
+  ##  - `true` if the communicators are equal (i.e., they refer to the same underlying MPI communicator), and `false` otherwise.
+  var flag: cint
+  mpiCheck MPI_Comm_compare(comm1.comm, comm2.comm, addr flag)
+  return flag == MPI_IDENT
+
+proc probe*(communicator: MpiCommunicator; source: int; tag: int = 0): MpiStatus =
+  ## Probes for an incoming message from the process with rank `source` in `communicator` with the given `tag`.
+  ## This is a blocking operation that waits until a matching message is available. The returned `MpiStatus` contains
+  ## information about the source, tag, and error code of the probed message.
+  ##
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to probe within.
+  ##  - `source`: The rank of the source process to probe for (or `MPI_ANY_SOURCE` to probe for messages from any source).
+  ##  - `tag`: The tag of the message to probe for (or `MPI_ANY_TAG` to probe for messages with any tag).
+  ##
+  ## Returns:
+  ##  - An `MpiStatus` object containing information about the probed message, including the source, tag, and error code.
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Probe(cint(source), cint(tag), communicator.comm, addr rawStatus)
+  return MpiStatus(status: rawStatus)
+
+proc immediateProbe*(communicator: MpiCommunicator; source: int; tag: int = 0): (bool, MpiStatus) =
+  ## Probes for an incoming message from the process with rank `source` in `communicator` with the given `tag` without blocking.
+  ## This is a non-blocking operation that checks if a matching message is available. If a matching message is found, returns `true` and an `MpiStatus` containing information about the message. If no matching message is available, returns `false` and an undefined `MpiStatus`.
+  ##
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to probe within.
+  ##  - `source`: The rank of the source process to probe for (or `MPI_ANY_SOURCE` to probe for messages from any source).
+  ##  - `tag`: The tag of the message to probe for (or `MPI_ANY_TAG` to probe for messages with any tag).
+  ##
+  ## Returns:
+  ##  - A tuple `(found, status)`. When `found` is `true`, a matching message was found and `status` contains information about the message. When `found` is `false`, no matching message is available and `status` is undefined.
+  var flag: cint
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Iprobe(cint(source), cint(tag), communicator.comm, addr flag, addr rawStatus)
+  return (flag != 0, MpiStatus(status: rawStatus))
+
 macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
   ## Prints `message` from rank 0 of `communicator` only.
   ## Accepts the same comma-separated arguments as the built-in `echo`.
@@ -584,15 +668,191 @@ macro echo*(communicator: MpiCommunicator; message: varargs[untyped]): untyped =
   ## customComm.echo "size = ", customComm.size
   ## ```
   result = quote do:
-    if `communicator`.myRank == 0: echo `message`
+    if `communicator`.myRank() == 0: echo `message`
 
-#[ point-to-point communication: blocking ]#
+#[ status ]#
+
+proc source*(status: MpiStatus): int =
+  ## Returns the source rank from the given `MpiStatus`.
+  ## 
+  ## Parameters:
+  ##  - `status`: The `MpiStatus` from which to retrieve the source rank.
+  ##
+  ## Returns:
+  ##  - The source rank associated with the status.
+  return int(status.status.MPI_SOURCE)
+
+proc tag*(status: MpiStatus): int =
+  ## Returns the tag from the given `MpiStatus`.
+  ## 
+  ## Parameters:
+  ##  - `status`: The `MpiStatus` from which to retrieve the tag.
+  ## 
+  ## Returns:
+  ##  - The tag associated with the status.
+  return int(status.status.MPI_TAG)
+
+proc error*(status: MpiStatus): int =
+  ## Returns the error code from the given `MpiStatus`.
+  ## 
+  ## Parameters:
+  ##  - `status`: The `MpiStatus` from which to retrieve the error code.
+  ##
+  ## Returns:
+  ##  - The error code associated with the status.
+  return int(status.status.MPI_ERROR)
+
+proc count*[T](status: MpiStatus): int =
+  ## Returns the number of received elements of type `T` from the given `MpiStatus`.
+  ##
+  ## Parameters:
+  ##  - `status`: The `MpiStatus` from which to retrieve the element count.
+  ##
+  ## Returns:
+  ##  - The number of elements of type `T` received.
+  ##
+  ## Example:
+  ## ```nim
+  ## let n = status.count[:float32]
+  ## ```
+  var c: cint
+  mpiCheck MPI_Get_count(unsafeAddr status.status, mpiType(T), addr c)
+  return int(c)
+
+#[ request ]#
+
+proc wait*(request: var MpiRequest): MpiStatus =
+  ## Waits for the non-blocking operation associated with `request` to complete.
+  ## 
+  ## Parameters:
+  ##  - `request`: The `MpiRequest` representing the non-blocking operation to wait for.
+  ## 
+  ## Returns:
+  ##  - An `MpiStatus` containing the source, tag, and error code of the completed operation.
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Wait(addr request.request, addr rawStatus)
+  request.request = MPI_REQUEST_NULL
+  return MpiStatus(status: rawStatus)
+
+proc test*(request: var MpiRequest): (bool, MpiStatus) =
+  ## Tests if the non-blocking operation associated with `request` has completed.
+  ## 
+  ## Parameters:
+  ##  - `request`: The `MpiRequest` representing the non-blocking operation to test.
+  ##
+  ## Returns:
+  ##  - A tuple `(done, status)`. When `done` is `true`, the operation has completed and
+  ##    `status` contains the source, tag, and error code. When `done` is `false`, `status`
+  ##    is undefined and should not be used.
+  var flag: cint
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Test(addr request.request, addr flag, addr rawStatus)
+  if flag != 0: request.request = MPI_REQUEST_NULL
+  return (flag != 0, MpiStatus(status: rawStatus))
+
+proc wait*(requests: var seq[MpiRequest]): seq[MpiStatus] =
+  ## Waits for all non-blocking operations in `requests` to complete.
+  ## 
+  ## Parameters:
+  ##  - `requests`: A sequence of `MpiRequest` objects representing the non-blocking operations to wait for.
+  ##
+  ## Returns:
+  ##  - A sequence of `MpiStatus` objects containing the source, tag, and error code for each completed operation. The order of statuses corresponds to the order of requests.
+  var rawStatuses = newSeq[mpiwrap.MPI_Status](requests.len)
+  var cRequests = newSeq[mpiwrap.MPI_Request](requests.len)
+  for i in 0..<requests.len: cRequests[i] = requests[i].request
+  mpiCheck MPI_Waitall(cint(requests.len), addr cRequests[0], addr rawStatuses[0])
+  for i in 0..<requests.len: requests[i].request = MPI_REQUEST_NULL
+  var statuses = newSeq[MpiStatus](requests.len)
+  for i in 0..<requests.len: statuses[i] = MpiStatus(status: rawStatuses[i])
+  return statuses
+
+proc test*(requests: var seq[MpiRequest]): (bool, seq[MpiStatus]) =
+  ## Tests if all non-blocking operations in `requests` have completed.
+  ## 
+  ## Parameters:
+  ##  - `requests`: A sequence of `MpiRequest` objects representing the non-blocking operations to test.
+  ##
+  ## Returns:
+  ##  - A tuple `(done, statuses)`. When `done` is `true`, all operations have completed and `statuses` contains the source, tag, and error code for each operation. When `done` is `false`, `statuses` is undefined and should not be used.
+  var flag: cint
+  var rawStatuses = newSeq[mpiwrap.MPI_Status](requests.len)
+  var cRequests = newSeq[mpiwrap.MPI_Request](requests.len)
+  for i in 0..<requests.len: cRequests[i] = requests[i].request
+  mpiCheck MPI_Testall(cint(requests.len), addr cRequests[0], addr flag, addr rawStatuses[0])
+  if flag != 0:
+    for i in 0..<requests.len: requests[i].request = MPI_REQUEST_NULL
+    var statuses = newSeq[MpiStatus](requests.len)
+    for i in 0..<requests.len: statuses[i] = MpiStatus(status: rawStatuses[i])
+    return (true, statuses)
+  else:
+    return (false, @[])
+
+#[ point-to-point communication ]#
+
+proc send*[T](
+  communicator: MpiCommunicator;
+  buffer: pointer;
+  count: int;
+  datatype: typedesc[T];
+  dest: int;
+  tag: int = 0;
+  sendType: SendType = StandardSend
+) =
+  ## Sends data from `buffer` to the process with rank `dest` in `communicator` using the specified send type.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for sending.
+  ##  - `buffer`: A pointer to the data to send.
+  ##  - `count`: The number of elements to send.
+  ##  - `datatype`: The MPI datatype of the elements to send.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  ##  - `sendType`: The type of send operation to perform (default is `StandardSend`).
+  case sendType
+  of StandardSend:
+    mpiCheck MPI_Send(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm
+    )
+  of BufferedSend:
+    mpiCheck MPI_Bsend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm
+    )
+  of SynchronousSend:
+    mpiCheck MPI_Ssend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm
+    )
+  of ReadySend:
+    mpiCheck MPI_Rsend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm
+    )
 
 proc send*[T](
   communicator: MpiCommunicator;
   buffer: openArray[T];
   dest: int;
-  tag: int = 0
+  tag: int = 0;
+  sendType: SendType = StandardSend
 ) =
   ## Sends `buffer` to the process with rank `dest` in `communicator` using `MPI_Send`.
   ## 
@@ -600,46 +860,136 @@ proc send*[T](
   ##  - `communicator`: The `MpiCommunicator` to use for sending.
   ##  - `buffer`: The data to send. Can be any type that has a corresponding MPI datatype.
   ##  - `dest`: The rank of the destination process within the communicator.
-  ##  - `tag`: An optional tag to identify the message (default is 0 
-  mpiCheck MPI_Send(
-    addr buffer[0], 
-    cint(buffer.len), 
-    mpiType(T), 
-    cint(dest), 
-    cint(tag), 
-    communicator.comm
-  )
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  communicator.send(addr buffer[0], buffer.len, T, dest, tag, sendType)
 
-proc send*[T: not (array or seq)](
-  communicator: MpiCommunicator; 
-  data: var T; 
-  dest: int; 
+proc immediateSend*[T](
+  communicator: MpiCommunicator;
+  buffer: pointer;
+  count: int;
+  datatype: typedesc[T];
+  dest: int;
   tag: int = 0;
-  len: int = 1
-) =
-  ## Sends scalar `data` to the process with rank `dest` in `communicator` using `MPI_Send`.
+  sendType: SendType = StandardSend
+): MpiRequest =
+  ## Initiates a non-blocking send of data from `buffer` to the process with rank `dest` in `communicator` using the specified send type.
   ## 
   ## Parameters:
   ##  - `communicator`: The `MpiCommunicator` to use for sending.
-  ##  - `data`: The scalar data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `buffer`: A pointer to the data to send.
+  ##  - `count`: The number of elements to send.
+  ##  - `datatype`: The MPI datatype of the elements to send.
   ##  - `dest`: The rank of the destination process within the communicator.
   ##  - `tag`: An optional tag to identify the message (default is 0).
-  ##  - `len`: The number of elements to send (default is 1).
-  mpiCheck MPI_Send(
-    addr data, 
-    cint(len), 
-    mpiType(T), 
-    cint(dest), 
-    cint(tag), 
-    communicator.comm
+  ##  - `sendType`: The type of send operation to perform (default is `StandardSend`).
+  var request: mpiwrap.MPI_Request
+  case sendType
+  of StandardSend:
+    mpiCheck MPI_Isend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm, 
+      addr request
+    )
+  of BufferedSend:
+    mpiCheck MPI_Ibsend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm, 
+      addr request
+    )
+  of SynchronousSend:
+    mpiCheck MPI_Issend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm, 
+      addr request
+    )
+  of ReadySend:
+    mpiCheck MPI_Irsend(
+      buffer, 
+      cint(count), 
+      mpiType(T), 
+      cint(dest), 
+      cint(tag), 
+      communicator.comm, 
+      addr request
+    )
+  return MpiRequest(request: request)
+
+proc immediateSend*[T](
+  communicator: MpiCommunicator;
+  buffer: openArray[T];
+  dest: int;
+  tag: int = 0;
+  sendType: SendType = StandardSend
+): MpiRequest =
+  ## Initiates a non-blocking send of `buffer` to the process with rank `dest` in `communicator` using `MPI_Isend`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for sending.
+  ##  - `buffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  ## 
+  ## Returns:
+  ##  - An `MpiRequest` object representing the non-blocking send operation, which can be used to test for completion or wait for completion.
+  return communicator.immediateSend(
+    addr buffer[0], 
+    buffer.len, 
+    T, 
+    dest, 
+    tag, 
+    sendType
   )
+
+proc receive*[T](
+  communicator: MpiCommunicator; 
+  buffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]; 
+  source: int; 
+  tag: int = 0
+): MpiStatus {.discardable.} =
+  ## Receives data into `buffer` from the process with rank `source` in `communicator` using `MPI_Recv`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for receiving.
+  ##  - `buffer`: A pointer to the buffer to receive data into.
+  ##  - `count`: The number of elements to receive.
+  ##  - `datatype`: The MPI datatype of the elements to receive.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  ## 
+  ## Returns:
+  ##  - An `MpiStatus` containing the source, tag, and error code of the received message.
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Recv(
+    buffer, 
+    cint(count), 
+    mpiType(T), 
+    cint(source), 
+    cint(tag), 
+    communicator.comm, 
+    addr rawStatus
+  )
+  return MpiStatus(status: rawStatus)
 
 proc receive*[T](
   communicator: MpiCommunicator; 
   buffer: var openArray[T]; 
   source: int; 
   tag: int = 0
-) =
+): MpiStatus {.discardable.} =
   ## Receives data into `buffer` from the process with rank `source` in `communicator` using `MPI_Recv`.
   ## 
   ## Parameters:
@@ -647,44 +997,218 @@ proc receive*[T](
   ##  - `buffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
   ##  - `source`: The rank of the source process within the communicator.
   ##  - `tag`: An optional tag to identify the message (default is 0).
-  var status: MPI_Status
-  mpiCheck MPI_Recv(
-    addr buffer[0], 
-    cint(buffer.len), 
-    mpiType(T), 
-    cint(source), 
-    cint(tag), 
-    communicator.comm, 
-    addr status
-  )
+  ## 
+  ## Returns:
+  ##  - An `MpiStatus` containing the source, tag, and error code of the received message.
+  return communicator.receive(addr buffer[0], buffer.len, T, source, tag)
 
-proc receive*[T: not (array or seq)](
+proc immediateReceive*[T](
   communicator: MpiCommunicator; 
-  data: var T; 
+  buffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]; 
   source: int; 
-  tag: int = 0;
-  len: int = 1
-) =
-  ## Receives scalar data into `data` from the process with rank `source` in `communicator` using `MPI_Recv`.
+  tag: int = 0
+): MpiRequest =
+  ## Initiates a non-blocking receive into `buffer` from the process with rank `source` in `communicator` using `MPI_Irecv`.
   ## 
   ## Parameters:
   ##  - `communicator`: The `MpiCommunicator` to use for receiving.
-  ##  - `data`: The scalar variable to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `buffer`: A pointer to the buffer to receive data into.
+  ##  - `count`: The number of elements to receive.
+  ##  - `datatype`: The MPI datatype of the elements to receive.
   ##  - `source`: The rank of the source process within the communicator.
   ##  - `tag`: An optional tag to identify the message (default is 0).
-  ##  - `len`: The number of elements to receive (default is 1).
-  var status: MPI_Status
-  mpiCheck MPI_Recv(
-    addr data, 
-    cint(len), 
+  ## 
+  ## Returns:
+  ##  - An `MpiRequest` object representing the non-blocking receive operation, which can be used to test for completion or wait for completion.
+  var request: mpiwrap.MPI_Request
+  mpiCheck MPI_Irecv(
+    buffer, 
+    cint(count), 
     mpiType(T), 
     cint(source), 
     cint(tag), 
     communicator.comm, 
-    addr status
+    addr request
+  )
+  return MpiRequest(request: request)
+
+proc immediateReceive*[T](
+  communicator: MpiCommunicator; 
+  buffer: var openArray[T]; 
+  source: int; 
+  tag: int = 0
+): MpiRequest =
+  ## Initiates a non-blocking receive into `buffer` from the process with rank `source` in `communicator` using `MPI_Irecv`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for receiving.
+  ##  - `buffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `tag`: An optional tag to identify the message (default is 0).
+  ## 
+  ## Returns:
+  ##  - An `MpiRequest` object representing the non-blocking receive operation, which can be used to test for completion or wait for completion.
+  return communicator.immediateReceive(addr buffer[0], buffer.len, T, source, tag)
+
+proc sendReceive*[T](
+  communicator: MpiCommunicator;
+  sendBuffer, recvBuffer: pointer;
+  sendCount, recvCount: int;
+  sendDatatype, recvDatatype: typedesc[T];
+  dest, source: int;
+  sendTag: int = 0;
+  recvTag: int = 0
+): MpiStatus {.discardable.} =
+  ## Performs a combined send and receive operation, sending data from `sendBuffer` to the process with rank `dest` and receiving data into `recvBuffer` from the process with rank `source` in `communicator`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `sendBuffer`: A pointer to the data to send.
+  ##  - `recvBuffer`: A pointer to the buffer to receive data into.
+  ##  - `sendCount`: The number of elements to send.
+  ##  - `recvCount`: The number of elements to receive.
+  ##  - `sendDatatype`: The MPI datatype of the elements to send.
+  ##  - `recvDatatype`: The MPI datatype of the elements to receive.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `sendTag`: The tag to identify the sent message.
+  ##  - `recvTag`: The tag to identify the received message.
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Sendrecv(
+    sendBuffer, 
+    cint(sendCount), 
+    mpiType(T), 
+    cint(dest), 
+    cint(sendTag), 
+    recvBuffer, 
+    cint(recvCount), 
+    mpiType(T), 
+    cint(source), 
+    cint(recvTag), 
+    communicator.comm, 
+    addr rawStatus
+  )
+  return MpiStatus(status: rawStatus)
+
+proc sendReceive*[T](
+  communicator: MpiCommunicator;
+  sendBuffer, recvBuffer: openArray[T];
+  dest, source: int;
+  sendTag: int = 0;
+  recvTag: int = 0
+): MpiStatus {.discardable.} =
+  ## Performs a combined send and receive operation, sending `sendBuffer` to the process with rank `dest` and receiving data into `recvBuffer` from the process with rank `source` in `communicator`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `sendTag`: The tag to identify the sent message.
+  ##  - `recvTag`: The tag to identify the received message.
+  return communicator.sendReceive(
+    addr sendBuffer[0], 
+    addr recvBuffer[0], 
+    sendBuffer.len, 
+    recvBuffer.len, 
+    T, 
+    T, 
+    dest, 
+    source, 
+    sendTag, 
+    recvTag
+  )
+
+proc sendReceiveReplace*[T](
+  communicator: MpiCommunicator;
+  buffer: pointer;
+  count: int;
+  datatype: typedesc[T];
+  dest, source: int;
+  sendTag: int = 0;
+  recvTag: int = 0
+): MpiStatus {.discardable.} =
+  ## Performs a combined send and receive operation, sending data from `buffer` to the process with rank `dest` and receiving data into the same `buffer` from the process with rank `source` in `communicator`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `buffer`: A pointer to the data to send and receive.
+  ##  - `count`: The number of elements to send and receive.
+  ##  - `datatype`: The MPI datatype of the elements to send and receive.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `sendTag`: The tag to identify the sent message.
+  ##  - `recvTag`: The tag to identify the received message.
+  var rawStatus: mpiwrap.MPI_Status
+  mpiCheck MPI_Sendrecv_replace(
+    buffer, 
+    cint(count), 
+    mpiType(T), 
+    cint(dest), 
+    cint(sendTag), 
+    cint(source), 
+    cint(recvTag), 
+    communicator.comm, 
+    addr rawStatus
+  )
+  return MpiStatus(status: rawStatus)
+
+proc sendReceiveReplace*[T](
+  communicator: MpiCommunicator;
+  buffer: var openArray[T];
+  dest, source: int;
+  sendTag: int = 0;
+  recvTag: int = 0
+): MpiStatus {.discardable.} =
+  ## Performs a combined send and receive operation, sending `buffer` to the process with rank `dest` and receiving data into the same `buffer` from the process with rank `source` in `communicator`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `buffer`: The data to send and receive. Can be any type that has a corresponding MPI datatype.
+  ##  - `dest`: The rank of the destination process within the communicator.
+  ##  - `source`: The rank of the source process within the communicator.
+  ##  - `sendTag`: The tag to identify the sent message.
+  ##  - `recvTag`: The tag to identify the received message.
+  ## 
+  ## Returns:
+  ##  - An `MpiStatus` containing the source, tag, and error code of the received message.
+  return communicator.sendReceiveReplace(
+    addr buffer[0], 
+    buffer.len, 
+    T, 
+    dest, 
+    source, 
+    sendTag, 
+    recvTag
   )
 
 #[ collective operations ]#
+
+proc broadcast*[T](
+  communicator: MpiCommunicator; 
+  buffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]; 
+  root: int
+) =
+  ## Broadcasts data from the process with rank `root` to all other processes in `communicator` using `MPI_Bcast`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for broadcasting.
+  ##  - `buffer`: A pointer to the data to broadcast. Can be any type that has a corresponding MPI datatype.
+  ##  - `count`: The number of elements to broadcast.
+  ##  - `datatype`: The MPI datatype of the elements to broadcast.
+  ##  - `root`: The rank of the root process that will broadcast the data.
+  mpiCheck MPI_Bcast(
+    buffer, 
+    cint(count), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
 
 proc broadcast*[T](
   communicator: MpiCommunicator; 
@@ -697,30 +1221,32 @@ proc broadcast*[T](
   ##  - `communicator`: The `MpiCommunicator` to use for broadcasting.
   ##  - `buffer`: The data to broadcast. Can be any type that has a corresponding MPI datatype.
   ##  - `root`: The rank of the root process that will broadcast the data.
-  mpiCheck MPI_Bcast(
-    addr buffer[0], 
-    cint(buffer.len), 
-    mpiType(T), 
-    cint(root), 
-    communicator.comm
-  )
+  communicator.broadcast(addr buffer[0], buffer.len, T, root)
 
-proc broadcast*[T: not (array or seq)](
+proc scatter*[T](
   communicator: MpiCommunicator; 
-  data: var T; 
-  root: int;
-  len: int = 1
+  sendBuffer, recvBuffer: pointer; 
+  sendCount, recvCount: int; 
+  sendDatatype, recvDatatype: typedesc[T];
+  root: int
 ) =
-  ## Broadcasts scalar `data` from the process with rank `root` to all other processes in `communicator` using `MPI_Bcast`.
+  ## Scatters data from the process with rank `root` to all other processes in `communicator` using `MPI_Scatter`.
   ## 
   ## Parameters:
-  ##  - `communicator`: The `MpiCommunicator` to use for broadcasting.
-  ##  - `data`: The scalar data to broadcast. Can be any type that has a corresponding MPI datatype.
-  ##  - `root`: The rank of the root process that will broadcast the data.
-  ##  - `len`: The number of elements to broadcast (default is 1).
-  mpiCheck MPI_Bcast(
-    addr data, 
-    cint(len), 
+  ##  - `communicator`: The `MpiCommunicator` to use for scattering.
+  ##  - `sendBuffer`: A pointer to the data to scatter. Only significant at the root process.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the scattered data into.
+  ##  - `sendCount`: The number of elements to send to each process (significant at root).
+  ##  - `recvCount`: The number of elements to receive from the root.
+  ##  - `sendDatatype`: The MPI datatype of the elements to send (significant at root).
+  ##  - `recvDatatype`: The MPI datatype of the elements to receive.
+  ##  - `root`: The rank of the root process that will scatter the data.
+  mpiCheck MPI_Scatter(
+    sendBuffer, 
+    cint(sendCount), 
+    mpiType(T), 
+    recvBuffer, 
+    cint(recvCount), 
     mpiType(T), 
     cint(root), 
     communicator.comm
@@ -741,13 +1267,105 @@ proc scatter*[T](
   ##  - `recvBuffer`: The buffer to receive the scattered data into. Can be any type that has a corresponding MPI datatype.
   ##  - `root`: The rank of the root process that will scatter the data.
   ##  - `sendLen`: The number of elements to send to each process (significant at root).
-  ##  - `recvLen`: The number of elements to receive from the root (significant at non-root processes).
-  mpiCheck MPI_Scatter(
-    addr sendBuffer[0], 
-    cint(sendLen), 
+  ##  - `recvLen`: The number of elements to receive from the root.
+  communicator.scatter(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendLen,
+    recvLen,
+    T, T,
+    root
+  )
+
+proc variableScatter*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCounts: openArray[int];
+  recvCount: int;
+  sendDatatype, recvDatatype: typedesc[T]; 
+  displacements: openArray[int];
+  root: int
+) =
+  ## Scatters data from the process with rank `root` to all other processes in `communicator` using `MPI_Scatterv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for scattering.
+  ##  - `sendBuffer`: A pointer to the data to scatter. Only significant at the root process.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the scattered data into.
+  ##  - `sendCounts`: An array of counts specifying the number of elements to send to each process (significant at root).
+  ##  - `recvCount`: The number of elements to receive from the root.
+  ##  - `sendDatatype`: The MPI datatype of the elements to send (significant at root).
+  ##  - `recvDatatype`: The MPI datatype of the elements to receive.
+  ##  - `displacements`: An array of displacements specifying the starting index in `sendBuffer` for each process (significant at root).
+  ##  - `root`: The rank of the root process that will scatter the data.
+  var sc = newSeq[cint](sendCounts.len)
+  for i in 0..<sendCounts.len: sc[i] = cint(sendCounts[i])
+  var d = newSeq[cint](displacements.len)
+  for i in 0..<displacements.len: d[i] = cint(displacements[i])
+  mpiCheck MPI_Scatterv(
+    sendBuffer, 
+    if sc.len > 0: addr sc[0] else: nil,
+    if d.len > 0: addr d[0] else: nil,
     mpiType(T), 
-    addr recvBuffer[0], 
-    cint(recvLen), 
+    recvBuffer, 
+    cint(recvCount), 
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc variableScatter*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  sendCounts, displacements: openArray[int]; 
+  recvBuffer: var openArray[T]; 
+  root: int;
+  recvLen: int
+) =
+  ## Scatters data from the process with rank `root` to all other processes in `communicator` using `MPI_Scatterv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for scattering.
+  ##  - `sendBuffer`: The data to scatter. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `sendCounts`: An array of counts specifying the number of elements to send to each process (significant at root).
+  ##  - `displacements`: An array of displacements specifying the starting index in `sendBuffer` for each process (significant at root).
+  ##  - `recvBuffer`: The buffer to receive the scattered data into. Can be any type that has a corresponding MPI datatype.
+  ##  - `root`: The rank of the root process that will scatter the data.
+  ##  - `recvLen`: The number of elements to receive from the root.
+  communicator.variableScatter(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendCounts,
+    recvLen,
+    T, T,
+    displacements,
+    root
+  )
+
+proc gather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCount, recvCount: int; 
+  sendDatatype, recvDatatype: typedesc[T]; 
+  root: int
+) =
+  ## Gathers data from all processes in `communicator` to the process with rank `root` using `MPI_Gather`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: A pointer to the data to send.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the gathered data into. Only significant at the root process.
+  ##  - `sendCount`: The number of elements to send from each process.
+  ##  - `recvCount`: The number of elements received from each process (significant at root).
+  ##  - `sendDatatype`: The MPI datatype of the elements to send.
+  ##  - `recvDatatype`: The MPI datatype of the elements received (significant at root).
+  ##  - `root`: The rank of the root process that will gather the data.
+  mpiCheck MPI_Gather(
+    sendBuffer, 
+    cint(sendCount), 
+    mpiType(T), 
+    recvBuffer, 
+    cint(recvCount), 
     mpiType(T), 
     cint(root), 
     communicator.comm
@@ -769,14 +1387,38 @@ proc gather*[T](
   ##  - `root`: The rank of the root process that will gather the data.
   ##  - `sendLen`: The number of elements to send from each process.
   ##  - `recvLen`: The number of elements received from each process (significant at root).
-  mpiCheck MPI_Gather(
-    addr sendBuffer[0], 
-    cint(sendLen), 
+  communicator.gather(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendLen,
+    recvLen,
+    T, T,
+    root
+  )
+
+proc allGather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCount, recvCount: int; 
+  sendDatatype, recvDatatype: typedesc[T]; 
+) =
+  ## Gathers data from all processes in `communicator` and distributes the combined data to all processes using `MPI_Allgather`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: A pointer to the data to send.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the gathered data into.
+  ##  - `sendCount`: The number of elements to send from each process.
+  ##  - `recvCount`: The number of elements received from each process.
+  ##  - `sendDatatype`: The MPI datatype of the elements to send.
+  ##  - `recvDatatype`: The MPI datatype of the elements received.
+  mpiCheck MPI_Allgather(
+    sendBuffer, 
+    cint(sendCount), 
     mpiType(T), 
-    addr recvBuffer[0], 
-    cint(recvLen), 
+    recvBuffer, 
+    cint(recvCount), 
     mpiType(T), 
-    cint(root), 
     communicator.comm
   )
 
@@ -793,18 +1435,222 @@ proc allGather*[T](
   ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
   ##  - `recvBuffer`: The buffer to receive the gathered data into. Can be any type that has a corresponding MPI datatype.
   ##  - `sendLen`: The number of elements to send from each process.
-  ##  - `recvLen`: The number of elements received from each process (significant at root).
-  mpiCheck MPI_Allgather(
-    addr sendBuffer[0], 
-    cint(sendLen), 
+  ##  - `recvLen`: The number of elements received from each process.
+  communicator.allGather(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendLen,
+    recvLen,
+    T, T
+  )
+
+proc variableGather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCount: int; 
+  recvCounts: openArray[int];
+  sendDatatype, recvDatatype: typedesc[T]; 
+  displacements: openArray[int]; 
+  root: int
+) =
+  ## Gathers data from all processes in `communicator` to the process with rank `root` using `MPI_Gatherv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: A pointer to the data to send.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the gathered data into. Only significant at the root process.
+  ##  - `sendCount`: The number of elements to send from each process.
+  ##  - `recvCounts`: An array of counts specifying the number of elements received from each process (significant at root).
+  ##  - `sendDatatype`: The MPI datatype of the elements to send.
+  ##  - `recvDatatype`: The MPI datatype of the elements received (significant at root).
+  ##  - `displacements`: An array of displacements specifying the starting index in `recvBuffer` for each process (significant at root).
+  ##  - `root`: The rank of the root process that will gather the data.
+  var rc = newSeq[cint](recvCounts.len)
+  for i in 0..<recvCounts.len: rc[i] = cint(recvCounts[i])
+  var d = newSeq[cint](displacements.len)
+  for i in 0..<displacements.len: d[i] = cint(displacements[i])
+  mpiCheck MPI_Gatherv(
+    sendBuffer, 
+    cint(sendCount), 
     mpiType(T), 
-    addr recvBuffer[0], 
-    cint(recvLen), 
+    recvBuffer, 
+    if rc.len > 0: addr rc[0] else: nil,
+    if d.len > 0: addr d[0] else: nil,
+    mpiType(T), 
+    cint(root), 
+    communicator.comm
+  )
+
+proc variableGather*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T]; 
+  recvCounts, displacements: openArray[int]; 
+  root: int
+) =
+  ## Gathers data from all processes in `communicator` to the process with rank `root` using `MPI_Gatherv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for gathering.
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the gathered data into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvCounts`: An array of counts specifying the number of elements received from each process (significant at root).
+  ##  - `displacements`: An array of displacements specifying the starting index in `recvBuffer` for each process (significant at root).
+  ##  - `root`: The rank of the root process that will gather the data.
+  communicator.variableGather(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendBuffer.len,
+    recvCounts,
+    T, T,
+    displacements,
+    root
+  )
+
+proc allToAll*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCount, recvCount: int; 
+  sendDatatype, recvDatatype: typedesc[T]
+) =
+  ## Performs an all-to-all communication, where each process sends data from `sendBuffer` to all other processes and receives data into `recvBuffer` from all other processes in `communicator` using `MPI_Alltoall`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `sendBuffer`: A pointer to the data to send.
+  ##  - `recvBuffer`: A pointer to the buffer to receive data into.
+  ##  - `sendCount`: The number of elements to send to each process.
+  ##  - `recvCount`: The number of elements received from each process.
+  ##  - `sendDatatype`: The MPI datatype of the elements to send.
+  ##  - `recvDatatype`: The MPI datatype of the elements received.
+  mpiCheck MPI_Alltoall(
+    sendBuffer, 
+    cint(sendCount), 
+    mpiType(T), 
+    recvBuffer, 
+    cint(recvCount), 
     mpiType(T), 
     communicator.comm
   )
 
+proc allToAll*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T]; 
+  sendLen, recvLen: int
+) =
+  ## Performs an all-to-all communication, where each process sends `sendBuffer` to all other processes and receives data into `recvBuffer` from all other processes in `communicator` using `MPI_Alltoall`.
+  ## 
+  ## Parameters:
+  ## - `communicator`: The `MpiCommunicator` to use for the operation.
+  ## - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ## - `recvBuffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ## - `sendLen`: The number of elements to send to each process.
+  ## - `recvLen`: The number of elements received from each process.
+  communicator.allToAll(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendLen,
+    recvLen,
+    T, T
+  )
+
+proc variableAllToAll*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer, recvBuffer: pointer; 
+  sendCounts, recvCounts: openArray[int]; 
+  sendDisplacements, recvDisplacements: openArray[int]; 
+  sendDatatype, recvDatatype: typedesc[T]
+) =
+  ## Performs a variable all-to-all communication, where each process sends data from `sendBuffer` to all other processes and receives data into `recvBuffer` from all other processes in `communicator` using `MPI_Alltoallv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ## - `communicator`: The `MpiCommunicator` to use for the operation.
+  ## - `sendBuffer`: A pointer to the data to send.
+  ## - `recvBuffer`: A pointer to the buffer to receive data into.
+  ## - `sendCounts`: An array of counts specifying the number of elements to send to each process.
+  ## - `recvCounts`: An array of counts specifying the number of elements received from each process.
+  ## - `sendDisplacements`: An array of displacements specifying the starting index in `sendBuffer` for each process.
+  ## - `recvDisplacements`: An array of displacements specifying the starting index in `recvBuffer` for each process.
+  ## - `sendDatatype`: The MPI datatype of the elements to send.
+  ## - `recvDatatype`: The MPI datatype of the elements received.
+  var sc = newSeq[cint](sendCounts.len)
+  for i in 0..<sendCounts.len: sc[i] = cint(sendCounts[i])
+  var rc = newSeq[cint](recvCounts.len)
+  for i in 0..<recvCounts.len: rc[i] = cint(recvCounts[i])
+  var sd = newSeq[cint](sendDisplacements.len)
+  for i in 0..<sendDisplacements.len: sd[i] = cint(sendDisplacements[i])
+  var rd = newSeq[cint](recvDisplacements.len)
+  for i in 0..<recvDisplacements.len: rd[i] = cint(recvDisplacements[i])
+  mpiCheck MPI_Alltoallv(
+    sendBuffer, 
+    addr sc[0],
+    addr sd[0],
+    mpiType(T), 
+    recvBuffer, 
+    addr rc[0],
+    addr rd[0],
+    mpiType(T), 
+    communicator.comm
+  )
+
+proc variableAllToAll*[T](
+  communicator: MpiCommunicator; 
+  sendBuffer: openArray[T]; 
+  sendCounts, sendDisplacements: openArray[int]; 
+  recvBuffer: var openArray[T]; 
+  recvCounts, recvDisplacements: openArray[int]
+) =
+  ## Performs a variable all-to-all communication, where each process sends `sendBuffer` to all other processes and receives data into `recvBuffer` from all other processes in `communicator` using `MPI_Alltoallv`, allowing for variable counts and displacements.
+  ## 
+  ## Parameters:
+  ## - `communicator`: The `MpiCommunicator` to use for the operation.
+  ## - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ## - `sendCounts`: An array of counts specifying the number of elements to send to each process.
+  ## - `sendDisplacements`: An array of displacements specifying the starting index in `sendBuffer` for each process.
+  ## - `recvBuffer`: The buffer to receive data into. Can be any type that has a corresponding MPI datatype.
+  ## - `recvCounts`: An array of counts specifying the number of elements received from each process.
+  ## - `recvDisplacements`: An array of displacements specifying the starting index in `recvBuffer` for each process.
+  communicator.variableAllToAll(
+    addr sendBuffer[0],
+    addr recvBuffer[0],
+    sendCounts,
+    recvCounts,
+    sendDisplacements,
+    recvDisplacements,
+    T, T
+  )
+
 #[ reduction ]#
+
+proc reduce*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: pointer; 
+  recvBuffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]; 
+  root: int
+) =
+  ## Reduces data from all processes in `communicator` to the process with rank `root` using `MPI_Reduce`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for reduction.
+  ##  - `op`: The reduction operation to apply (e.g., `ReduceSum`, `ReduceMaximum`, etc.).
+  ##  - `sendBuffer`: A pointer to the data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the reduced result into. Only significant at the root process. Can be any type that has a corresponding MPI datatype.
+  ##  - `count`: The number of elements to send from each process.
+  ##  - `datatype`: The MPI datatype of the elements to send and receive.
+  ##  - `root`: The rank of the root process that will receive the reduced result.
+  mpiCheck MPI_Reduce(
+    sendBuffer, 
+    recvBuffer, 
+    cint(count), 
+    mpiType(T), 
+    op.mpiOp, 
+    cint(root), 
+    communicator.comm
+  )
 
 proc reduce*[T](
   communicator: MpiCommunicator;
@@ -824,13 +1670,38 @@ proc reduce*[T](
   ##  - `root`: The rank of the root process that will receive the reduced result.
   ##  - `sendLen`: The number of elements to send from each process.
   ##  - `recvLen`: The number of elements received from each process (significant at root).
-  mpiCheck MPI_Reduce(
+  communicator.reduce(
+    op,
     addr sendBuffer[0], 
     addr recvBuffer[0], 
-    cint(sendLen), 
+    sendLen, 
+    T, 
+    root
+  )
+
+proc allReduce*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: pointer; 
+  recvBuffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]
+) =
+  ## Reduces data from all processes in `communicator` and distributes the reduced result to all processes using `MPI_Allreduce`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for reduction.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: A pointer to the data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the reduced result into. Can be any type that has a corresponding MPI datatype.
+  ##  - `count`: The number of elements to send from each process.
+  ##  - `datatype`: The MPI datatype of the elements to send and receive.
+  mpiCheck MPI_Allreduce(
+    sendBuffer, 
+    recvBuffer, 
+    cint(count), 
     mpiType(T), 
     op.mpiOp, 
-    cint(root), 
     communicator.comm
   )
 
@@ -850,13 +1721,112 @@ proc allReduce*[T](
   ##  - `recvBuffer`: The buffer to receive the reduced result into. Can be any type that has a corresponding MPI datatype.
   ##  - `sendLen`: The number of elements to send from each process.
   ##  - `recvLen`: The number of elements received from each process (significant at root).
-  mpiCheck MPI_Allreduce(
+  communicator.allReduce(
+    op,
     addr sendBuffer[0], 
     addr recvBuffer[0], 
-    cint(sendLen), 
+    sendLen, 
+    T
+  )
+
+proc inclusiveScan*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: pointer; 
+  recvBuffer: pointer; 
+  count: int; 
+  datatype: typedesc[T]
+) =
+  ## Performs an inclusive scan (prefix reduction) across all processes in `communicator` using `MPI_Scan`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: A pointer to the data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the scanned result into. Can be any type that has a corresponding MPI datatype.
+  ##  - `count`: The number of elements to send from each process.
+  ##  - `datatype`: The MPI datatype of the elements to send and receive.
+  mpiCheck MPI_Scan(
+    sendBuffer, 
+    recvBuffer, 
+    cint(count), 
     mpiType(T), 
     op.mpiOp, 
     communicator.comm
+  )
+
+proc inclusiveScan*[T](
+  communicator: MpiCommunicator; 
+  op: MpiOperation; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T];  
+  sendLen, recvLen: int
+) =
+  ## Performs an inclusive scan (prefix reduction) across all processes in `communicator` using `MPI_Scan`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the scanned result into. Can be any type that has a corresponding MPI datatype.
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  communicator.inclusiveScan(
+    op,
+    addr sendBuffer[0], 
+    addr recvBuffer[0], 
+    sendLen, 
+    T
+  )
+
+proc exclusiveScan*[T](
+  communicator: MpiCommunicator;
+  op: MpiOperation; 
+  sendBuffer: pointer; 
+  recvBuffer: pointer;  
+  count: int; 
+  datatype: typedesc[T]
+) =
+  ## Performs an exclusive scan (prefix reduction) across all processes in `communicator` using `MPI_Exscan`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: A pointer to the data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: A pointer to the buffer to receive the scanned result into. Can be any type that has a corresponding MPI datatype.  
+  ##  - `count`: The number of elements to send from each process.
+  ##  - `datatype`: The MPI datatype of the elements to send and receive.
+  mpiCheck MPI_Exscan(
+    sendBuffer, 
+    recvBuffer, 
+    cint(count), 
+    mpiType(T), 
+    op.mpiOp, 
+    communicator.comm
+  )
+
+proc exclusiveScan*[T](
+  communicator: MpiCommunicator; 
+  op: MpiOperation; 
+  sendBuffer: openArray[T]; 
+  recvBuffer: var openArray[T];  
+  sendLen, recvLen: int
+) =
+  ## Performs an exclusive scan (prefix reduction) across all processes in `communicator` using `MPI_Exscan`.
+  ## 
+  ## Parameters:
+  ##  - `communicator`: The `MpiCommunicator` to use for the operation.
+  ##  - `op`: The reduction operation to apply (e.g., sum, max).
+  ##  - `sendBuffer`: The data to send. Can be any type that has a corresponding MPI datatype.
+  ##  - `recvBuffer`: The buffer to receive the scanned result into. Can be any type that has a corresponding MPI datatype.  
+  ##  - `sendLen`: The number of elements to send from each process.
+  ##  - `recvLen`: The number of elements received from each process (significant at root).
+  communicator.exclusiveScan(
+    op,
+    addr sendBuffer[0], 
+    addr recvBuffer[0], 
+    sendLen, 
+    T
   )
 
 #[ MPI dispatch wrappers ]#

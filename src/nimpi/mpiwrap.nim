@@ -61,6 +61,13 @@ template constantDefinition(ident: untyped, identType: untyped) {.dirty.} =
 
 type MPI_Offset* {.mpi.} = cint
 
+type MPI_Status* {.importc: "MPI_Status", mpi.} = object
+  ## MPI status returned by receive and probe operations.
+  ## MPI_SOURCE, MPI_TAG, and MPI_ERROR are guaranteed by the MPI standard.
+  MPI_SOURCE*: cint
+  MPI_TAG*: cint
+  MPI_ERROR*: cint
+
 mpiTypes typeDefinition:
   MPI_Aint
   MPI_Count
@@ -73,7 +80,6 @@ mpiTypes typeDefinition:
   MPI_Op
   MPI_Request
   MPI_Message
-  MPI_Status
   MPI_Win
   MPI_Fint
 
@@ -241,6 +247,14 @@ proc MPI_Wtime*: cdouble {.cdecl, mpi.}
 
 proc MPI_Wtick*: cdouble {.cdecl, mpi.}
 
+#[ MPI status ]#
+
+proc MPI_Get_count*(
+  status: ptr MPI_Status,
+  datatype: MPI_Datatype,
+  count: ptr cint
+): cint {.cdecl, mpi.}
+
 #[ MPI group ]#
 
 proc MPI_Group_incl*(
@@ -309,6 +323,44 @@ proc MPI_Comm_group*(comm: MPI_Comm, group: ptr MPI_Group): cint {.cdecl, mpi.}
 
 proc MPI_Barrier*(comm: MPI_Comm): cint {.cdecl, mpi.}
 
+proc MPI_Probe*(
+  source: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+proc MPI_Iprobe*(
+  source: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  flag: ptr cint, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+#[ MPI request ]#
+
+proc MPI_Wait*(request: ptr MPI_Request, status: ptr MPI_Status): cint {.cdecl, mpi.}
+
+proc MPI_Test*(
+  request: ptr MPI_Request, 
+  flag: ptr cint, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+proc MPI_Waitall*(
+  count: cint, 
+  array_of_requests: ptr MPI_Request, 
+  array_of_statuses: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+proc MPI_Testall*(
+  count: cint, 
+  array_of_requests: ptr MPI_Request, 
+  flag: ptr cint, 
+  array_of_statuses: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
 #[ MPI send/recv ]#
 
 proc MPI_Send*(
@@ -320,12 +372,116 @@ proc MPI_Send*(
   comm: MPI_Comm
 ): cint {.cdecl, mpi.}
 
+proc MPI_Ssend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Bsend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Rsend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Isend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  request: ptr MPI_Request
+): cint {.cdecl, mpi.}
+
+proc MPI_Issend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  request: ptr MPI_Request
+): cint {.cdecl, mpi.}
+
+proc MPI_Ibsend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  request: ptr MPI_Request
+): cint {.cdecl, mpi.}
+
+proc MPI_Irsend*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  request: ptr MPI_Request
+): cint {.cdecl, mpi.}
+
 proc MPI_Recv*(
   buf: pointer, 
   count: cint, 
   datatype: MPI_Datatype, 
   source: cint, 
   tag: cint, 
+  comm: MPI_Comm, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+proc MPI_Irecv*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  source: cint, 
+  tag: cint, 
+  comm: MPI_Comm, 
+  request: ptr MPI_Request
+): cint {.cdecl, mpi.}
+
+proc MPI_Sendrecv*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  dest: cint, 
+  sendtag: cint, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  source: cint, 
+  recvtag: cint, 
+  comm: MPI_Comm, 
+  status: ptr MPI_Status
+): cint {.cdecl, mpi.}
+
+proc MPI_Sendrecv_replace*(
+  buf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  dest: cint, 
+  sendtag: cint, 
+  source: cint, 
+  recvtag: cint, 
   comm: MPI_Comm, 
   status: ptr MPI_Status
 ): cint {.cdecl, mpi.}
@@ -361,6 +517,18 @@ proc MPI_Allgather*(
   comm: MPI_Comm
 ): cint {.cdecl, mpi.}
 
+proc MPI_Gatherv*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcounts: ptr cint, 
+  displs: ptr cint, 
+  recvtype: MPI_Datatype, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
 proc MPI_Scatter*(
   sendbuf: pointer, 
   sendcount: cint, 
@@ -371,6 +539,56 @@ proc MPI_Scatter*(
   root: cint, 
   comm: MPI_Comm
 ): cint {.cdecl, mpi.}
+
+proc MPI_Scatterv*(
+  sendbuf: pointer, 
+  sendcounts: ptr cint, 
+  displs: ptr cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  root: cint, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Alltoall*(
+  sendbuf: pointer, 
+  sendcount: cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcount: cint, 
+  recvtype: MPI_Datatype, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Alltoallv*(
+  sendbuf: pointer, 
+  sendcounts: ptr cint, 
+  sdispls: ptr cint, 
+  sendtype: MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcounts: ptr cint, 
+  rdispls: ptr cint, 
+  recvtype: MPI_Datatype, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+#[
+proc MPI_Alltoallw*(
+  sendbuf: pointer, 
+  sendcounts: ptr cint, 
+  sdispls: ptr cint, 
+  sendtypes: ptr MPI_Datatype, 
+  recvbuf: pointer, 
+  recvcounts: ptr cint, 
+  rdispls: ptr cint, 
+  recvtypes: ptr MPI_Datatype, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+]#
+
+#[ reduction operations (also collective, of course) ]#
 
 proc MPI_Reduce*(
   sendbuf: pointer, 
@@ -391,4 +609,21 @@ proc MPI_Allreduce*(
   comm: MPI_Comm
 ): cint {.cdecl, mpi.}
 
+proc MPI_Scan*(
+  sendbuf: pointer, 
+  recvbuf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  op: MPI_Op, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
+
+proc MPI_Exscan*(
+  sendbuf: pointer, 
+  recvbuf: pointer, 
+  count: cint, 
+  datatype: MPI_Datatype, 
+  op: MPI_Op, 
+  comm: MPI_Comm
+): cint {.cdecl, mpi.}
 

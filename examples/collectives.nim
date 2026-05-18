@@ -3,16 +3,8 @@ import nimpi
 mpi:
   assert WorldCommunicator.size == 4
 
-  var scalarData: int
   var vectorData1: array[5, int]
   var vectorData2 = newSeq[int](5)
-
-  # broadcast: scalar data
-
-  if myRank() == 0: scalarData = 42
-  WorldCommunicator.broadcast(scalarData, 0)
-  if myRank() != 0: 
-    echo "Process ", myRank(), " received data: ", scalarData
 
   # broadcast: vector data
 
